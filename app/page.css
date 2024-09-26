@@ -1,0 +1,32 @@
+.background-image {
+    background-image: url('/world5.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    width: 100vw;
+  }
+  
+  .body {
+    background-image: url('../public/world5.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .container {
+    min-height: 100vh;
+    width: 100%;
+  }
+  
+  .heroSection {
+    background-image: url('/world5.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    width: 100%;
+  }
+  

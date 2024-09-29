@@ -17,12 +17,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
 
         token.role = existingUser.role;
         token.id = existingUser._id.toString();
-        console.log("JWT Token:", token);
         return token;
       },
       async session({ token, session }) {
-        // console.log({ sessionToken: token, session });
-
         if (token.sub && session.user) {
           session.user.id = token.sub;
         }
@@ -30,8 +27,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
         if (token.role && session.user) {
           session.user.role = token.role as UserRole;
         }
-
-        console.log("Session:", session);
 
         return session;
       },

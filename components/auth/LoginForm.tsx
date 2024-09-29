@@ -44,7 +44,6 @@ export const LoginForm = () => {
   const onSubmit = (
     values: z.infer<typeof LoginSchema>
   ) => {
-    console.log("Submitting values:", values);
     setError("");
     setSuccess("");
 

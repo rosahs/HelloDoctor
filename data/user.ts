@@ -6,8 +6,7 @@ export const getUserByEmail = async (email: string) => {
     await connectDB();
     const user = await User.findOne({ email }).exec();
     return user;
-  } catch (error) {
-    console.error("Error fetching user by email:", error);
+  } catch {
     return null;
   }
 };
@@ -18,8 +17,7 @@ export const getUserById = async (id: string) => {
 
     const user = await User.findById(id).exec();
     return user;
-  } catch (error) {
-    console.error("Error fetching user by ID:", error);
+  } catch {
     return null;
   }
 };

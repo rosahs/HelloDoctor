@@ -22,8 +22,6 @@ export const register = async (
     const { email, password, name, role } =
       validatedFields.data;
 
-    console.log("Validated data:", validatedFields.data);
-
     await connectDB();
 
     const existingUser = await getUserByEmail(email);
@@ -34,20 +32,15 @@ export const register = async (
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    console.log(role);
-
-    const newUser = await User.create({
+    await User.create({
       role,
       name,
       email,
       password: hashedPassword,
     });
 
-    console.log("New user created:", newUser.toObject());
-
     return { success: "User registered successfully" };
-  } catch (error) {
-    console.error("Registration error:", error);
+  } catch {
     return {
       error: "An error occurred during registration",
     };

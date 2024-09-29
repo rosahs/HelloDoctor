@@ -1,6 +1,11 @@
 "use client";
 
+import * as z from "zod";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { RegisterSchema } from "@/schemas";
 import { CardWrapper } from "./FormWrapper";
 import {
   Form,
@@ -14,16 +19,49 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { FormError } from "./FormError";
 import { FormSuccess } from "./FormSuccess";
+import { register } from "@/actions/register";
 
 export const RegisterForm = () => {
-  const form = useForm({
+  const [error, setError] = useState<string | undefined>(
+    ""
+  );
+  const [success, setSuccess] = useState<
+    string | undefined
+  >("");
+  const [isPending, startTransition] = useTransition();
+  const [activeRole, setActiveRole] = useState("PATIENT");
+
+  const form = useForm<z.infer<typeof RegisterSchema>>({
+    resolver: zodResolver(RegisterSchema),
     defaultValues: {
       email: "",
       password: "",
+      passwordConfirm: "",
       name: "",
+      role: "PATIENT",
     },
   });
 
+  const handleRoleChange = (role: string) => {
+    setActiveRole(role);
+    form.setValue("role", role);
+  };
+
+  const onSubmit = (
+    values: z.infer<typeof RegisterSchema>
+  ) => {
+    setError(undefined);
+    setSuccess(undefined);
+
+    startTransition(() =>
+      register({ ...values, role: activeRole }).then(
+        (data) => {
+          setError(data.error);
+          setSuccess(data.success);
+        }
+      )
+    );
+  };
   return (
     <CardWrapper
       headerLabel="Create an account"
@@ -32,8 +70,54 @@ export const RegisterForm = () => {
       showSocial
     >
       <Form {...form}>
-        <form className="space-y-6">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-6"
+        >
           <div className="space-y-4">
+            <FormField
+              control={form.control}
+              name="role"
+              render={() => (
+                <FormItem>
+                  <FormLabel className="text-labelColor">
+                    Role
+                  </FormLabel>
+                  <div className="flex space-x-4">
+                    <Button
+                      type="button"
+                      onClick={() =>
+                        handleRoleChange("PATIENT")
+                      }
+                      disabled={isPending}
+                      className={`flex-1 ${
+                        activeRole === "PATIENT"
+                          ? "bg-primaryColor text-white hover:bg-primaryColor/80"
+                          : "bg-white text-textDark  hover:bg-primaryColor/15"
+                      }`}
+                    >
+                      Patient
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={() =>
+                        handleRoleChange("DOCTOR")
+                      }
+                      disabled={isPending}
+                      className={`flex-1 ${
+                        activeRole === "DOCTOR"
+                          ? "bg-primaryColor text-white hover:bg-primaryColor/80 "
+                          : "bg-white text-textDark  hover:bg-primaryColor/15"
+                      }`}
+                    >
+                      Doctor
+                    </Button>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="name"
@@ -47,6 +131,7 @@ export const RegisterForm = () => {
                       {...field}
                       placeholder="Name"
                       type="text"
+                      disabled={isPending}
                       className="text-textDark placeholder-placeholder"
                     />
                   </FormControl>
@@ -68,6 +153,7 @@ export const RegisterForm = () => {
                       {...field}
                       placeholder="Email"
                       type="email"
+                      disabled={isPending}
                       className="text-textDark placeholder-placeholder"
                     />
                   </FormControl>
@@ -89,6 +175,30 @@ export const RegisterForm = () => {
                       {...field}
                       placeholder="Password"
                       type="password"
+                      disabled={isPending}
+                      className="text-textDark placeholder-placeholder"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Password Confirm Field */}
+            <FormField
+              control={form.control}
+              name="passwordConfirm"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-labelColor">
+                    Confirm Password
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder="Confirm Password"
+                      type="password"
+                      disabled={isPending}
                       className="text-textDark placeholder-placeholder"
                     />
                   </FormControl>
@@ -98,12 +208,13 @@ export const RegisterForm = () => {
             />
           </div>
 
-          <FormError message={""} />
-          <FormSuccess message={""} />
+          <FormError message={error} />
+          <FormSuccess message={success} />
 
           <Button
             type="submit"
-            className="w-full bg-primaryColor"
+            disabled={isPending}
+            className="w-full bg-primaryColor hover:bg-primaryColor/80"
           >
             Create an account
           </Button>

@@ -1,8 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import * as z from "zod";
+import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { LoginSchema } from "@/schemas";
 import { CardWrapper } from "./FormWrapper";
 import {
   Form,
@@ -16,17 +20,41 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { FormError } from "./FormError";
 import { FormSuccess } from "./FormSuccess";
+import { login } from "@/actions/login";
 
 export const LoginForm = () => {
-  const [showTwoFactor] = useState(false);
+  const [showTwoFactor, setShowTwoFactor] = useState(false);
+  const [error, setError] = useState<string | undefined>(
+    ""
+  );
+  const [success, setSuccess] = useState<
+    string | undefined
+  >("");
+  const [isPending, startTransition] = useTransition();
 
-  const form = useForm({
+  const form = useForm<z.infer<typeof LoginSchema>>({
+    resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: "",
       password: "",
       code: "",
     },
   });
+
+  const onSubmit = (
+    values: z.infer<typeof LoginSchema>
+  ) => {
+    console.log("Submitting values:", values);
+    setError("");
+    setSuccess("");
+
+    startTransition(() => {
+      login(values).then((data) => {
+        setError(data?.error);
+        setSuccess(data?.success);
+      });
+    });
+  };
 
   return (
     <CardWrapper
@@ -36,10 +64,14 @@ export const LoginForm = () => {
       showSocial
     >
       <Form {...form}>
-        <form className="space-y-6">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-6"
+        >
           <div className="space-y-4">
             {showTwoFactor && (
               <FormField
+                control={form.control}
                 name="code"
                 render={({ field }) => (
                   <FormItem>
@@ -51,6 +83,7 @@ export const LoginForm = () => {
                         {...field}
                         placeholder="123456"
                         className="text-textDark placeholder-placeholder"
+                        disabled={isPending}
                       />
                     </FormControl>
                     <FormMessage />
@@ -62,6 +95,7 @@ export const LoginForm = () => {
             {!showTwoFactor && (
               <>
                 <FormField
+                  control={form.control}
                   name="email"
                   render={({ field }) => (
                     <FormItem>
@@ -74,6 +108,7 @@ export const LoginForm = () => {
                           placeholder="Email"
                           type="email"
                           className="text-textDark placeholder-placeholder"
+                          disabled={isPending}
                         />
                       </FormControl>
                       <FormMessage />
@@ -82,6 +117,7 @@ export const LoginForm = () => {
                 />
 
                 <FormField
+                  control={form.control}
                   name="password"
                   render={({ field }) => (
                     <FormItem>
@@ -93,9 +129,11 @@ export const LoginForm = () => {
                           {...field}
                           placeholder="Password"
                           type="password"
+                          disabled={isPending}
                           className="text-textDark placeholder-placeholder"
                         />
                       </FormControl>
+                      <FormMessage />
                       <Button
                         size="sm"
                         variant="link"
@@ -106,7 +144,6 @@ export const LoginForm = () => {
                           Forgot Password?
                         </Link>
                       </Button>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -114,8 +151,8 @@ export const LoginForm = () => {
             )}
           </div>
 
-          <FormError message={""} />
-          <FormSuccess message={""} />
+          <FormError message={error} />
+          <FormSuccess message={success} />
 
           <Button
             type="submit"

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { Doctor } from '@/lib/api/types';
+import { Doctor } from '@/lib/types';
 
 export async function GET() {
   try {

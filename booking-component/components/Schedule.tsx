@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Doctor, Appointment } from '@/lib/api/types';
+import { Doctor, Appointment } from '@/lib/types';
 
 export interface ScheduleProps {
   doctor: Doctor;

@@ -1,22 +1,25 @@
-import { Doctor } from '@/lib/api/types';
+import { Doctor } from '@/lib/types';
 
-// Fetch all doctors
 export async function getDoctors(): Promise<Doctor[]> {
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001'; 
-  const apiUrl = `${baseUrl}/api/doctors`; 
+  console.log('Fetching doctors...');
 
-  console.log('Fetching doctors from:', apiUrl);
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'; 
+  const apiUrl = new URL('/api/doctors', baseUrl).toString();
+
+  console.log('Fetching from URL:', apiUrl);
 
   try {
     const res = await fetch(apiUrl, { cache: 'no-store' });
+    console.log('Fetch response status:', res.status);
+
     if (!res.ok) {
       const errorText = await res.text();
-      console.error('Error fetching doctors:', res.status, res.statusText, errorText);
-      throw new Error(`Failed to fetch doctors: ${res.status} ${res.statusText}`);
+      console.error('API Response:', res.status, res.statusText, errorText);
+      throw new Error(`Failed to fetch doctors: ${res.status} ${res.statusText}. ${errorText}`);
     }
 
     const data = await res.json();
-    console.log('Fetched doctors:', data);
+    console.log('Fetched data:', data);
     return data;
   } catch (error) {
     console.error('Error fetching doctors:', error);
@@ -24,16 +27,14 @@ export async function getDoctors(): Promise<Doctor[]> {
   }
 }
 
-// Fetch a doctor by ID
-export async function getDoctorById(id: string): Promise<Doctor | null> {
+
+
+export async function getDoctorById(id: number): Promise<Doctor | null> {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/doctors/${id}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch doctor');
-    }
-    return response.json();
+    const doctors = await getDoctors();
+    return doctors.find(doctor => doctor.id === String(id)) || null;
   } catch (error) {
-    console.error('Error fetching doctor:', error);
-    return null;
+    console.error(`Error fetching doctor with id ${id}:`, error);
+    throw new Error(`Failed to fetch doctor with id ${id}. Please try again later.`);
   }
 }

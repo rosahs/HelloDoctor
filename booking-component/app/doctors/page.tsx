@@ -1,39 +1,37 @@
-import { getDoctors } from '@/lib/api/getDoctors';
 import Link from 'next/link';
+import { getDoctors } from '@/lib/api/getDoctors';
+import { Doctor } from '@/lib/types';
 
 export default async function DoctorsPage() {
+  let doctors: Doctor[] = [];
   try {
-    console.log('Fetching doctors in DoctorsPage');
-    const doctors = await getDoctors();
-    console.log('Doctors fetched successfully:', doctors);
+    doctors = await getDoctors();
+  } catch (error) {
+    console.error('Error fetching doctors:', error);
+  }
 
-
-    return (
-      <div className="p-4">
-        <h1 className="text-2xl font-bold mb-4">Our Doctors</h1>
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <h1 className="text-4xl font-bold mb-8">Our Doctors</h1>
+      {doctors.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {doctors.map((doctor) => (
-            <div key={doctor.id} className="border p-4 rounded-lg">
-              <h2 className="text-xl font-semibold">{doctor.name}</h2>
-              <p>{doctor.specialty}</p>
-              <p>{doctor.experience} years experience</p>
-              <p>Rating: {doctor.rating}</p>
-              <Link href={`/doctors/${doctor.id}`} className="text-blue-500 hover:underline">
-                View Profile
-              </Link>
-            </div>
+            <Link key={doctor.id} href={`/doctors/${doctor.id}`}>
+              <div className="border p-4 rounded-lg hover:shadow-lg transition-shadow">
+                <h2 className="text-xl font-semibold">{doctor.name}</h2>
+                <p>{doctor.specialty}</p>
+                <p>Experience: {doctor.experience} years</p>
+                <p>Rating: {doctor.rating}</p>
+              </div>
+            </Link>
           ))}
         </div>
-      </div>
-    );
-  } catch (error) {
-    console.error('Error in DoctorsPage:', error);
-    return (
-      <div className="p-4">
-        <h1 className="text-2xl font-bold mb-4">Error</h1>
-        <p>Failed to load doctors. Please try again later.</p>
-        <p>Error details: {(error as Error).message}</p>
-      </div>
-    );
-  }
+      ) : (
+        <p>No doctors available at the moment. Please try again later.</p>
+      )}
+      <Link href="/" className="mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        Back to Home
+      </Link>
+    </main>
+  );
 }

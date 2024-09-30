@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link';
-import { Doctor } from '@/lib/api/types';
+import { Doctor } from '@/lib/types';
 import { useState, useEffect } from 'react';
 
 interface DoctorListProps {

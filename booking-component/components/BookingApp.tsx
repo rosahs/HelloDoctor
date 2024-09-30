@@ -1,8 +1,8 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { Doctor, Appointment } from '@/lib/api/types';
-import { getAvailableAppointments } from '@/lib/api';
+import { Doctor, Appointment } from '@/lib/types';
+import { getAvailableAppointments } from '@/lib/api/api';
 import DoctorProfile from '../components/DoctorProfile';
 import Schedule, { ScheduleProps } from '../components/Schedule';
 import AppointmentDetails from '../components/AppointmentDetails';

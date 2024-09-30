@@ -2,7 +2,7 @@ import React from 'react';
 import { getDoctorById } from '@/lib/api/getDoctors'; 
 
 export default async function DoctorProfile({ params }: { params: { id: string } }) {
-  const doctor = await getDoctorById(params.id);
+  const doctor = await getDoctorById(parseInt(params.id));
 
   if (!doctor) {
     return <div>Doctor not found</div>;

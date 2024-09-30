@@ -1,4 +1,4 @@
-import { Doctor, Appointment } from '@/lib/api/types';
+import { Doctor, Appointment } from '@/lib/types';
 
 // Utility function to construct API URLs
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";

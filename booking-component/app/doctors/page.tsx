@@ -1,4 +1,3 @@
-// app/doctors/page.tsx
 import { getDoctors } from '@/lib/api/getDoctors';
 import Link from 'next/link';
 
@@ -7,6 +6,7 @@ export default async function DoctorsPage() {
     console.log('Fetching doctors in DoctorsPage');
     const doctors = await getDoctors();
     console.log('Doctors fetched successfully:', doctors);
+
 
     return (
       <div className="p-4">
@@ -33,7 +33,6 @@ export default async function DoctorsPage() {
         <h1 className="text-2xl font-bold mb-4">Error</h1>
         <p>Failed to load doctors. Please try again later.</p>
         <p>Error details: {(error as Error).message}</p>
-        <pre>{JSON.stringify(error, null, 2)}</pre>
       </div>
     );
   }

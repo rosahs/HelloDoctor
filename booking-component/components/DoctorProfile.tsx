@@ -1,11 +1,13 @@
 import React from 'react';
-import { Doctor } from '@/lib/api/types';
+import { getDoctorById } from '@/lib/api/getDoctors'; 
 
-export interface DoctorProfileProps {
-  doctor: Doctor;
-}
+export default async function DoctorProfile({ params }: { params: { id: string } }) {
+  const doctor = await getDoctorById(params.id);
 
-export default function DoctorProfile({ doctor }: DoctorProfileProps) {
+  if (!doctor) {
+    return <div>Doctor not found</div>;
+  }
+
   return (
     <div className="bg-white p-6 rounded-2xl shadow-lg max-w-sm mx-auto">
       {/* Top Bar */}
@@ -18,39 +20,34 @@ export default function DoctorProfile({ doctor }: DoctorProfileProps) {
 
       {/* Doctor Info */}
       <div className="flex flex-col items-center">
-        {/* <img
-          src={doctor?.photoUrl || "/api/placeholder/100/100"}
-          alt={`Dr. ${doctor?.name}`}
-          className="w-28 h-28 rounded-full shadow-lg mb-4"
-        /> */}
-        <div className="bg-blue-500 text-white px-2 py-1 rounded-full text-sm mb-2">20 years experience</div>
+        <div className="bg-blue-500 text-white px-2 py-1 rounded-full text-sm mb-2">{doctor.experience} years experience</div>
         <div className="bg-blue-200 text-blue-800 p-3 rounded-lg text-sm w-full text-center">
-          Focus: The impact of hormonal imbalances on skin conditions, specializing in acne, hirsutism, and other skin disorders.
+          Focus: {doctor.focus || "Information not available"}
         </div>
       </div>
 
       {/* Doctor Name and Specialization */}
       <div className="text-center mt-4">
-        <h2 className="text-xl font-bold">Dr. Olivia Turner, M.D.</h2>
-        <p className="text-gray-600">Dermato-Endocrinology</p>
+        <h2 className="text-xl font-bold">Dr. {doctor.name}</h2>
+        <p className="text-gray-600">{doctor.specialty}</p>
       </div>
 
       {/* Rating and Time */}
       <div className="flex justify-center items-center space-x-2 mt-2">
         <span className="flex items-center">
           <span className="text-yellow-500 mr-1">★</span>
-          <span className="text-sm">4.5</span>
+          <span className="text-sm">{doctor.rating}</span>
         </span>
         <span className="border-l-2 border-gray-300 mx-2 h-6"></span>
         <span className="flex items-center">
           <i className="fas fa-clock text-gray-500 mr-1"></i>
-          <span className="text-sm">Mon - Sat / 9 AM - 4 PM</span>
+          <span className="text-sm">{doctor.workingHours || "Mon - Sat / 9 AM - 4 PM"}</span>
         </span>
       </div>
 
       {/* Profile Description */}
       <p className="text-sm mt-4 text-center px-2">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        {doctor.description || "No description available."}
       </p>
 
       {/* Calendar Section */}

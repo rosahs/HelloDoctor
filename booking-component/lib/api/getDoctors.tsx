@@ -1,25 +1,22 @@
 import { Doctor } from '@/lib/api/types';
 
+// Fetch all doctors
 export async function getDoctors(): Promise<Doctor[]> {
-  console.log('Fetching doctors...');
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001'; 
+  const apiUrl = `${baseUrl}/api/doctors`; 
 
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'; // Note the port change
-  const apiUrl = new URL('/api/doctors', baseUrl).toString();
-
-  console.log('Fetching from URL:', apiUrl);
+  console.log('Fetching doctors from:', apiUrl);
 
   try {
     const res = await fetch(apiUrl, { cache: 'no-store' });
-    console.log('Fetch response status:', res.status);
-
     if (!res.ok) {
       const errorText = await res.text();
-      console.error('API Response:', res.status, res.statusText, errorText);
-      throw new Error(`Failed to fetch doctors: ${res.status} ${res.statusText}. ${errorText}`);
+      console.error('Error fetching doctors:', res.status, res.statusText, errorText);
+      throw new Error(`Failed to fetch doctors: ${res.status} ${res.statusText}`);
     }
 
     const data = await res.json();
-    console.log('Fetched data:', data);
+    console.log('Fetched doctors:', data);
     return data;
   } catch (error) {
     console.error('Error fetching doctors:', error);
@@ -27,14 +24,16 @@ export async function getDoctors(): Promise<Doctor[]> {
   }
 }
 
-
-
-export async function getDoctorById(id: number): Promise<Doctor | null> {
+// Fetch a doctor by ID
+export async function getDoctorById(id: string): Promise<Doctor | null> {
   try {
-    const doctors = await getDoctors();
-    return doctors.find(doctor => doctor.id === id) || null;
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/doctors/${id}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch doctor');
+    }
+    return response.json();
   } catch (error) {
-    console.error(`Error fetching doctor with id ${id}:`, error);
-    throw new Error(`Failed to fetch doctor with id ${id}. Please try again later.`);
+    console.error('Error fetching doctor:', error);
+    return null;
   }
 }

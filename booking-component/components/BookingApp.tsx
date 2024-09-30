@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import React, { useState, useEffect } from 'react';
 import { Doctor, Appointment } from '@/lib/api/types';
@@ -21,7 +21,7 @@ export default function BookingApp({ doctor }: BookingAppProps) {
 
     useEffect(() => {
         async function fetchAppointments() {
-            const appointments = await getAvailableAppointments(doctor.id, selectedDate);
+            const appointments = await getAvailableAppointments(Number(doctor.id), selectedDate);
             setAvailableAppointments(appointments);
         }
         fetchAppointments();
@@ -29,7 +29,7 @@ export default function BookingApp({ doctor }: BookingAppProps) {
 
     return (
         <div className="max-w-md mx-auto bg-gray-100 p-4">
-            {selectedTab === 'profile' && <DoctorProfile doctor={doctor} />}
+            {selectedTab === 'profile' && <DoctorProfile params={{ id: doctor.id }} />}
             {selectedTab === 'schedule' && <Schedule 
                 doctor={doctor}
                 selectedDate={selectedDate}

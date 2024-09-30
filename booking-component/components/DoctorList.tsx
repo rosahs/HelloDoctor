@@ -1,11 +1,26 @@
+'use client'
+
 import Link from 'next/link';
 import { Doctor } from '@/lib/api/types';
+import { useState, useEffect } from 'react';
 
 interface DoctorListProps {
-  doctors: Doctor[];
+  initialDoctors: Doctor[];
 }
 
-export default function DoctorList({ doctors }: DoctorListProps) {
+export default function DoctorList({ initialDoctors }: DoctorListProps) {
+  const [doctors, setDoctors] = useState<Doctor[]>(initialDoctors);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setDoctors(initialDoctors);
+    setIsLoading(false);
+  }, [initialDoctors]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <ul>
       {doctors.map((doctor) => (

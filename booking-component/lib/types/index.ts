@@ -2,11 +2,14 @@ export interface Doctor {
   id: string;
   name: string;
   specialty: string;
-  experience?: number;
-  rating?: number;
-  focus?: string;
-  workingHours?: string;
-  description?: string;
+  experience: number;
+  rating: number;
+  imageUrl: string;
+  about: string;
+  specialties: string[];
+  certifications: string[];
+  professionalExperience: string[];
+  languages: string[];
 }
 
 export interface Appointment {

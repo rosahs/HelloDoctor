@@ -22,7 +22,7 @@ export default async function DoctorProfile({ params }: { params: { id: string }
       <div className="flex flex-col items-center">
         <div className="bg-blue-500 text-white px-2 py-1 rounded-full text-sm mb-2">{doctor.experience} years experience</div>
         <div className="bg-blue-200 text-blue-800 p-3 rounded-lg text-sm w-full text-center">
-          Focus: {doctor.focus || "Information not available"}
+          Focus: {doctor.specialties.join(', ') || "Information not available"}
         </div>
       </div>
 
@@ -41,13 +41,13 @@ export default async function DoctorProfile({ params }: { params: { id: string }
         <span className="border-l-2 border-gray-300 mx-2 h-6"></span>
         <span className="flex items-center">
           <i className="fas fa-clock text-gray-500 mr-1"></i>
-          <span className="text-sm">{doctor.workingHours || "Mon - Sat / 9 AM - 4 PM"}</span>
+          <span className="text-sm">Mon - Sat / 9 AM - 4 PM</span>
         </span>
       </div>
 
       {/* Profile Description */}
       <p className="text-sm mt-4 text-center px-2">
-        {doctor.description || "No description available."}
+        {doctor.about || "No description available."}
       </p>
 
       {/* Calendar Section */}

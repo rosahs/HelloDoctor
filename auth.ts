@@ -1,27 +1,50 @@
 import NextAuth from "next-auth";
-import { MongoDBAdapter } from "@auth/mongodb-adapter";
-import { connectDB } from "./lib/db";
 import authConfig from "./auth.config";
-import { getUserById } from "./data/user";
+import { getUserByEmail } from "./data/user";
 import { UserRole } from "./lib/userRole";
+import { saveOAuthUser } from "./data/saveOAuthUser";
 
 export const { handlers, auth, signIn, signOut } = NextAuth(
   {
     callbacks: {
-      async jwt({ token }) {
-        if (!token.sub) return token;
+      async signIn({ account, profile }) {
+        if (!account) {
+          return false;
+        }
 
-        const existingUser = await getUserById(token.sub);
+        if (account.provider === "credentials") {
+          return true;
+        }
 
-        if (!existingUser) return token;
+        if (account.provider === "google" && profile) {
+          try {
+            await saveOAuthUser(profile, account);
+            return true;
+          } catch {
+            return false;
+          }
+        }
 
-        token.role = existingUser.role;
-        token.id = existingUser._id.toString();
+        return true;
+      },
+      async jwt({ token, user }) {
+        if (user) {
+          token.id = user.id;
+        } else if (token.email) {
+          const dbUser = await getUserByEmail(token.email);
+          if (dbUser) {
+            token.id = dbUser._id.toString();
+            token.role = dbUser.role;
+          }
+        }
+
         return token;
       },
       async session({ token, session }) {
-        if (token.sub && session.user) {
-          session.user.id = token.sub;
+        if (token.id && session.user) {
+          session.user.id = token.id as string;
+        } else if (token.sub && session.user) {
+          session.user.id = token.sub as string;
         }
 
         if (token.role && session.user) {
@@ -31,7 +54,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
         return session;
       },
     },
-    adapter: MongoDBAdapter(connectDB),
     session: { strategy: "jwt" },
     ...authConfig,
   }

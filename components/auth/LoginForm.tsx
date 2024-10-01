@@ -155,7 +155,7 @@ export const LoginForm = () => {
 
           <Button
             type="submit"
-            className="w-full bg-primaryColor"
+            className="w-full bg-primaryColor hover:bg-primaryColor/80"
           >
             {showTwoFactor ? "Confirm" : "Login"}
           </Button>

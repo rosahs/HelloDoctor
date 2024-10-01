@@ -20,6 +20,7 @@ import { Button } from "../ui/button";
 import { FormError } from "./FormError";
 import { FormSuccess } from "./FormSuccess";
 import { register } from "@/actions/register";
+import { UserRole } from "@/lib/userRole";
 
 export const RegisterForm = () => {
   const [error, setError] = useState<string | undefined>(
@@ -87,7 +88,7 @@ export const RegisterForm = () => {
                     <Button
                       type="button"
                       onClick={() =>
-                        handleRoleChange("PATIENT")
+                        handleRoleChange(UserRole.PATIENT)
                       }
                       disabled={isPending}
                       className={`flex-1 ${
@@ -101,7 +102,7 @@ export const RegisterForm = () => {
                     <Button
                       type="button"
                       onClick={() =>
-                        handleRoleChange("DOCTOR")
+                        handleRoleChange(UserRole.DOCTOR)
                       }
                       disabled={isPending}
                       className={`flex-1 ${

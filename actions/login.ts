@@ -9,6 +9,8 @@ import {
   DOCTOR_LOGIN_REDIRECT,
   PATIENT_LOGIN_REDIRECT,
 } from "@/routes";
+import { generateVerificationToken } from "@/lib/tokens";
+import { sendVerificationEmail } from "@/lib/send-mail";
 
 export const login = async (
   values: z.infer<typeof LoginSchema>
@@ -26,6 +28,25 @@ export const login = async (
 
     if (!user) {
       return { error: "Email does not exist" };
+    }
+
+    if (!user.password) {
+      return {
+        error:
+          "This account was created with Google Sign-In. Please log in using Google.",
+      };
+    }
+
+    if (!user.emailVerified) {
+      const verificationToken =
+        await generateVerificationToken(user.email);
+
+      await sendVerificationEmail(
+        verificationToken.email,
+        verificationToken.token
+      );
+
+      return { success: "Confirmation email sent!" };
     }
 
     const redirectTo =

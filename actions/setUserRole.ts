@@ -27,7 +27,7 @@ export async function setUserRole(role: UserRole) {
     }
 
     user.role = role;
-    user.emailVerified = new Date();
+    // user.emailVerified = new Date();
 
     await user.save();
 

@@ -34,13 +34,11 @@ export interface TwoFactorConfirmationDocument
 }
 
 // VerificationToken Schema
-const VerificationTokenSchema: Schema = new mongoose.Schema(
-  {
-    email: String,
-    token: { type: String, unique: true },
-    expires: Date,
-  }
-);
+const VerificationTokenSchema: Schema = new Schema({
+  email: { type: String, required: true, unique: true },
+  token: { type: String, required: true, unique: true },
+  expires: { type: Date, required: true },
+});
 
 // Compound unique index for email and token
 VerificationTokenSchema.index(
@@ -49,12 +47,11 @@ VerificationTokenSchema.index(
 );
 
 // PasswordResetToken Schema
-const PasswordResetTokenSchema: Schema =
-  new mongoose.Schema({
-    email: String,
-    token: { type: String, unique: true },
-    expires: Date,
-  });
+const PasswordResetTokenSchema: Schema = new Schema({
+  email: String,
+  token: { type: String, unique: true },
+  expires: Date,
+});
 
 // Compound unique index for email and token
 PasswordResetTokenSchema.index(
@@ -63,7 +60,7 @@ PasswordResetTokenSchema.index(
 );
 
 // TwoFactorToken Schema
-const TwoFactorTokenSchema: Schema = new mongoose.Schema({
+const TwoFactorTokenSchema: Schema = new Schema({
   email: String,
   token: { type: String, unique: true },
   expires: Date,
@@ -76,14 +73,13 @@ TwoFactorTokenSchema.index(
 );
 
 // TwoFactorConfirmation Schema
-const TwoFactorConfirmationSchema: Schema =
-  new mongoose.Schema({
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      unique: true,
-    },
-  });
+const TwoFactorConfirmationSchema: Schema = new Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    unique: true,
+  },
+});
 
 const VerificationToken: Model<VerificationTokenDocument> =
   mongoose.models?.VerificationToken ||

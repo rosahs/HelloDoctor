@@ -1,37 +1,59 @@
-import Link from 'next/link';
-import { getDoctors } from '@/lib/api/getDoctors';
-import { Doctor } from '@/lib/types';
+"use client";
 
-export default async function DoctorsPage() {
-  let doctors: Doctor[] = [];
-  try {
-    doctors = await getDoctors();
-  } catch (error) {
-    console.error('Error fetching doctors:', error);
+import { useState, useEffect } from 'react';
+import { Doctor } from '@/lib/types';
+import Link from 'next/link';
+import DoctorsList from '@/components/DoctorList';
+import { getDoctors } from '@/lib/api/getDoctors';
+
+export default function DoctorsPage() {
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    getDoctors()
+      .then(data => {
+        if (Array.isArray(data)) {
+          setDoctors(data as Doctor[]);
+        } else {
+          throw new Error('Invalid data format received');
+        }
+        setLoading(false);
+      })
+      .catch(err => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-4xl font-bold text-center mb-12">Our Doctors</h1>
+        <p className="text-center">Loading doctors...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-4xl font-bold text-center mb-12">Our Doctors</h1>
+        <p className="text-center text-red-500">Error: {error}</p>
+      </div>
+    );
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1 className="text-4xl font-bold mb-8">Our Doctors</h1>
-      {doctors.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {doctors.map((doctor) => (
-            <Link key={doctor.id} href={`/doctors/${doctor.id}`}>
-              <div className="border p-4 rounded-lg hover:shadow-lg transition-shadow">
-                <h2 className="text-xl font-semibold">{doctor.name}</h2>
-                <p>{doctor.specialty}</p>
-                <p>Experience: {doctor.experience} years</p>
-                <p>Rating: {doctor.rating}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      ) : (
-        <p>No doctors available at the moment. Please try again later.</p>
-      )}
-      <Link href="/" className="mt-8 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        Back to Home
-      </Link>
-    </main>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-4xl font-bold text-center mb-12">Our Doctors</h1>
+      <DoctorsList initialDoctors={doctors} />
+      <div className="mt-12 text-center">
+        <Link href="/" className="bg-gray-500 text-white py-2 px-6 rounded-full hover:bg-gray-600 transition duration-300">
+          Back to Home
+        </Link>
+      </div>
+    </div>
   );
 }

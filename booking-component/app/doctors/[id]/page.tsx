@@ -1,114 +1,109 @@
 import { getDoctorById } from '@/lib/api/getDoctors';
 import { Doctor } from '@/lib/types';
-import Image from 'next/image';
 import Link from 'next/link';
-import { FiCamera, FiMapPin, FiStar, FiBookmark, FiMenu } from 'react-icons/fi';
-import { FaUserMd, FaCamera, FaMapMarkerAlt, FaStar, FaBookmark, FaBars } from 'react-icons/fa';
-import { FaSuitcaseMedical } from "react-icons/fa6";
+import { Calendar, Phone, Video, MessageSquare, Star, Clock } from 'lucide-react';
+import DoctorImage from './DoctorImage';
 
 function DoctorDetails({ doctor }: { doctor: Doctor }) {
   return (
-    <div className="max-w-4xl mx-auto p-8">
-      <div className="flex items-center mb-8">
-        <FaSuitcaseMedical size={40} className="text-green-600 mr-2" />
-        <h1 className="text-2xl font-bold text-gray-800">Hello Doctor</h1>
-      </div>
-      <div className="bg-white shadow-lg rounded-lg p-8">
-        <div className="flex items-center justify-between mb-4">
+    <div className="max-w-md mx-auto bg-blue-50 min-h-screen p-4">
+      <header className="flex justify-between items-center mb-4">
+        <Link href="/doctors" className="text-blue-600">
+          <span className="text-2xl">&larr;</span>
+        </Link>
+        <div className="flex space-x-2">
+          <Calendar className="text-blue-600" size={24} />
+          <Phone className="text-blue-600" size={24} />
+          <Video className="text-blue-600" size={24} />
+          <MessageSquare className="text-blue-600" size={24} />
+        </div>
+        <div className="flex space-x-2">
+          <button className="text-blue-600">?</button>
+          <button className="text-blue-600">♥</button>
+        </div>
+      </header>
+
+      <div className="bg-white rounded-3xl p-6 mb-6 shadow-lg">
+        <div className="flex items-center mb-4">
+          <DoctorImage
+            src={doctor.imageUrl || '/default-doctor-image.jpg'}
+            alt={doctor.name}
+            fallbackSrc="/default-doctor-image.jpg"
+            className="w-24 h-24 rounded-full mr-4"
+          />
+          <div>
+            <h1 className="text-xl font-bold">{doctor.name}</h1>
+            <p className="text-gray-600">{doctor.specialty}</p>
+          </div>
+        </div>
+
+        <div className="bg-blue-100 rounded-2xl p-3 mb-4">
+          <div className="flex items-center mb-2">
+            <Clock className="text-blue-600 mr-2" size={16} />
+            <p className="text-sm">{doctor.yearsOfExperience} years experience</p>
+          </div>
+          <p className="text-sm">Focus: {doctor.focusArea}</p>
+        </div>
+
+        <div className="flex items-center justify-between text-sm text-gray-600 mb-4">
           <div className="flex items-center">
-            <Image
-              src={doctor.imageUrl || '/Dr_Razha.jpg'}
-              alt={doctor.name}
-              width={60}
-              height={60}
-              className="mr-4"
-            />
-            <div>
-              <h1 className="text-xl font-bold">{doctor.name}</h1>
-              <p className="text-gray-600">{doctor.specialty} | Internal Medicine Specialist</p>
-            </div>
+            <Star className="text-yellow-400 mr-1" size={16} />
+            <span>{doctor.rating}</span>
           </div>
-          <div className="flex space-x-2">
-            <button className="p-2 bg-gray-200 rounded-full">
-              <FaBookmark size={20} />
-            </button>
-            <button className="p-2 bg-gray-200 rounded-full">
-              <FaBars size={20} />
-            </button>
-          </div>
+          <span>({doctor.reviewCount || 0} reviews)</span>
+          <span>{doctor.availableDays || 'N/A'}</span>
+          <span>{doctor.availableHours || 'N/A'}</span>
         </div>
-
-        <div className="flex justify-center space-x-8 mb-8">
-          <Link 
-            href={`/doctors/${doctor.id}/message`} 
-            className="w-80 bg-gray-800 text-white py-5 px-4 rounded text-center text-lg font-medium"
-          >
-            Message
-          </Link>
-          <Link 
-            href={`/doctors/${doctor.id}/reserve`} 
-            className="w-80 bg-gray-800 text-white py-5 px-4 rounded text-center text-lg font-medium"
-          >
-            Reserve
-          </Link>
-        </div>
-
-        <div className="flex justify-between mb-4">
-          <div className="p-2 bg-gray-100 rounded">
-            <FaUserMd size={24} className="text-green-600" />
-          </div>
-          <div className="p-2 bg-gray-100 rounded">
-            <FaCamera size={24} />
-          </div>
-          <div className="p-2 bg-gray-100 rounded">
-            <FaMapMarkerAlt size={24} />
-          </div>
-          <div className="p-2 bg-gray-100 rounded">
-            <FaStar size={24} />
-          </div>
-        </div>
-
-        <section className="mb-4">
-          <h2 className="text-lg font-semibold mb-2">About me</h2>
-          <p className="text-gray-700">{doctor.about}</p>
-        </section>
-
-        <section className="mb-4">
-          <h2 className="text-lg font-semibold mb-2">Specialties</h2>
-          <ul className="list-disc list-inside text-gray-700">
-            {doctor.specialties.map((specialty, index) => (
-              <li key={index}>{specialty}</li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="mb-4">
-          <h2 className="text-lg font-semibold mb-2">Certifications</h2>
-          <ul className="list-disc list-inside text-gray-700">
-            {doctor.certifications.map((certification, index) => (
-              <li key={index}>{certification}</li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="mb-4">
-          <h2 className="text-lg font-semibold mb-2">Professional Experience</h2>
-          <ul className="list-disc list-inside text-gray-700">
-            {doctor.professionalExperience.map((experience, index) => (
-              <li key={index}>{experience}</li>
-            ))}
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="text-lg font-semibold mb-2">Languages</h2>
-          <ul className="list-disc list-inside text-gray-700">
-            {doctor.languages.map((language, index) => (
-              <li key={index}>{language}</li>
-            ))}
-          </ul>
-        </section>
       </div>
+
+      <div className="bg-white rounded-3xl p-6 mb-6 shadow-lg">
+        <h2 className="text-lg font-semibold mb-2">About</h2>
+        <p className="text-gray-700 mb-4">{doctor.about}</p>
+
+        <h2 className="text-lg font-semibold mb-2">Specialties</h2>
+        <ul className="list-disc list-inside text-gray-700 mb-4">
+          {doctor.specialties && doctor.specialties.length > 0 ? (
+            doctor.specialties.map((specialty, index) => (
+              <li key={index}>{specialty}</li>
+            ))
+          ) : (
+            <li>No specialties listed</li>
+          )}
+        </ul>
+
+        <h2 className="text-lg font-semibold mb-2">Languages</h2>
+        <ul className="list-disc list-inside text-gray-700">
+          {doctor.languages && doctor.languages.length > 0 ? (
+            doctor.languages.map((language, index) => (
+              <li key={index}>{language}</li>
+            ))
+          ) : (
+            <li>No languages listed</li>
+          )}
+        </ul>
+      </div>
+
+      <div className="flex space-x-4 mb-6">
+        <Link 
+          href={`/doctors/${doctor.id}/message`} 
+          className="flex-1 bg-blue-600 text-white py-3 px-4 rounded-full text-center text-lg font-medium"
+        >
+          Message
+        </Link>
+        <Link 
+          href={`/doctors/${doctor.id}/reserve`} 
+          className="flex-1 bg-blue-600 text-white py-3 px-4 rounded-full text-center text-lg font-medium"
+        >
+          Reserve
+        </Link>
+      </div>
+
+      {/* <div className="fixed bottom-0 left-0 right-0 bg-white p-4 flex justify-around">
+        <button className="text-blue-600">🏠</button>
+        <button className="text-blue-600">💬</button>
+        <button className="text-blue-600">👤</button>
+        <button className="text-blue-600">📅</button>
+      </div> */}
     </div>
   );
 }

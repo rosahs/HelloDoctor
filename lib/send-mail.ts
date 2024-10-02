@@ -54,3 +54,14 @@ export const sendPasswordResetEmail = async (
 
   return sendEmail(email, subject, html);
 };
+
+// Send two-factor authentication (2FA) token email
+export const sendTwoFactorTokenEmail = async (
+  email: string,
+  token: string
+): Promise<void> => {
+  const subject = "Your 2FA Code";
+  const html = `<p>Your 2FA code is: ${token}</p>`;
+
+  return sendEmail(email, subject, html);
+};

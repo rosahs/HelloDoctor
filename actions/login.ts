@@ -9,19 +9,34 @@ import {
   DOCTOR_LOGIN_REDIRECT,
   PATIENT_LOGIN_REDIRECT,
 } from "@/routes";
-import { generateVerificationToken } from "@/lib/tokens";
-import { sendVerificationEmail } from "@/lib/send-mail";
+import {
+  generateTwoFactorToken,
+  generateVerificationToken,
+} from "@/lib/tokens";
+import {
+  sendTwoFactorTokenEmail,
+  sendVerificationEmail,
+} from "@/lib/send-mail";
+import {
+  TwoFactorConfirmation,
+  TwoFactorToken,
+} from "@/models/AuthModels";
+import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
+import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
+import { connectDB } from "@/lib/db";
 
 export const login = async (
   values: z.infer<typeof LoginSchema>
 ) => {
+  await connectDB();
+
   const validatedFields = LoginSchema.safeParse(values);
 
   if (!validatedFields.success) {
     return { error: "Invalid fields" };
   }
 
-  const { email, password } = validatedFields.data;
+  const { email, password, code } = validatedFields.data;
 
   try {
     const user = await getUserByEmail(email);
@@ -47,6 +62,49 @@ export const login = async (
       );
 
       return { success: "Confirmation email sent!" };
+    }
+
+    if (user.isTwoFactorEnabled) {
+      if (code) {
+        const twoFactorToken =
+          await getTwoFactorTokenByEmail(user.email);
+        if (
+          !twoFactorToken ||
+          twoFactorToken.token !== code
+        ) {
+          return { error: "Invalid code!" };
+        }
+        if (new Date(twoFactorToken.expires) < new Date()) {
+          return { error: "Code expired!" };
+        }
+
+        await TwoFactorToken.findByIdAndDelete(
+          twoFactorToken.id
+        );
+
+        const existingConfirmation =
+          await getTwoFactorConfirmationByUserId(user.id);
+        if (existingConfirmation) {
+          await TwoFactorConfirmation.findByIdAndDelete(
+            existingConfirmation.id
+          );
+        }
+
+        await TwoFactorConfirmation.create({
+          userId: user.id,
+        });
+      } else {
+        const twoFactorToken = await generateTwoFactorToken(
+          user.email
+        );
+
+        await sendTwoFactorTokenEmail(
+          twoFactorToken.email,
+          twoFactorToken.token
+        );
+
+        return { twoFactor: true };
+      }
     }
 
     const redirectTo =

@@ -3,6 +3,9 @@ import authConfig from "./auth.config";
 import { getUserByEmail, getUserById } from "./data/user";
 import { UserRole } from "./lib/userRole";
 import { saveOAuthUser } from "./data/saveOAuthUser";
+import { getTwoFactorConfirmationByUserId } from "./data/two-factor-confirmation";
+import { TwoFactorConfirmation } from "./models/AuthModels";
+import { connectDB } from "./lib/db";
 
 export const { handlers, auth, signIn, signOut } = NextAuth(
   {
@@ -30,15 +33,32 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
 
         const existingUser = await getUserById(user.id);
 
+        console.log("existingUser", existingUser);
+
         //Prevent sign in without email verification`
         if (!existingUser?.emailVerified) return false;
 
-        // TODO: ADD 2FA CHECK
+        //  ADD 2FA CHECK
+        if (existingUser.isTwoFactorEnabled) {
+          const twoFactorConfirmation =
+            await getTwoFactorConfirmationByUserId(
+              existingUser.id
+            );
 
-        // if (account.provider === "credentials") {
-        //   return true;
-        // }
+          console.log(
+            "twoFactorConfirmation",
+            twoFactorConfirmation
+          );
 
+          if (!twoFactorConfirmation) return false;
+
+          await connectDB();
+
+          // Delete two factor confirmation for next sign in
+          await TwoFactorConfirmation.findByIdAndDelete(
+            twoFactorConfirmation.id
+          );
+        }
         return true;
       },
       async jwt({ token }) {

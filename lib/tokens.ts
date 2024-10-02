@@ -1,12 +1,15 @@
+import crypto from "crypto";
 import { v4 as uuidv4 } from "uuid";
 
 import { getVerificationTokenByEmail } from "@/data/verification-token";
 import { connectDB } from "./db";
 import {
   PasswordResetToken,
+  TwoFactorToken,
   VerificationToken,
 } from "@/models/AuthModels";
 import { getPasswordResetTokenByEmail } from "@/data/password-reset-token";
+import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 
 export const generateVerificationToken = async (
   email: string
@@ -68,4 +71,34 @@ export const generatePasswordResetToken = async (
     });
 
   return passwordResetToken;
+};
+
+export const generateTwoFactorToken = async (
+  email: string
+) => {
+  const token = crypto
+    .randomInt(100_000, 1_000_000)
+    .toString();
+
+  const expires = new Date(
+    new Date().getTime() + 15 * 60 * 1000
+  ); // 15 minutes;
+
+  const existingToken = await getTwoFactorTokenByEmail(
+    email
+  );
+
+  if (existingToken) {
+    await TwoFactorToken.findByIdAndDelete(
+      existingToken.id
+    );
+  }
+
+  const twoFactorToken = await TwoFactorToken.create({
+    email,
+    token,
+    expires,
+  });
+
+  return twoFactorToken;
 };

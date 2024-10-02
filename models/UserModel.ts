@@ -1,5 +1,9 @@
 import { UserRole } from "@/lib/userRole";
-import mongoose, { Schema, model } from "mongoose";
+import mongoose, {
+  Schema,
+  model,
+  Document,
+} from "mongoose";
 
 export interface Account {
   provider: string;
@@ -13,7 +17,7 @@ export interface Account {
   session_state?: string;
 }
 
-export interface UserDocument {
+export interface UserDocument extends Document {
   name: string | null;
   email: string | null;
   emailVerified: Date | null;
@@ -63,6 +67,19 @@ const UserSchema = new Schema<UserDocument>(
     accounts: [{ type: Object }],
   },
   { timestamps: true }
+);
+
+// Middleware to delete TwoFactorConfirmation when User is deleted
+UserSchema.pre(
+  "deleteOne",
+  { document: true, query: false },
+  async function (next) {
+    const user = this as UserDocument;
+    await mongoose
+      .model("TwoFactorConfirmation")
+      .deleteOne({ userId: user._id });
+    next();
+  }
 );
 
 const User =

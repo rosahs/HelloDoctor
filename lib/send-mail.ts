@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 
+// Configure the transporter for Gmail
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -8,6 +9,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// Helper function to send an email
 const sendEmail = async (
   to: string,
   subject: string,
@@ -28,6 +30,7 @@ const sendEmail = async (
   }
 };
 
+// Send email verification
 export const sendVerificationEmail = async (
   email: string,
   token: string
@@ -36,6 +39,18 @@ export const sendVerificationEmail = async (
 
   const subject = "Confirm your email";
   const html = `<p>Click <a href='${confirmLink}'>here</a> to confirm your email.</p>`;
+
+  return sendEmail(email, subject, html);
+};
+
+// Send password reset email
+export const sendPasswordResetEmail = async (
+  email: string,
+  token: string
+): Promise<void> => {
+  const resetLink = `http://localhost:3000/new-password?token=${token}`;
+  const subject = "Reset your Password";
+  const html = `<p>Click <a href='${resetLink}'>here</a> to reset your password.</p>`;
 
   return sendEmail(email, subject, html);
 };

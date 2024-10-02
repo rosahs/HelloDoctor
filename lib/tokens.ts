@@ -2,7 +2,11 @@ import { v4 as uuidv4 } from "uuid";
 
 import { getVerificationTokenByEmail } from "@/data/verification-token";
 import { connectDB } from "./db";
-import { VerificationToken } from "@/models/AuthModels";
+import {
+  PasswordResetToken,
+  VerificationToken,
+} from "@/models/AuthModels";
+import { getPasswordResetTokenByEmail } from "@/data/password-reset-token";
 
 export const generateVerificationToken = async (
   email: string
@@ -36,4 +40,32 @@ export const generateVerificationToken = async (
   });
 
   return verificationToken;
+};
+
+export const generatePasswordResetToken = async (
+  email: string
+) => {
+  const token = uuidv4();
+  const expires = new Date(
+    new Date().getTime() + 15 * 60 * 1000
+  ); // 15 minutes;
+
+  const existingToken = await getPasswordResetTokenByEmail(
+    email
+  );
+
+  if (existingToken) {
+    await PasswordResetToken.findByIdAndDelete(
+      existingToken.id
+    );
+  }
+
+  const passwordResetToken =
+    await PasswordResetToken.create({
+      email,
+      token,
+      expires,
+    });
+
+  return passwordResetToken;
 };

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 export default function BookAppointmentPage({ params }: { params: { id: string } }) {
-  const [date, setDate] = useState('10/17/2024');
+  const [date, setDate] = useState('2024-10-17');
   const [time, setTime] = useState('10:00 AM');
   const [patientName, setPatientName] = useState('Sara Osborn');
   const [patientAge, setPatientAge] = useState('34');
@@ -15,8 +15,8 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send the appointment data to your backend
-    // For now, we'll just simulate a successful booking
+    // Add appointment data from backend here
+    // Remove dummy data
     router.push(`/booking-confirmation?doctorId=${params.id}&date=${date}&time=${time}`);
   };
 
@@ -24,7 +24,14 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
     <div className="bg-blue-50 min-h-screen p-4">
       <div className="bg-white rounded-3xl shadow-lg p-6 max-w-md mx-auto">
         <div className="flex items-center mb-6">
-          <div className="w-16 h-16 bg-gray-300 rounded-full mr-4"></div>
+        <Image
+            src='/default-doctor-image.jpg'
+            alt="Dr. Razha"
+            width={84}
+            height={84}
+            className="mr-4"
+            priority
+          />
           <h1 className="text-2xl font-bold">Dr. Razha</h1>
         </div>
         <div className="bg-blue-100 rounded-xl p-4 mb-6">
@@ -77,7 +84,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
           />
           
           <div className="flex gap-2 mb-4">
-            {['Male', 'Female', 'Other'].map((g) => (
+            {['Male', 'Female'].map((g) => (
               <button
                 key={g}
                 type="button"

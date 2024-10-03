@@ -1,8 +1,8 @@
 import { getDoctorById } from '@/lib/api/getDoctors';
 import { Doctor } from '@/lib/types';
 import Link from 'next/link';
-// import { Calendar, Phone, Video, MessageSquare, Star, Clock } from 'lucide-react';
 import DoctorImage from './DoctorImage';
+import { Home, MessageSquare, User, Calendar } from 'lucide-react';
 import DynamicDoctorProfile from '@/components/DynamicDoctorProfile';
 
 function DoctorDetails({ doctor }: { doctor: Doctor }) {
@@ -12,12 +12,7 @@ function DoctorDetails({ doctor }: { doctor: Doctor }) {
         <Link href="/doctors" className="text-blue-600">
           <span className="text-2xl">&larr;</span>
         </Link>
-        {/* <div className="flex space-x-2">
-          <Calendar className="text-blue-600" size={24} />
-          <Phone className="text-blue-600" size={24} />
-          <Video className="text-blue-600" size={24} />
-          <MessageSquare className="text-blue-600" size={24} />
-        </div> */}
+       
         <div className="flex space-x-2">
           <button className="text-blue-600">?</button>
           <button className="text-blue-600">♥</button>
@@ -38,14 +33,14 @@ function DoctorDetails({ doctor }: { doctor: Doctor }) {
           </div>
         </div>
 
-        <div className="bg-blue-100 rounded-2xl p-3 mb-4">
+        {/* <div className="bg-blue-100 rounded-2xl p-3 mb-4">
           <div className="flex items-center mb-2">
             <Clock className="text-blue-600 mr-2" size={16} />
             <p className="text-sm">{doctor.yearsOfExperience} years experience</p>
           </div>
           <p className="text-sm">Focus: {doctor.focusArea}</p>
-        </div>
-
+        </div> */}
+{/* 
         <div className="flex items-center justify-between text-sm text-gray-600 mb-4">
           <div className="flex items-center">
             <Star className="text-yellow-400 mr-1" size={16} />
@@ -54,7 +49,7 @@ function DoctorDetails({ doctor }: { doctor: Doctor }) {
           <span>({doctor.reviewCount || 0} reviews)</span>
           <span>{doctor.availableDays || 'N/A'}</span>
           <span>{doctor.availableHours || 'N/A'}</span>
-        </div>
+        </div> */}
 
         {/* Add the DynamicDoctorProfile component here */}
         <DynamicDoctorProfile initialDoctor={doctor} id={doctor.id.toString()} />
@@ -102,16 +97,23 @@ function DoctorDetails({ doctor }: { doctor: Doctor }) {
         </Link>
       </div>
 
-      {/* <div className="fixed bottom-0 left-0 right-0 bg-white p-4 flex justify-around">
-        <button className="text-blue-600">🏠</button>
-        <button className="text-blue-600">💬</button>
-        <button className="text-blue-600">👤</button>
-        <button className="text-blue-600">📅</button>
-      </div> */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white p-4 flex justify-around">
+        <button className="text-blue-600">
+          <Home size={24} />
+        </button>
+        <button className="text-blue-600">
+          <MessageSquare size={24} />
+        </button>
+        <button className="text-blue-600">
+          <User size={24} />
+        </button>
+        <button className="text-blue-600">
+          <Calendar size={24} />
+        </button>
+      </div>
     </div>
   );
 }
-
 export default async function DoctorDetailsPage({ params }: { params: { id: string } }) {
   const doctor = await getDoctorById(parseInt(params.id));
   if (!doctor) {

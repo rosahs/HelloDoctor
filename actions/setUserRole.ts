@@ -1,16 +1,15 @@
 "use server";
 
-import { auth } from "@/auth";
-
 import { getUserById } from "@/data/user";
+import { currentUser } from "@/lib/auth";
 import { UserRole } from "@/lib/userRole";
 
 export async function setUserRole(role: UserRole) {
   try {
-    const session = await auth();
+    const session = await currentUser();
     console.log("role session", session);
 
-    if (!session || !session.user) {
+    if (!session) {
       throw new Error("Unauthorized");
     }
 
@@ -21,22 +20,22 @@ export async function setUserRole(role: UserRole) {
       throw new Error("Invalid role");
     }
 
-    const user = await getUserById(session?.user?.id);
+    const user = await getUserById(session?.id);
     if (!user) {
       throw new Error("User not found");
     }
 
     user.role = role;
-    // user.emailVerified = new Date();
 
     await user.save();
 
     return {
-      success: `Role successfully set to '${role}'. Your email has been verified.`,
+      success: `Role successfully set to '${role}'.`,
     };
   } catch (error) {
+    console.error("Error in setUserRole:", error);
     return {
-      error: `An unexpected error occurred. Please try again later.`,
+      error: `An unexpected error occurred. Please try again.`,
     };
   }
 }

@@ -12,9 +12,11 @@ import {
 import { setUserRole } from "@/actions/setUserRole";
 import { FormError } from "@/components/auth/FormError";
 import { FormSuccess } from "@/components/auth/FormSuccess";
+import { useSession } from "next-auth/react";
 
 const RoleSelection = () => {
   const router = useRouter();
+  const { data: session, update } = useSession();
 
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>(
@@ -36,14 +38,19 @@ const RoleSelection = () => {
         : PATIENT_LOGIN_REDIRECT;
 
     startTransition(() => {
-      setUserRole(selectedRole as UserRole).then((data) => {
-        if (data.success) {
-          setSuccess(data.success);
-          router.push(redirectTo);
-        } else {
-          setError(data.error);
+      setUserRole(selectedRole as UserRole).then(
+        async (data) => {
+          if (data.success) {
+            setSuccess(data.success);
+            // Update the session
+            await update();
+
+            router.push(redirectTo);
+          } else {
+            setError(data.error);
+          }
         }
-      });
+      );
     });
   };
 

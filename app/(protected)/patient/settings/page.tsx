@@ -1,4 +1,4 @@
-import Settings from "@/components/private/settings";
+import Settings from "@/components/protected/settings";
 
 const PatientSettings = () => {
   const patientLinks = [

@@ -6,8 +6,10 @@ import {
   apiAuthPrefix,
   authRoutes,
   DOCTOR_LOGIN_REDIRECT,
+  doctorProtectedRoute,
   OAUTH_ROLE_SELECTION_REDIRECT,
   PATIENT_LOGIN_REDIRECT,
+  patientProtectedRoute,
   publicRoutes,
 } from "./routes";
 import { NextResponse } from "next/server";
@@ -16,83 +18,133 @@ import { NextResponse } from "next/server";
 const { auth } = NextAuth(authConfig);
 
 export default auth(async (req) => {
-  const { nextUrl } = req;
-  const secret = process.env.AUTH_SECRET;
+  try {
+    const { nextUrl } = req;
 
-  // Get the token from the JWT
-  const token = await getToken({ req, secret });
+    // Get the token from the JWT
+    const secret = process.env.AUTH_SECRET;
+    const token = await getToken({ req, secret });
 
-  const isLoggedIn = !!token;
-  const userRole = token?.role;
+    const isLoggedIn = !!token;
+    const userRole = token?.role;
 
-  const isApiAuthRoute =
-    nextUrl.pathname.startsWith(apiAuthPrefix);
-  const isPublicRoute = publicRoutes.includes(
-    nextUrl.pathname
-  );
-  const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+    const isApiAuthRoute =
+      nextUrl.pathname.startsWith(apiAuthPrefix);
+    const isPublicRoute = publicRoutes.includes(
+      nextUrl.pathname
+    );
+    const isAuthRoute = authRoutes.includes(
+      nextUrl.pathname
+    );
+    const isDoctorProtectedRoute =
+      doctorProtectedRoute.some((route) =>
+        nextUrl.pathname.startsWith(route)
+      );
+    const isPatientProtectedRoute =
+      nextUrl.pathname.startsWith(patientProtectedRoute);
 
-  // Handle API auth routes
-  if (isApiAuthRoute) {
-    // Allow API requests to continue
-    return NextResponse.next();
-    // return null;
-  }
+    // Handle API auth routes
+    if (isApiAuthRoute) {
+      // Allow API requests to continue
+      return NextResponse.next();
+    }
 
-  if (isAuthRoute) {
-    if (isLoggedIn) {
-      // Redirect to role selection if the user is logged in but has no role
-      if (!userRole) {
+    // Auth route handling
+    if (isAuthRoute) {
+      if (isLoggedIn) {
+        // Redirect to role selection if the user is logged in but has no role
+        if (!userRole) {
+          return NextResponse.redirect(
+            new URL(OAUTH_ROLE_SELECTION_REDIRECT, nextUrl)
+          );
+        }
+
+        // Redirect based on user role
+        const redirectUrl =
+          userRole === "DOCTOR"
+            ? DOCTOR_LOGIN_REDIRECT
+            : PATIENT_LOGIN_REDIRECT;
+
         return NextResponse.redirect(
-          new URL(OAUTH_ROLE_SELECTION_REDIRECT, nextUrl)
+          new URL(redirectUrl, nextUrl)
         );
       }
 
-      // Redirect based on user role
+      return NextResponse.next();
+    }
+
+    // Restrict access to the role selection page if user already has a role
+    if (
+      nextUrl.pathname === OAUTH_ROLE_SELECTION_REDIRECT &&
+      userRole
+    ) {
       const redirectUrl =
         userRole === "DOCTOR"
           ? DOCTOR_LOGIN_REDIRECT
           : PATIENT_LOGIN_REDIRECT;
-
       return NextResponse.redirect(
         new URL(redirectUrl, nextUrl)
       );
     }
-    return null;
-  }
 
-  // Restrict access to the role selection page if user already has a role
-  if (
-    nextUrl.pathname === OAUTH_ROLE_SELECTION_REDIRECT &&
-    userRole
-  ) {
-    const redirectUrl =
-      userRole === "DOCTOR"
-        ? DOCTOR_LOGIN_REDIRECT
-        : PATIENT_LOGIN_REDIRECT;
-    return NextResponse.redirect(
-      new URL(redirectUrl, nextUrl)
-    );
-  }
-
-  // Redirect unauthenticated users trying to access protected routes
-  if (!isLoggedIn && !isPublicRoute) {
-    let from = nextUrl.pathname;
-    if (nextUrl.search) {
-      from += nextUrl.search;
+    // Doctor route protection
+    if (isDoctorProtectedRoute) {
+      if (!isLoggedIn) {
+        return NextResponse.redirect(
+          new URL("/login", nextUrl)
+        );
+      } else if (userRole !== "DOCTOR") {
+        return NextResponse.redirect(new URL("/", nextUrl));
+      }
     }
 
-    return NextResponse.redirect(
-      new URL(
-        `/login?from=${encodeURIComponent(from)}`,
-        nextUrl
-      )
-    );
-  }
+    // Patient route protection
+    if (isPatientProtectedRoute) {
+      if (!isLoggedIn) {
+        return NextResponse.redirect(
+          new URL("/login", nextUrl)
+        );
+      } else if (userRole !== "PATIENT") {
+        return NextResponse.redirect(new URL("/", nextUrl));
+      }
+    }
 
-  // Continue to the next middleware or page
-  return NextResponse.next();
-  // return null
+    // Redirect unauthenticated users trying to access protected routes
+    if (!isLoggedIn && !isPublicRoute) {
+      let from = nextUrl.pathname;
+      if (nextUrl.search) {
+        from += nextUrl.search;
+      }
+
+      return NextResponse.redirect(
+        new URL(
+          `/login?from=${encodeURIComponent(from)}`,
+          nextUrl
+        )
+      );
+    }
+
+    // Add security headers
+    const response = NextResponse.next();
+    response.headers.set("X-Frame-Options", "DENY");
+    response.headers.set(
+      "X-Content-Type-Options",
+      "nosniff"
+    );
+    response.headers.set(
+      "Referrer-Policy",
+      "strict-origin-when-cross-origin"
+    );
+    response.headers.set(
+      "Permissions-Policy",
+      "camera=(), microphone=(), geolocation=()"
+    );
+
+    return response;
+  } catch (error) {
+    console.error("Middleware error:", error);
+    return NextResponse.error();
+  }
 });
 
 export const config = {

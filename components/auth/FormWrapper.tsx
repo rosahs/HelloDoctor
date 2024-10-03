@@ -19,7 +19,7 @@ export const CardWrapper = ({
   showSocial,
 }: CardWrapperProps) => {
   return (
-    <div className="w-full max-w-sm bg-bgGray rounded-xl shadow-2xl overflow-hidden border-2 border-primaryColor">
+    <div className="w-full max-w-sm bg-bgLight rounded-xl shadow-2xl overflow-hidden border-2 border-primaryColor">
       <div className="px-4 sm:px-8 py-4 sm:py-6">
         <h1 className="text-2xl font-bold text-center mb-6 text-textDark">
           {headerLabel}

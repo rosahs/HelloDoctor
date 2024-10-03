@@ -5,6 +5,7 @@
 export const publicRoutes: string[] = [
   "/",
   "/new-verification",
+  "/doctor/public-profile",
 ];
 
 /**  An array of routes that are used for authentication
@@ -36,6 +37,7 @@ export const patientProtectedRoute: string = "/patient";
  */
 export const doctorProtectedRoute: string[] = [
   "/doctor/settings",
+  "/doctor/profile",
 ];
 
 /**

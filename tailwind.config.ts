@@ -16,8 +16,9 @@ const config: Config = {
         inputBorder: "#787878", // Border color of the input
         placeholder: "#A9A9A9", // Slightly lighter than the input border
         labelColor: "#212121", // Label color
-        bgGray: "#F8F8F8", // Background color of the page
+        bgLight: "#F0F0F0", // Background color of the page
         textDark: "#212121",
+        textGray: "#262626",
         // shadcn
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",

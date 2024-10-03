@@ -67,6 +67,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
           if (dbUser) {
             token.id = dbUser._id.toString();
             token.role = dbUser.role;
+            token.isTwoFactorEnabled =
+              dbUser.isTwoFactorEnabled;
           }
         }
 
@@ -81,6 +83,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
 
         if (token.role && session.user) {
           session.user.role = token.role as UserRole;
+        }
+
+        if (token.isTwoFactorEnabled && session.user) {
+          session.user.isTwoFactorEnabled =
+            token.isTwoFactorEnabled as boolean;
         }
 
         return session;

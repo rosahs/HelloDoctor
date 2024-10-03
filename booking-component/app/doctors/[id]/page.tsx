@@ -3,6 +3,7 @@ import { Doctor } from '@/lib/types';
 import Link from 'next/link';
 import { Calendar, Phone, Video, MessageSquare, Star, Clock } from 'lucide-react';
 import DoctorImage from './DoctorImage';
+import DynamicDoctorProfile from '@/components/DynamicDoctorProfile';
 
 function DoctorDetails({ doctor }: { doctor: Doctor }) {
   return (
@@ -11,12 +12,12 @@ function DoctorDetails({ doctor }: { doctor: Doctor }) {
         <Link href="/doctors" className="text-blue-600">
           <span className="text-2xl">&larr;</span>
         </Link>
-        <div className="flex space-x-2">
+        {/* <div className="flex space-x-2">
           <Calendar className="text-blue-600" size={24} />
           <Phone className="text-blue-600" size={24} />
           <Video className="text-blue-600" size={24} />
           <MessageSquare className="text-blue-600" size={24} />
-        </div>
+        </div> */}
         <div className="flex space-x-2">
           <button className="text-blue-600">?</button>
           <button className="text-blue-600">♥</button>
@@ -54,6 +55,9 @@ function DoctorDetails({ doctor }: { doctor: Doctor }) {
           <span>{doctor.availableDays || 'N/A'}</span>
           <span>{doctor.availableHours || 'N/A'}</span>
         </div>
+
+        {/* Add the DynamicDoctorProfile component here */}
+        <DynamicDoctorProfile initialDoctor={doctor} id={doctor.id.toString()} />
       </div>
 
       <div className="bg-white rounded-3xl p-6 mb-6 shadow-lg">
@@ -113,5 +117,5 @@ export default async function DoctorDetailsPage({ params }: { params: { id: stri
   if (!doctor) {
     return <div>Doctor not found</div>;
   }
-  return <DoctorDetails doctor={doctor} />;
+  return <DynamicDoctorProfile initialDoctor={doctor} id={params.id} />;
 }

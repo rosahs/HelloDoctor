@@ -4,10 +4,10 @@ import { getDoctorById } from '@/lib/api/getDoctors';
 export default async function DoctorProfile({ params }: { params: { id: string } }) {
   try {
     const doctor = await getDoctorById(parseInt(params.id));
-    console.log('Fetched doctor:', doctor);  // Add this line
+    console.log('Fetched doctor:', doctor);  
 
     if (!doctor) {
-      console.log('Doctor not found');  // Add this line
+      console.log('Doctor not found');  
       return <div>Doctor not found</div>;
     }
 

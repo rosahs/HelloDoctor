@@ -26,8 +26,6 @@ export const generateVerificationToken = async (
     email
   );
 
-  console.log("existing roken id", existingToken);
-
   if (existingToken) {
     // Delete the existing token
     await VerificationToken.findByIdAndDelete(

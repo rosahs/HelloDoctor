@@ -23,7 +23,11 @@ export const TwoFactorAuth: React.FC<
         <Switch
           checked={is2FAEnabled}
           onCheckedChange={onToggle}
-          className="bg-inputBg"
+          className={`${
+            is2FAEnabled
+              ? "data-[state=checked]:bg-primaryColor"
+              : "data-[state=unchecked]:bg-inputBg"
+          }`}
         />
         <span>{is2FAEnabled ? "Enabled" : "Disabled"}</span>
       </div>

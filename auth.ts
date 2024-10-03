@@ -17,23 +17,30 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
 
         if (account.provider === "google" && profile) {
           try {
-            await saveOAuthUser(profile, account);
+            // This function should either create or retrieve the user based on their Google profile
+            const existingUser = await saveOAuthUser(
+              profile,
+              account
+            );
+
+            if (!existingUser) {
+              return false;
+            }
+
+            // Set the user's ID from the database (existingUser.id)
+            user.id = existingUser._id.toString();
+
             return true;
           } catch {
             return false;
           }
         }
 
-        console.log("user", user);
-
-        // Ensure user.id is defined before proceeding
         if (!user.id) {
           return false;
         }
 
         const existingUser = await getUserById(user.id);
-
-        console.log("existingUser", existingUser);
 
         //Prevent sign in without email verification`
         if (!existingUser?.emailVerified) return false;
@@ -44,11 +51,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
             await getTwoFactorConfirmationByUserId(
               existingUser.id
             );
-
-          console.log(
-            "twoFactorConfirmation",
-            twoFactorConfirmation
-          );
 
           if (!twoFactorConfirmation) return false;
 
@@ -61,15 +63,43 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
         }
         return true;
       },
-      async jwt({ token }) {
-        if (token.email) {
-          const dbUser = await getUserByEmail(token.email);
+      async jwt({ token, user, account, profile }) {
+        if (user && user.id) {
+          // Set token ID based on the user object from signIn
+          token.id = user.id;
+        }
+
+        console.log(user);
+
+        // Check if it's OAuth (e.g., Google)
+        if (account && account.provider !== "credentials") {
+          const dbUser =
+            (await getUserById(token.id as string)) ||
+            (await getUserByEmail(token.email as string));
+
           if (dbUser) {
             token.id = dbUser._id.toString();
+            token.name = dbUser.name;
+            token.email = dbUser.email;
             token.role = dbUser.role;
             token.isTwoFactorEnabled =
               dbUser.isTwoFactorEnabled;
           }
+        }
+
+        // Credentials-based user lookup
+
+        const existingUser = await getUserById(
+          token.sub as string
+        );
+
+        if (existingUser) {
+          token.id = existingUser._id.toString();
+          token.name = existingUser.name;
+          token.email = existingUser.email;
+          token.role = existingUser.role;
+          token.isTwoFactorEnabled =
+            existingUser.isTwoFactorEnabled;
         }
 
         return token;
@@ -81,11 +111,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
           session.user.id = token.sub as string;
         }
 
-        if (token.role && session.user) {
+        if (session.user) {
+          session.user.name = token.name;
+          session.user.email = token.email as string;
           session.user.role = token.role as UserRole;
-        }
-
-        if (token.isTwoFactorEnabled && session.user) {
           session.user.isTwoFactorEnabled =
             token.isTwoFactorEnabled as boolean;
         }

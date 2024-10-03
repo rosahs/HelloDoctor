@@ -24,10 +24,8 @@ export default {
         if (validatedFields.success) {
           const { email, password } = validatedFields.data;
           const user = await getUserByEmail(email);
-          console.log("Fetched User:", user);
 
           if (!user || !user.password) {
-            console.log("User not found or no password.");
             return null;
           }
 
@@ -35,12 +33,10 @@ export default {
             password,
             user.password
           );
-          console.log("Passwords Match:", passwordsMatch);
 
           if (passwordsMatch) return user;
         }
 
-        console.log("Authorization failed.");
         return null;
       },
     }),

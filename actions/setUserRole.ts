@@ -7,7 +7,6 @@ import { UserRole } from "@/lib/userRole";
 export async function setUserRole(role: UserRole) {
   try {
     const session = await currentUser();
-    console.log("role session", session);
 
     if (!session) {
       throw new Error("Unauthorized");

@@ -1,7 +1,7 @@
 import { getDoctorById } from '@/lib/api/getDoctors';
 import { Doctor } from '@/lib/types';
 import Link from 'next/link';
-import { Calendar, Phone, Video, MessageSquare, Star, Clock } from 'lucide-react';
+// import { Calendar, Phone, Video, MessageSquare, Star, Clock } from 'lucide-react';
 import DoctorImage from './DoctorImage';
 import DynamicDoctorProfile from '@/components/DynamicDoctorProfile';
 

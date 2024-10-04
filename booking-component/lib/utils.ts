@@ -1,4 +1,5 @@
-// Remove the import for clsx and tailwind-merge
+// import { clsx, type ClassValue } from "clsx"
+// import { twMerge } from "tailwind-merge"
 
 // Replace the cn function with a simple string concatenation
 export function classNames(...classes: (string | undefined | null | false)[]) {
@@ -74,3 +75,7 @@ export function classNames(...classes: (string | undefined | null | false)[]) {
   export function decryptKey(passkey: string) {
     return atob(passkey);
   }
+
+  // export function cn(...inputs: ClassValue[]) {
+  //   return twMerge(clsx(inputs))
+  // }

@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Doctor } from '@/lib/types';
 import { MessageSquare, Calendar, User, Image as ImageIcon, MapPin, Star, Home } from 'lucide-react';
 
@@ -23,6 +24,11 @@ const dummyData: Partial<Doctor> = {
 
 export default function DynamicDoctorProfile({ initialDoctor, id }: { initialDoctor: Doctor, id: string }) {
   const [doctor, setDoctor] = useState<Doctor>({ ...dummyData, ...initialDoctor } as Doctor);
+  const router = useRouter();
+
+  const handleReserveClick = () => {
+    router.push(`/doctors/${id}/book`);
+  };
 
   return (
     <div className="max-w-md mx-auto bg-blue-50 min-h-screen p-4">
@@ -47,15 +53,19 @@ export default function DynamicDoctorProfile({ initialDoctor, id }: { initialDoc
               <button className="text-gray-600">☰</button>
             </div>
           </div>
+          
           <div className="flex mb-4">
             <Link href={`/doctors/${id}/message`} className="flex-1 bg-black text-white py-2 px-4 text-center mr-2">
               Message
             </Link>
-            <Link href={`/doctors/${id}/book`} className="flex-1 bg-black text-white py-2 px-4 text-center">
+            <button 
+              onClick={handleReserveClick}
+              className="flex-1 bg-black text-white py-2 px-4 text-center"
+            >
               Reserve
-            </Link>
+            </button>
           </div>
-
+          
           <div className="flex justify-between mb-4 border-t border-b py-2">
             <button className="text-gray-600"><User size={20} /></button>
             <button className="text-gray-600"><ImageIcon size={20} /></button>
@@ -103,6 +113,7 @@ export default function DynamicDoctorProfile({ initialDoctor, id }: { initialDoc
               ))}
             </ul>
           </section>
+          
           <div className="mt-8 flex justify-center">
             <Link 
               href="/"

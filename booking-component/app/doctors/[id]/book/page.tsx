@@ -1,22 +1,35 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 export default function BookAppointmentPage({ params }: { params: { id: string } }) {
-  const [date, setDate] = useState('2024-10-17');
-  const [time, setTime] = useState('10:00 AM');
-  const [patientName, setPatientName] = useState('Sara Osborn');
-  const [patientAge, setPatientAge] = useState('34');
-  const [patientGender, setPatientGender] = useState('Female');
-  const [patientCondition, setPatientCondition] = useState('cold');
   const router = useRouter();
+
+  const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
+  const [patientName, setPatientName] = useState('');
+  const [patientAge, setPatientAge] = useState('');
+  const [patientGender, setPatientGender] = useState('');
+  const [patientCondition, setPatientCondition] = useState('');
+
+  const resetForm = () => {
+    setDate('');
+    setTime('');
+    setPatientName('');
+    setPatientAge('');
+    setPatientGender('');
+    setPatientCondition('');
+  };
+
+  useEffect(() => {
+    resetForm();
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Add appointment data from backend here
-    // Remove dummy data
+    // Add appointment data to backend here
     router.push(`/booking-confirmation?doctorId=${params.id}&date=${date}&time=${time}`);
   };
 
@@ -24,7 +37,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
     <div className="bg-blue-50 min-h-screen p-4">
       <div className="bg-white rounded-3xl shadow-lg p-6 max-w-md mx-auto">
         <div className="flex items-center mb-6">
-        <Image
+          <Image
             src='/default-doctor-image.jpg'
             alt="Dr. Razha"
             width={84}

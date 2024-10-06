@@ -4,7 +4,7 @@
  */
 export const publicRoutes: string[] = [
   "/",
-  "/new-verification",
+  "/auth/new-verification",
   "/doctor/public-profile",
 ];
 
@@ -13,10 +13,11 @@ export const publicRoutes: string[] = [
  * @type {string[]}
  */
 export const authRoutes: string[] = [
-  "/login",
-  "/register",
-  "/reset-password",
-  "/new-password",
+  "/auth/login",
+  "/auth/register",
+  "/auth/reset-password",
+  "/auth/new-password",
+  "/auth/error",
 ];
 
 /**  The prefix for API authentication routes
@@ -53,4 +54,4 @@ export const PATIENT_LOGIN_REDIRECT: string = "/";
  * @type {string}
  */
 export const OAUTH_ROLE_SELECTION_REDIRECT: string =
-  "/role-selection";
+  "/auth/role-selection";

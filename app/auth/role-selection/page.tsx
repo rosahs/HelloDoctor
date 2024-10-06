@@ -58,7 +58,7 @@ const RoleSelection = () => {
     <CardWrapper
       headerLabel="Select Your Role"
       backButtonLabel="Go Back"
-      backButtonHref="/register"
+      backButtonHref="/auth/register"
       showSocial={false}
     >
       <div className="space-y-4">

@@ -85,3 +85,60 @@ export const passwordChangeSchema = z
       path: ["confirmNewPassword"],
     }
   );
+
+export const SettingsSchema = z
+  .object({
+    name: z.optional(z.string()),
+    isTwoFactorEnabled: z.optional(z.boolean()),
+    role: z.enum(
+      Object.values(UserRole) as [string, ...string[]]
+    ),
+    email: z.optional(z.string().email()),
+    password: z.optional(z.string().min(8)),
+    newPassword: z.optional(z.string().min(8)),
+    passwordConfirm: z.optional(z.string().min(8)),
+  })
+  .refine(
+    (data) => {
+      // Ensure newPassword is present when password is provided
+      if (data.password && !data.newPassword) {
+        return false;
+      }
+
+      return true;
+    },
+    {
+      message: "New password is required!",
+      path: ["newPassword"],
+    }
+  )
+  .refine(
+    (data) => {
+      // Ensure password is present when newPassword is provided
+      if (data.newPassword && !data.password) {
+        return false;
+      }
+
+      return true;
+    },
+    {
+      message: "Password is required!",
+      path: ["password"],
+    }
+  )
+  .refine(
+    (data) => {
+      // Ensure passwordConfirm matches newPassword if newPassword is provided
+      if (
+        data.newPassword &&
+        data.passwordConfirm !== data.newPassword
+      ) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "Passwords don't match!",
+      path: ["passwordConfirm"],
+    }
+  );

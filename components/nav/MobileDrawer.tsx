@@ -10,16 +10,7 @@ import LogoutButtonItem from "./LogoutButtonItem";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { doctorLinks, patientLinks } from "./NavLinks";
 import { useEffect, useState } from "react";
-import { UserRole } from "@/lib/userRole";
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  image: string;
-  role: UserRole;
-  isTwoFactorEnabled: boolean;
-}
+import { ExtendedUser } from "@/next-auth";
 
 interface MobileDrawerProps {
   isOpen: boolean;
@@ -31,9 +22,9 @@ function MobileDrawer({
   onClose,
 }: MobileDrawerProps) {
   const currentUser = useCurrentUser();
-  const [user, setUser] = useState<User | null>(null);
-
-  console.log(user);
+  const [user, setUser] = useState<
+    ExtendedUser | undefined
+  >(undefined);
 
   useEffect(() => {
     setUser(currentUser);
@@ -43,7 +34,7 @@ function MobileDrawer({
     user?.role === "DOCTOR" ? doctorLinks : patientLinks;
 
   const handleLogout = () => {
-    setUser(null);
+    setUser(undefined);
   };
 
   return (
@@ -90,13 +81,13 @@ function MobileDrawer({
         <>
           <ul className={styles.navList}>
             <NavLink
-              link="/login"
+              link="/auth/login"
               label="Login"
               className={styles.navItem}
               onClick={onClose}
             />
             <NavLink
-              link="/register"
+              link="/auth/register"
               label="Signup"
               className={styles.navItem}
               onClick={onClose}

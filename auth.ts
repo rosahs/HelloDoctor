@@ -9,6 +9,10 @@ import { connectDB } from "./lib/db";
 
 export const { handlers, auth, signIn, signOut } = NextAuth(
   {
+    pages: {
+      signIn: "/auth/login",
+      error: "/auth/error",
+    },
     callbacks: {
       async signIn({ user, account, profile }) {
         if (!account) {
@@ -18,17 +22,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
         if (account.provider === "google" && profile) {
           try {
             // This function should either create or retrieve the user based on their Google profile
-            const existingUser = await saveOAuthUser(
+            const OAuthUser = await saveOAuthUser(
               profile,
               account
             );
 
-            if (!existingUser) {
+            // Check if there was an error during user saving
+            if (OAuthUser && OAuthUser.error) {
+              // Redirect to the error page with the specific error message
+              return `/auth/error?error=${encodeURIComponent(
+                OAuthUser.error
+              )}`;
+            }
+
+            if (!OAuthUser) {
               return false;
             }
 
-            // Set the user's ID from the database (existingUser.id)
-            user.id = existingUser._id.toString();
+            // Set the user's ID from the database (OAuthUser.id)
+            user.id = OAuthUser._id.toString();
 
             return true;
           } catch {

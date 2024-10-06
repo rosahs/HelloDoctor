@@ -19,6 +19,7 @@ const config: Config = {
         bgLight: "#F0F0F0", // Background color of the page
         textDark: "#212121",
         textGray: "#262626",
+        textLight: "#616161",
         // shadcn
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
@@ -68,6 +69,10 @@ const config: Config = {
       },
       boxShadow: {
         custom: "0 4px 12px rgba(0, 0, 0, 0.1)",
+      },
+      padding: {
+        mobileY: "12.8px",
+        mobileX: "16px",
       },
     },
   },

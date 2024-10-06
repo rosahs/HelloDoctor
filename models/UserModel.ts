@@ -18,8 +18,8 @@ export interface Account {
 }
 
 export interface UserDocument extends Document {
-  name: string | null;
-  email: string | null;
+  name: string;
+  email: string;
   emailVerified: Date | null;
   profileImage: string | null;
   password: string | null;

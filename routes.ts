@@ -44,11 +44,9 @@ export const doctorProtectedRoute: string[] = [
  * Redirect path after logging in
  * @type {string}
  */
-export const DOCTOR_LOGIN_REDIRECT: string =
-  "/doctor/settings";
+export const DOCTOR_LOGIN_REDIRECT: string = "/";
 
-export const PATIENT_LOGIN_REDIRECT: string =
-  "/patient/settings";
+export const PATIENT_LOGIN_REDIRECT: string = "/";
 
 /**
  * Redirect path for OAuth users to select their role

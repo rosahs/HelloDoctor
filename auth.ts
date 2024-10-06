@@ -69,8 +69,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
           token.id = user.id;
         }
 
-        console.log(user);
-
         // Check if it's OAuth (e.g., Google)
         if (account && account.provider !== "credentials") {
           const dbUser =
@@ -84,6 +82,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
             token.role = dbUser.role;
             token.isTwoFactorEnabled =
               dbUser.isTwoFactorEnabled;
+            token.image =
+              dbUser.profileImage || profile?.picture;
           }
         }
 
@@ -100,6 +100,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
           token.role = existingUser.role;
           token.isTwoFactorEnabled =
             existingUser.isTwoFactorEnabled;
+          token.image = existingUser.profileImage;
         }
 
         return token;
@@ -117,6 +118,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
           session.user.role = token.role as UserRole;
           session.user.isTwoFactorEnabled =
             token.isTwoFactorEnabled as boolean;
+          session.user.image = token.image as string;
         }
 
         return session;

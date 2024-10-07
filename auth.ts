@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import authConfig from "./auth.config";
-import { getUserByEmail, getUserById } from "./data/user";
+import { getUserById } from "./data/user";
 import { UserRole } from "./lib/userRole";
 import { saveOAuthUser } from "./data/saveOAuthUser";
 import { getTwoFactorConfirmationByUserId } from "./data/two-factor-confirmation";
@@ -9,6 +9,10 @@ import { connectDB } from "./lib/db";
 
 export const { handlers, auth, signIn, signOut } = NextAuth(
   {
+    pages: {
+      signIn: "/auth/login",
+      error: "/auth/error",
+    },
     callbacks: {
       async signIn({ user, account, profile }) {
         if (!account) {
@@ -18,17 +22,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
         if (account.provider === "google" && profile) {
           try {
             // This function should either create or retrieve the user based on their Google profile
-            const existingUser = await saveOAuthUser(
+            const OAuthUser = await saveOAuthUser(
               profile,
               account
             );
 
-            if (!existingUser) {
+            // Check if there was an error during user saving
+            if (OAuthUser && OAuthUser.error) {
+              // Redirect to the error page with the specific error message
+              return `/auth/error?error=${encodeURIComponent(
+                OAuthUser.error
+              )}`;
+            }
+
+            if (!OAuthUser) {
               return false;
             }
 
-            // Set the user's ID from the database (existingUser.id)
-            user.id = existingUser._id.toString();
+            // Set the user's ID from the database (OAuthUser.id)
+            user.id = OAuthUser._id.toString();
 
             return true;
           } catch {
@@ -63,52 +75,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
         }
         return true;
       },
-      async jwt({ token, user, account, profile }) {
-        if (user && user.id) {
-          // Set token ID based on the user object from signIn
-          token.id = user.id;
-        }
+      async jwt({ token }) {
+        if (!token.sub) return token;
 
-        console.log(user);
+        const user = await getUserById(token.sub);
 
-        // Check if it's OAuth (e.g., Google)
-        if (account && account.provider !== "credentials") {
-          const dbUser =
-            (await getUserById(token.id as string)) ||
-            (await getUserByEmail(token.email as string));
+        if (!user) return token;
 
-          if (dbUser) {
-            token.id = dbUser._id.toString();
-            token.name = dbUser.name;
-            token.email = dbUser.email;
-            token.role = dbUser.role;
-            token.isTwoFactorEnabled =
-              dbUser.isTwoFactorEnabled;
-          }
-        }
-
-        // Credentials-based user lookup
-
-        const existingUser = await getUserById(
-          token.sub as string
-        );
-
-        if (existingUser) {
-          token.id = existingUser._id.toString();
-          token.name = existingUser.name;
-          token.email = existingUser.email;
-          token.role = existingUser.role;
-          token.isTwoFactorEnabled =
-            existingUser.isTwoFactorEnabled;
-        }
+        token.isOAuth = !!user.authProviderId;
+        token.name = user.name;
+        token.email = user.email;
+        token.role = user.role;
+        token.isTwoFactorEnabled = user.isTwoFactorEnabled;
 
         return token;
       },
       async session({ token, session }) {
-        if (token.id && session.user) {
-          session.user.id = token.id as string;
-        } else if (token.sub && session.user) {
-          session.user.id = token.sub as string;
+        if (token.sub && session.user) {
+          session.user.id = token.sub;
         }
 
         if (session.user) {
@@ -117,6 +101,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
           session.user.role = token.role as UserRole;
           session.user.isTwoFactorEnabled =
             token.isTwoFactorEnabled as boolean;
+          session.user.image = token.image as string;
+          session.user.isOAuth = token.isOAuth as boolean;
         }
 
         return session;

@@ -1,16 +1,32 @@
 "use client";
 
+import { toggleTwoFactorAuth } from "@/actions/account-security/two-factor";
 import { Switch } from "@/components/ui/switch";
-import React from "react";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useSession } from "next-auth/react";
+import React, { useState } from "react";
 
-interface TwoFactorAuthProps {
-  is2FAEnabled: boolean;
-  onToggle: () => void;
-}
+export const TwoFactorAuth = () => {
+  const user = useCurrentUser();
 
-export const TwoFactorAuth: React.FC<
-  TwoFactorAuthProps
-> = ({ is2FAEnabled, onToggle }) => {
+  const { update } = useSession();
+
+  const onToggle = async () => {
+    try {
+      const result = await toggleTwoFactorAuth();
+      if (result.success) {
+        await update({
+          user: {
+            ...user,
+            isTwoFactorEnabled: user?.isTwoFactorEnabled,
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Failed to toggle 2FA:", error);
+    }
+  };
+
   return (
     <section className="space-y-4 pb-8 border-b border-inputBorder">
       <h2 className="text-2xl font-semibold">
@@ -21,15 +37,19 @@ export const TwoFactorAuth: React.FC<
       </p>
       <div className="flex items-center space-x-2">
         <Switch
-          checked={is2FAEnabled}
+          checked={user?.isTwoFactorEnabled}
           onCheckedChange={onToggle}
           className={`${
-            is2FAEnabled
+            user?.isTwoFactorEnabled
               ? "data-[state=checked]:bg-primaryColor"
               : "data-[state=unchecked]:bg-inputBg"
           }`}
         />
-        <span>{is2FAEnabled ? "Enabled" : "Disabled"}</span>
+        <span>
+          {user?.isTwoFactorEnabled
+            ? "Enabled"
+            : "Disabled"}
+        </span>
       </div>
     </section>
   );

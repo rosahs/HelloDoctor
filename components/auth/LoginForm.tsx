@@ -21,8 +21,10 @@ import { Button } from "../ui/button";
 import { FormError } from "./FormError";
 import { FormSuccess } from "./FormSuccess";
 import { login } from "@/actions/login";
+import { useSession } from "next-auth/react";
 
 export const LoginForm = () => {
+  const { update } = useSession();
   const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [error, setError] = useState<string | undefined>(
     ""
@@ -41,7 +43,7 @@ export const LoginForm = () => {
     },
   });
 
-  const onSubmit = (
+  const onSubmit = async (
     values: z.infer<typeof LoginSchema>
   ) => {
     setError("");
@@ -49,7 +51,7 @@ export const LoginForm = () => {
 
     startTransition(() => {
       login(values)
-        .then((data) => {
+        .then(async (data) => {
           if (data?.error) {
             form.reset();
             setError(data?.error);
@@ -57,6 +59,7 @@ export const LoginForm = () => {
 
           if (data?.success) {
             form.reset();
+            await update();
             setSuccess(data?.success);
           }
 
@@ -72,7 +75,7 @@ export const LoginForm = () => {
     <CardWrapper
       headerLabel="Welcome back"
       backButtonLabel="Don't have an account?"
-      backButtonHref="/register"
+      backButtonHref="/auth/register"
       showSocial
     >
       <Form {...form}>

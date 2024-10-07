@@ -34,7 +34,7 @@ export const sendVerificationEmail = async (
   email: string,
   token: string
 ): Promise<void> => {
-  const confirmLink = `http://localhost:3000/new-verification?token=${token}`;
+  const confirmLink = `http://localhost:3000/auth/new-verification?token=${token}`;
 
   const subject = "Confirm your email";
   const html = `<p>Click <a href='${confirmLink}'>here</a> to confirm your email.</p>`;
@@ -47,7 +47,7 @@ export const sendPasswordResetEmail = async (
   email: string,
   token: string
 ): Promise<void> => {
-  const resetLink = `http://localhost:3000/new-password?token=${token}`;
+  const resetLink = `http://localhost:3000/auth/new-password?token=${token}`;
   const subject = "Reset your Password";
   const html = `<p>Click <a href='${resetLink}'>here</a> to reset your password.</p>`;
 

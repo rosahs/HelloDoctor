@@ -8,7 +8,7 @@ export async function setUserRole(role: UserRole) {
   try {
     const session = await currentUser();
 
-    if (!session) {
+    if (!session || !session.id) {
       throw new Error("Unauthorized");
     }
 
@@ -31,8 +31,7 @@ export async function setUserRole(role: UserRole) {
     return {
       success: `Role successfully set to '${role}'.`,
     };
-  } catch (error) {
-    console.error("Error in setUserRole:", error);
+  } catch {
     return {
       error: `An unexpected error occurred. Please try again.`,
     };

@@ -1,7 +1,7 @@
 "use client";
-
 import { BackButton } from "./BackButton";
 import { Social } from "./Social";
+import styles from "./FormWrapper.module.css";
 
 type CardWrapperProps = {
   children: React.ReactNode;
@@ -19,30 +19,32 @@ export const CardWrapper = ({
   showSocial,
 }: CardWrapperProps) => {
   return (
-    <div className="w-full max-w-sm bg-bgLight rounded-xl shadow-2xl overflow-hidden border-2 border-primaryColor">
-      <div className="px-4 sm:px-8 py-4 sm:py-6">
-        <h1 className="text-2xl font-bold text-center mb-6 text-textDark">
-          {headerLabel}
-        </h1>
-        <div className="space-y-4">{children}</div>
+    <div className={styles.cardWrapper}>
+      <div
+        className={`${styles.content} sm:${styles.contentSm}`}
+      >
+        <h1 className={styles.header}>{headerLabel}</h1>
+        <div>{children}</div>
 
         {showSocial && (
           <>
-            <div className="flex items-center mt-6">
-              <div className="flex-grow h-px bg-placeholder"></div>
-              <span className="px-3 text-sm text-gray-400">
+            <div className={styles.socialWrapper}>
+              <div className={styles.divider}></div>
+              <span className={styles.orText}>
                 or continue with
               </span>
-              <div className="flex-grow h-px bg-placeholder"></div>
+              <div className={styles.divider}></div>
             </div>
-            <div className="mt-4">
+            <div className={styles.socialContainer}>
               <Social />
             </div>
           </>
         )}
       </div>
 
-      <div className="px-4 sm:px-8 py-4 bg-babyPowder border-t border-primaryColor">
+      <div
+        className={`${styles.footer} sm:${styles.footerSm}`}
+      >
         <BackButton
           label={backButtonLabel}
           href={backButtonHref}

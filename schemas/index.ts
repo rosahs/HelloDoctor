@@ -61,14 +61,14 @@ export const NewPasswordSchema = z
   );
 
 export const emailChangeSchema = z.object({
-  newEmail: z
+  email: z
     .string()
     .email({ message: "Invalid email address" }),
 });
 
 export const passwordChangeSchema = z
   .object({
-    currentPassword: z
+    password: z
       .string()
       .min(8, "Password must be at least 8 characters"),
     newPassword: z

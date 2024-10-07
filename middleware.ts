@@ -91,7 +91,7 @@ export default auth(async (req) => {
     if (isDoctorProtectedRoute) {
       if (!isLoggedIn) {
         return NextResponse.redirect(
-          new URL("/login", nextUrl)
+          new URL("/auth/login", nextUrl)
         );
       } else if (userRole !== "DOCTOR") {
         return NextResponse.redirect(new URL("/", nextUrl));
@@ -102,7 +102,7 @@ export default auth(async (req) => {
     if (isPatientProtectedRoute) {
       if (!isLoggedIn) {
         return NextResponse.redirect(
-          new URL("/login", nextUrl)
+          new URL("/auth/login", nextUrl)
         );
       } else if (userRole !== "PATIENT") {
         return NextResponse.redirect(new URL("/", nextUrl));
@@ -111,16 +111,8 @@ export default auth(async (req) => {
 
     // Redirect unauthenticated users trying to access protected routes
     if (!isLoggedIn && !isPublicRoute) {
-      let from = nextUrl.pathname;
-      if (nextUrl.search) {
-        from += nextUrl.search;
-      }
-
       return NextResponse.redirect(
-        new URL(
-          `/login?from=${encodeURIComponent(from)}`,
-          nextUrl
-        )
+        new URL(`/auth/login`, nextUrl)
       );
     }
 
@@ -141,8 +133,7 @@ export default auth(async (req) => {
     );
 
     return response;
-  } catch (error) {
-    console.error("Middleware error:", error);
+  } catch {
     return NextResponse.error();
   }
 });

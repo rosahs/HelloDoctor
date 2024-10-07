@@ -26,6 +26,15 @@ export const saveOAuthUser = async (
         accounts: [account],
       });
     } else {
+      // Check if the user signed up with email/password
+      if (user.password) {
+        // User exists with email/password => prevent OAuth sign-in
+        return {
+          error:
+            "This email is already registered with a password. Please log in with your password.",
+        };
+      }
+
       // If the user exists, update their information
       user.name = name;
       user.profileImage = picture;
@@ -47,7 +56,6 @@ export const saveOAuthUser = async (
 
     return user;
   } catch (error) {
-    console.error("Error saving OAuth user:", error);
     throw error;
   }
 };

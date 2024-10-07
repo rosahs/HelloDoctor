@@ -3,7 +3,16 @@
 @tailwind utilities;
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Inter", sans-serif;
+  overflow-y: auto;
+  box-sizing: border-box;
+  height: 100%;
+  margin: 0;
+}
+
+.p-mobile {
+  padding-block: 12px;
+  padding-inline: 16px;
 }
 
 @layer utilities {
@@ -14,6 +23,19 @@ body {
 
 @layer base {
   :root {
+    /*  */
+    --primary-color: #91be55;
+    --baby-powder: #f8faf4;
+    --input-bg: #e8e8e8;
+    --input-border: #787878;
+    --placeholder: #a9a9a9;
+    --label-color: #212121;
+    --bg-light: #f0f0f0;
+    --text-dark: #212121;
+    --text-gray: #262626;
+    --text-light: #616161;
+    /*  */
+
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;

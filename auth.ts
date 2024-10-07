@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import authConfig from "./auth.config";
-import { getUserByEmail, getUserById } from "./data/user";
+import { getUserById } from "./data/user";
 import { UserRole } from "./lib/userRole";
 import { saveOAuthUser } from "./data/saveOAuthUser";
 import { getTwoFactorConfirmationByUserId } from "./data/two-factor-confirmation";
@@ -75,55 +75,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
         }
         return true;
       },
-      async jwt({ token, user, account, profile }) {
-        if (user && user.id) {
-          // Set token ID based on the user object from signIn
-          token.id = user.id;
-        }
+      async jwt({ token }) {
+        if (!token.sub) return token;
 
-        // Check if it's OAuth (e.g., Google)
-        if (account && account.provider !== "credentials") {
-          const dbUser =
-            (await getUserById(token.id as string)) ||
-            (await getUserByEmail(token.email as string));
+        const user = await getUserById(token.sub);
 
-          if (dbUser) {
-            token.isOAuth = true;
-            token.id = dbUser._id.toString();
-            token.name = dbUser.name;
-            token.email = dbUser.email;
-            token.role = dbUser.role;
-            token.isTwoFactorEnabled =
-              dbUser.isTwoFactorEnabled;
-            token.image =
-              dbUser.profileImage || profile?.picture;
-          }
-        }
+        if (!user) return token;
 
-        // Credentials-based user lookup
-
-        const existingUser = await getUserById(
-          token.sub as string
-        );
-
-        if (existingUser) {
-          token.isOAuth = false;
-          token.id = existingUser._id.toString();
-          token.name = existingUser.name;
-          token.email = existingUser.email;
-          token.role = existingUser.role;
-          token.isTwoFactorEnabled =
-            existingUser.isTwoFactorEnabled;
-          token.image = existingUser.profileImage;
-        }
+        token.isOAuth = !!user.authProviderId;
+        token.name = user.name;
+        token.email = user.email;
+        token.role = user.role;
+        token.isTwoFactorEnabled = user.isTwoFactorEnabled;
 
         return token;
       },
       async session({ token, session }) {
-        if (token.id && session.user) {
-          session.user.id = token.id as string;
-        } else if (token.sub && session.user) {
-          session.user.id = token.sub as string;
+        if (token.sub && session.user) {
+          session.user.id = token.sub;
         }
 
         if (session.user) {

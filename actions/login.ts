@@ -65,16 +65,20 @@ export const login = async (
       return { success: "Confirmation email sent!" };
     }
 
+    console.log(user.isTwoFactorEnabled);
+
     if (user.isTwoFactorEnabled) {
       if (code) {
         const twoFactorToken =
           await getTwoFactorTokenByEmail(user.email);
+
         if (
           !twoFactorToken ||
           twoFactorToken.token !== code
         ) {
           return { error: "Invalid code!" };
         }
+
         if (new Date(twoFactorToken.expires) < new Date()) {
           return { error: "Code expired!" };
         }

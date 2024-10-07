@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import * as z from "zod";
+import React, { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -14,22 +15,48 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { passwordChangeSchema } from "@/schemas";
+import { useSession } from "next-auth/react";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { passwordChange } from "@/actions/account-security/password-change";
+import { FormError } from "@/components/auth/FormError";
+import { FormSuccess } from "@/components/auth/FormSuccess";
 
-interface PasswordChangeFormProps {
-  onSubmit: (data: unknown) => void;
-}
+export const PasswordChangeForm = () => {
+  const user = useCurrentUser();
 
-export const PasswordChangeForm: React.FC<
-  PasswordChangeFormProps
-> = ({ onSubmit }) => {
+  const { update } = useSession();
+  const [isPending, startTransition] = useTransition();
+
+  const [error, setError] = useState<string | undefined>();
+  const [success, setSuccess] = useState<
+    string | undefined
+  >();
+
   const passwordForm = useForm({
     resolver: zodResolver(passwordChangeSchema),
     defaultValues: {
-      currentPassword: "",
+      password: "",
       newPassword: "",
       confirmNewPassword: "",
     },
   });
+
+  const onSubmit = (
+    value: z.infer<typeof passwordChangeSchema>
+  ) => {
+    startTransition(() => {
+      passwordChange(value)
+        .then((data) => {
+          if (data?.error) {
+            setError(data.error);
+          } else if (data?.success) {
+            update();
+            setSuccess(data.success);
+          }
+        })
+        .catch(() => setError("Something went wrong!"));
+    });
+  };
 
   return (
     <section className="space-y-4">
@@ -46,7 +73,7 @@ export const PasswordChangeForm: React.FC<
         >
           <FormField
             control={passwordForm.control}
-            name="currentPassword"
+            name="password"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-labelColor">
@@ -104,6 +131,10 @@ export const PasswordChangeForm: React.FC<
               </FormItem>
             )}
           />
+
+          <FormError message={error} />
+          <FormSuccess message={success} />
+
           <Button
             type="submit"
             className="bg-primaryColor hover:bg-primaryColor/80 text-babyPowder"

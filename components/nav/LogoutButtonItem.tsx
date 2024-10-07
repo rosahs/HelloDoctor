@@ -3,18 +3,18 @@ import { logout } from "@/actions/logout";
 interface LogoutButtonItemProps {
   className: string;
   onClick: () => void;
-  handleLogout: () => void;
+  // handleLogout: () => void;
 }
 
 const LogoutButtonItem = ({
   className,
   onClick,
-  handleLogout,
-}: LogoutButtonItemProps) => {
+}: // handleLogout,
+LogoutButtonItemProps) => {
   const logoutClick = async () => {
     await logout();
     onClick();
-    handleLogout();
+    // handleLogout();
   };
 
   return (

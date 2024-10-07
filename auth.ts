@@ -88,6 +88,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
             (await getUserByEmail(token.email as string));
 
           if (dbUser) {
+            token.isOAuth = true;
             token.id = dbUser._id.toString();
             token.name = dbUser.name;
             token.email = dbUser.email;
@@ -106,6 +107,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
         );
 
         if (existingUser) {
+          token.isOAuth = false;
           token.id = existingUser._id.toString();
           token.name = existingUser.name;
           token.email = existingUser.email;
@@ -131,6 +133,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
           session.user.isTwoFactorEnabled =
             token.isTwoFactorEnabled as boolean;
           session.user.image = token.image as string;
+          session.user.isOAuth = token.isOAuth as boolean;
         }
 
         return session;

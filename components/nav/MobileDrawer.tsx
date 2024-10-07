@@ -7,40 +7,26 @@ import LogoLink from "./LogoLink";
 import Image from "next/image";
 import NavLink from "./NavLink";
 import LogoutButtonItem from "./LogoutButtonItem";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { doctorLinks, patientLinks } from "./NavLinks";
-import { useEffect, useState } from "react";
 import { ExtendedUser } from "@/next-auth";
-
-interface MobileDrawerProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+import { useDrawerStore } from "@/store/drawerStore";
 
 function MobileDrawer({
-  isOpen,
-  onClose,
-}: MobileDrawerProps) {
-  const currentUser = useCurrentUser();
-  const [user, setUser] = useState<
-    ExtendedUser | undefined
-  >(undefined);
-
-  useEffect(() => {
-    setUser(currentUser);
-  }, [currentUser]);
+  user,
+}: {
+  user: ExtendedUser | undefined;
+}) {
+  const { isDrawerOpen, closeDrawer } = useDrawerStore();
 
   const loggedInLinks =
     user?.role === "DOCTOR" ? doctorLinks : patientLinks;
 
-  const handleLogout = () => {
-    setUser(undefined);
-  };
-
   return (
     <div
       className={`bg-bgLight ${styles.drawer} ${
-        isOpen ? styles.drawerOpen : styles.drawerClosed
+        isDrawerOpen
+          ? styles.drawerOpen
+          : styles.drawerClosed
       }`}
     >
       <div
@@ -49,7 +35,7 @@ function MobileDrawer({
         <LogoLink />
         <button
           className={`${styles.closeButton} text-dark-hover`}
-          onClick={onClose}
+          onClick={closeDrawer}
           aria-label="Close Menu"
         >
           <MdOutlineClose size={28} />
@@ -84,13 +70,13 @@ function MobileDrawer({
               link="/auth/login"
               label="Login"
               className={styles.navItem}
-              onClick={onClose}
+              onClick={closeDrawer}
             />
             <NavLink
               link="/auth/register"
               label="Signup"
               className={styles.navItem}
-              onClick={onClose}
+              onClick={closeDrawer}
             />
           </ul>
           <hr className={styles.separator} />
@@ -106,13 +92,12 @@ function MobileDrawer({
                 link={link.href}
                 label={link.label}
                 className={styles.navItem}
-                onClick={onClose}
+                onClick={closeDrawer}
               />
             ))}
             <LogoutButtonItem
               className={styles.navItem}
-              onClick={onClose}
-              handleLogout={handleLogout}
+              onClick={closeDrawer}
             />
           </ul>
         )}
@@ -125,19 +110,19 @@ function MobileDrawer({
             link="/"
             label="Home"
             className={styles.navItem}
-            onClick={onClose}
+            onClick={closeDrawer}
           />
           <NavLink
             link="/search"
             label="Find a Doctor"
             className={styles.navItem}
-            onClick={onClose}
+            onClick={closeDrawer}
           />
           <NavLink
             link="/search"
             label="Find a Dentist"
             className={styles.navItem}
-            onClick={onClose}
+            onClick={closeDrawer}
           />
         </ul>
 
@@ -148,13 +133,13 @@ function MobileDrawer({
             link="/"
             label="Invite Friends"
             className={styles.navItem}
-            onClick={onClose}
+            onClick={closeDrawer}
           />
           <NavLink
             link="/"
             label="Help and Support"
             className={styles.navItem}
-            onClick={onClose}
+            onClick={closeDrawer}
           />
         </ul>
       </div>

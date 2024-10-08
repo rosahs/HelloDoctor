@@ -28,22 +28,28 @@ export default function DoctorReservePage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100 overflow-y-auto">
-      {/* Logo at the Top */}
-      <div className="w-full max-w-lg mx-auto py-4">
-        <h1 className="text-3xl font-bold text-center text-green-800">HelloDoctor</h1>
-      </div>
-
       <div className="flex-grow p-4">
-        <div className="w-full max-w-lg mx-auto bg-white shadow-md rounded-lg p-4">
+        <div className="w-full max-w-lg mx-auto bg-white shadow-md rounded-lg p-6">
+          {/* Back Button */}
+          <div className="mb-4">
+            <button onClick={() => router.back()} className="text-green-800">
+              ← Back
+            </button>
+          </div>
+
+          {/* Logo at the Top */}
+          <div className="w-full mb-6 text-left">
+            <h1 className="text-3xl font-bold text-green-800">HelloDoctor</h1>
+          </div>
+
           {/* Header */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
               <Image
                 src={doctor.imageUrl}
                 alt={doctor.name}
-                width={50}
-                height={50}
-                className="rounded-full"
+                width={100}
+                height={100}
               />
               <div className="ml-4">
                 <h2 className="font-bold text-lg">{doctor.name}</h2>

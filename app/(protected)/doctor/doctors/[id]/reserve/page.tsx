@@ -76,20 +76,20 @@ export default function DoctorReservePage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-gray-100 p-4 overflow-y-auto">
-      {/* Logo at the Top */}
-      <div className="w-full max-w-lg mx-auto mb-4">
-        <h1 className="text-3xl font-bold text-center text-green-800">HelloDoctor</h1>
-      </div>
-
       <div className="w-full max-w-lg bg-white shadow-md rounded-lg p-4 mb-4">
-        {/* Top Bar */}
-        <div className="flex justify-between items-center mb-4">
+        {/* Back Button */}
+        <div className="mb-4">
           <button onClick={() => router.back()} className="text-green-800">
             ← Back
           </button>
-          <h1 className="text-xl font-bold text-center">
+        </div>
+
+        {/* Logo and Top Bar */}
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-3xl font-bold text-green-800">HelloDoctor</h1>
+          <h2 className="text-xl font-bold text-center">
             Book Appointment with<br />Dr. Emily Chen
-          </h1>
+          </h2>
         </div>
 
         {/* Doctor Info Card */}
@@ -98,9 +98,9 @@ export default function DoctorReservePage() {
             <Image
               src={doctor.imageUrl}
               alt={doctor.name}
-              width={60}
-              height={60}
-              className="rounded-full mr-4"
+              width={100}
+              height={100}
+              className="mr-4"
             />
             <div>
               <h2 className="font-medium text-lg">{doctor.name}</h2>
@@ -170,14 +170,14 @@ export default function DoctorReservePage() {
           <input 
             type="text" 
             placeholder="Full Name" 
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm h-12"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
           />
           <input 
             type="number" 
             placeholder="Age" 
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm h-12"
             value={age}
             onChange={(e) => setAge(e.target.value)}
           />

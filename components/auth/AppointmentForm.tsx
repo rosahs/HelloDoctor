@@ -143,7 +143,7 @@ export const AppointmentForm = ({
               label="Doctor"
               placeholder="Select a doctor"
             >
-              {/* Render your doctors list */}
+              {/* Render doctors list */}
               {Doctors.map((doctor, i) => (
                 <SelectItem key={doctor.name + i} value={doctor.name}>
                   <div className="flex cursor-pointer items-center gap-2">

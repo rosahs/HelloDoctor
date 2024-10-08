@@ -1,34 +1,43 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 // import { Calendar, Clock, Phone, Video, MessageSquare } from 'lucide-react';
 
-export default function AppointmentBooking({ doctorId, doctorName, doctorSpecialty, doctorExperience, doctorFocus }: { 
+export default function AppointmentBooking({
+  doctorId,
+  doctorName,
+  doctorSpecialty,
+  doctorExperience,
+  doctorFocus,
+}: {
   doctorId: string;
   doctorName: string;
   doctorSpecialty: string;
   doctorExperience: string;
   doctorFocus: string;
 }) {
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
-  const [patientName, setPatientName] = useState('');
-  const [age, setAge] = useState('');
-  const [gender, setGender] = useState('');
-  const [problem, setProblem] = useState('');
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const [patientName, setPatientName] = useState("");
+  const [age, setAge] = useState("");
+  const [gender, setGender] = useState("");
+  const [problem, setProblem] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    alert("Appointment booked successfully");
     // ... (keep submit logic)
   };
 
   return (
     <div className="max-w-md mx-auto bg-blue-50 p-4 rounded-3xl shadow-lg">
       <header className="flex justify-between items-center mb-4">
-        <Link href={`/doctor/doctors/${doctorId}/reserve`} className="text-blue-600">
+        <Link
+          href={`/doctor/doctors/${doctorId}/reserve`}
+          className="text-blue-600">
           <span className="text-2xl">&larr;</span>
         </Link>
         {/* <div className="flex space-x-2">
@@ -74,13 +83,25 @@ export default function AppointmentBooking({ doctorId, doctorName, doctorSpecial
         <div>
           <h3 className="font-semibold mb-2">Available Time</h3>
           <div className="grid grid-cols-4 gap-2">
-            {['9:00 AM', '9:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM'].map((t) => (
+            {[
+              "9:00 AM",
+              "9:30 AM",
+              "10:00 AM",
+              "10:30 AM",
+              "11:00 AM",
+              "11:30 AM",
+              "12:00 PM",
+              "12:30 PM",
+            ].map((t) => (
               <button
                 key={t}
                 type="button"
                 onClick={() => setTime(t)}
-                className={`${time === t ? 'bg-blue-600 text-white' : 'bg-white text-blue-600'} rounded-full py-1 px-2 text-sm`}
-              >
+                className={`${
+                  time === t
+                    ? "bg-blue-600 text-white"
+                    : "bg-white text-blue-600"
+                } rounded-full py-1 px-2 text-sm`}>
                 {t}
               </button>
             ))}
@@ -90,12 +111,11 @@ export default function AppointmentBooking({ doctorId, doctorName, doctorSpecial
         <div>
           <h3 className="font-semibold mb-2">Patient Details</h3>
           <div className="flex space-x-2 mb-2">
-            {['Yourself', 'Another Person'].map((option) => (
+            {["Yourself", "Another Person"].map((option) => (
               <button
                 key={option}
                 type="button"
-                className={`bg-white text-blue-600 rounded-full py-1 px-4 flex-1`}
-              >
+                className={`bg-white text-blue-600 rounded-full py-1 px-4 flex-1`}>
                 {option}
               </button>
             ))}
@@ -117,13 +137,16 @@ export default function AppointmentBooking({ doctorId, doctorName, doctorSpecial
             className="w-full p-2 rounded-lg bg-white mb-2"
           />
           <div className="flex space-x-2 mb-2">
-            {['Male', 'Female', 'Other'].map((g) => (
+            {["Male", "Female", "Other"].map((g) => (
               <button
                 key={g}
                 type="button"
                 onClick={() => setGender(g)}
-                className={`${gender === g ? 'bg-blue-600 text-white' : 'bg-white text-blue-600'} rounded-full py-1 px-4 flex-1`}
-              >
+                className={`${
+                  gender === g
+                    ? "bg-blue-600 text-white"
+                    : "bg-white text-blue-600"
+                } rounded-full py-1 px-4 flex-1`}>
                 {g}
               </button>
             ))}
@@ -138,7 +161,9 @@ export default function AppointmentBooking({ doctorId, doctorName, doctorSpecial
           />
         </div>
 
-        <button type="submit" className="w-full bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700">
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700">
           Book Appointment
         </button>
       </form>

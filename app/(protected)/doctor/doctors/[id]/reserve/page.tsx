@@ -1,131 +1,218 @@
-// import { getDoctorById } from '@//api/getDoctors';
+"use client";
+import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
+import { MessageSquare, Bookmark, User, Image as ImageIcon, MapPin, Star } from 'lucide-react';
+import { useState } from 'react';
+import Footer from "@/components/footer/page";
 
-export default async function DoctorReservePage({
-    params,
-  }: {
-    params: { id: string };
-  }) {
-    //   const doctor = await getDoctorById(parseInt(params.id));
-  
-    const doctor = {
-      id: 1,
-      name: "Dr. Emily Chen",
-      specialty: "Cardiology",
-      imageUrl: "/doctor1.jpg",
-      experience: 15,
-      rating: 4.8,
-      about:
-        "Dr. Chen is a board-certified cardiologist with over 15 years of experience in treating complex heart conditions. She specializes in interventional cardiology and has performed over 1000 successful procedures.",
-      education: [
-        "MD from Harvard Medical School",
-        "Residency in Internal Medicine at Massachusetts General Hospital",
-        "Fellowship in Cardiology at Johns Hopkins Hospital",
-      ],
-      languages: ["English", "Mandarin"],
-      availableDays: ["Monday", "Wednesday", "Friday"],
-      consultationFee: "$200",
-      specialties: ["surgery"],
+export default function DoctorReservePage() {
+  const params = useParams();
+  const router = useRouter();
+  const doctorId = params.id as string;
+
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedTime, setSelectedTime] = useState('');
+  const [patientType, setPatientType] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [age, setAge] = useState('');
+  const [gender, setGender] = useState('');
+  const [problem, setProblem] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+
+  const doctor = {
+    id: 1,
+    name: "Dr. Emily Chen",
+    specialty: "Cardiology",
+    imageUrl: "/user2.jpg", 
+    focus: "Cardiology"
+  };
+
+  const handleTimeSelect = (time: string) => {
+    setSelectedTime(time);
+  };
+
+  const handlePatientTypeSelect = (type: string) => {
+    setPatientType(type);
+  };
+
+  const handleGenderSelect = (genderOption: string) => {
+    setGender(genderOption);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const formData = {
+      doctorId,
+      selectedDate,
+      selectedTime,
+      patientType,
+      fullName,
+      age,
+      gender,
+      problem,
     };
-  
-    if (!doctor) {
-      console.log("Doctor not found"); // Add this line
-      return <div>Doctor not found</div>;
+
+    console.log("Form Data Submitted:", formData);
+
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      setSuccessMessage("Appointment successfully booked!");
+      setSelectedDate('');
+      setSelectedTime('');
+      setPatientType('');
+      setFullName('');
+      setAge('');
+      setGender('');
+      setProblem('');
+
+      setTimeout(() => {
+        setSuccessMessage('');
+      }, 3000);
+    } catch (error) {
+      console.error("Error booking appointment:", error);
     }
-  
-    return (
-      <div className="bg-white p-6 rounded-2xl shadow-lg max-w-sm mx-auto">
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col items-center bg-gray-100 p-4 overflow-y-auto">
+      {/* Logo at the Top */}
+      <div className="w-full max-w-lg mx-auto mb-4">
+        <h1 className="text-3xl font-bold text-center text-green-800">HelloDoctor</h1>
+      </div>
+
+      <div className="w-full max-w-lg bg-white shadow-md rounded-lg p-4 mb-4">
         {/* Top Bar */}
         <div className="flex justify-between items-center mb-4">
-          <button className="text-gray-500">
-            <i className="fas fa-chevron-left"></i>
+          <button onClick={() => router.back()} className="text-green-800">
+            ← Back
           </button>
-          <button className="bg-blue-500 text-white px-4 py-1 rounded-full text-sm">
-            Schedule
-          </button>
+          <h1 className="text-xl font-bold text-center">
+            Book Appointment with<br />Dr. Emily Chen
+          </h1>
         </div>
-  
-        {/* Doctor Info */}
-        <div className="flex flex-col items-center">
-          <div className="bg-blue-500 text-white px-2 py-1 rounded-full text-sm mb-2">
-            {doctor.experience} years experience
+
+        {/* Doctor Info Card */}
+        <div className="bg-white rounded-lg shadow-md p-4 mb-4">
+          <div className="flex items-center mb-4">
+            <Image
+              src={doctor.imageUrl}
+              alt={doctor.name}
+              width={60}
+              height={60}
+              className="rounded-full mr-4"
+            />
+            <div>
+              <h2 className="font-medium text-lg">{doctor.name}</h2>
+              <p className="text-gray-600">{doctor.specialty}</p>
+            </div>
           </div>
-          <div className="bg-blue-200 text-blue-800 p-3 rounded-lg text-sm w-full text-center">
-            Focus: {doctor.specialties!.join(", ") || "Information not available"}
+          <div className="bg-blue-100 text-green-800 p-2 rounded-md">
+            Focus: {doctor.focus}
           </div>
         </div>
-  
-        {/* Doctor Name and Specialization */}
-        <div className="text-center mt-4">
-          <h2 className="text-xl font-bold">Dr. {doctor.name}</h2>
-          <p className="text-gray-600">{doctor.specialty}</p>
-        </div>
-  
-        {/* Rating and Time */}
-        <div className="flex justify-center items-center space-x-2 mt-2">
-          <span className="flex items-center">
-            <span className="text-yellow-500 mr-1">★</span>
-            <span className="text-sm">{doctor.rating}</span>
-          </span>
-          <span className="border-l-2 border-gray-300 mx-2 h-6"></span>
-          <span className="flex items-center">
-            <i className="fas fa-clock text-gray-500 mr-1"></i>
-            <span className="text-sm">Mon - Sat / 9 AM - 4 PM</span>
-          </span>
-        </div>
-  
-        {/* Profile Description */}
-        <p className="text-sm mt-4 text-center px-2">
-          {doctor.about || "No description available."}
-        </p>
-  
-        {/* Calendar Section */}
-        <div className="bg-blue-100 mt-6 p-4 rounded-lg">
-          <div className="flex justify-between items-center mb-2">
-            <button className="text-blue-500">
-              <i className="fas fa-chevron-left"></i>
-            </button>
-            <span className="text-blue-800 font-semibold">Month</span>
-            <button className="text-blue-500">
-              <i className="fas fa-chevron-right"></i>
-            </button>
+
+        {/* Success Message */}
+        {successMessage && (
+          <div className="mb-4 p-2 bg-green-100 text-green-800 rounded-md">
+            {successMessage}
           </div>
-          <div className="grid grid-cols-7 gap-2 text-center text-sm">
-            {/* Calendar Days */}
-            <div className="text-blue-800">Mon</div>
-            <div className="text-blue-800">Tue</div>
-            <div className="text-blue-800">Wed</div>
-            <div className="text-blue-800">Thu</div>
-            <div className="text-blue-800">Fri</div>
-            <div className="text-blue-800">Sat</div>
-            <div className="text-blue-800">Sun</div>
-            {/* Calendar Dates */}
-            {[...Array(30)].map((_, i) => (
-              <div
-                key={i}
-                className={`p-2 ${
-                  i + 1 === 24
-                    ? "bg-blue-500 text-white rounded-full"
-                    : "text-gray-600"
-                }`}>
-                {i + 1}
-              </div>
+        )}
+
+        {/* Appointment Booking Form */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-md font-medium text-gray-700">Select Date</label>
+            <input 
+              type="date" 
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" 
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="block text-md font-medium text-gray-700">Available Time</label>
+            <div className="grid grid-cols-4 gap-2 mt-1">
+              {['9:00 AM', '9:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM'].map((time) => (
+                <button 
+                  key={time} 
+                  type="button" 
+                  className={`py-2 px-4 border rounded-md text-sm text-black hover:bg-blue-50 ${selectedTime === time ? 'bg-green-600 text-white' : 'bg-white'}`}
+                  onClick={() => handleTimeSelect(time)}
+                >
+                  {time}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-md font-medium text-gray-700">Patient Details</label>
+            <div className="flex space-x-2 mt-1">
+              <button 
+                type="button" 
+                className={`py-2 px-4 border rounded-md text-sm text-black hover:bg-blue-50 ${patientType === 'Yourself' ? 'bg-green-600 text-white' : 'bg-white'}`}
+                onClick={() => handlePatientTypeSelect('Yourself')}
+              >
+                Yourself
+              </button>
+              <button 
+                type="button" 
+                className={`py-2 px-4 border rounded-md text-sm text-black hover:bg-blue-50 ${patientType === 'Another Person' ? 'bg-green-600 text-white' : 'bg-white'}`}
+                onClick={() => handlePatientTypeSelect('Another Person')}
+              >
+                Another Person
+              </button>
+            </div>
+          </div>
+
+          <input 
+            type="text" 
+            placeholder="Full Name" 
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+          />
+          <input 
+            type="number" 
+            placeholder="Age" 
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            value={age}
+            onChange={(e) => setAge(e.target.value)}
+          />
+
+          <div className="flex space-x-2">
+            {['Male', 'Female', 'Other'].map((genderOption) => (
+              <button 
+                key={genderOption} 
+                type="button" 
+                className={`py-2 px-4 border rounded-md text-sm text-black hover:bg-blue-50 ${gender === genderOption ? 'bg-green-600 text-white' : 'bg-white'}`}
+                onClick={() => handleGenderSelect(genderOption)}
+              >
+                {genderOption}
+              </button>
             ))}
           </div>
-        </div>
-  
-        {/* Bottom Navigation */}
-        <div className="flex justify-around mt-6">
-          <button className="text-blue-500">
-            <i className="fas fa-home"></i>
+
+          <textarea 
+            placeholder="Describe your problem" 
+            rows={3} 
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            value={problem}
+            onChange={(e) => setProblem(e.target.value)}
+          ></textarea>
+
+          <button type="submit" className="w-full py-4 px-4 bg-black text-white rounded-md hover:bg-green-600">
+            Book Appointment
           </button>
-          <button className="text-blue-500">
-            <i className="fas fa-user"></i>
-          </button>
-          <button className="text-blue-500">
-            <i className="fas fa-calendar"></i>
-          </button>
-        </div>
+        </form>
       </div>
-    );
-  }
-  
+
+      {/* Footer */}
+      <div className="w-full max-w-lg mx-auto mt-8">
+        <Footer />
+      </div>
+    </div>
+  );
+}

@@ -1,8 +1,8 @@
 import mongoose, { Schema, Document, model } from 'mongoose';
 
 interface IAppointment extends Document {
-  doctorId: mongoose.Schema.Types.ObjectId; // References a doctor
-  userId: string; // References a user (patient)
+  doctorId: mongoose.Schema.Types.ObjectId; 
+  userId: string; 
   date: Date;
   time: string;
   status: "scheduled" | "pending" | "cancelled";

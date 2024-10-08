@@ -1,5 +1,5 @@
 import React from 'react';
-import { getDoctorById } from '@//api/getDoctors'; 
+// import { getDoctorById } from '@//api/getDoctors'; 
 
 export default async function DoctorProfile({ params }: { params: { id: string } }) {
   try {

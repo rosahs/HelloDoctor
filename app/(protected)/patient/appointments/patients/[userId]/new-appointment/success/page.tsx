@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Doctors } from "@/components/auth/Constants";
-import { getAppointment } from "@/lib/appointment-actions";
+import { getAppointment } from "@/actions/appointment-actions";
 import { formatDateTime } from "@/lib/utils";
 
 const RequestSuccess = async ({

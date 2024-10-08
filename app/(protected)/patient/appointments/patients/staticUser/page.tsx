@@ -6,8 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import CustomFormField, { FormFieldType } from "@/components/auth/CustomFormField";
-import { createAppointment } from "@/lib/appointment-actions";
-import { getAppointmentSchema } from "@/lib/appointment-validations";
+import { createAppointment } from "@/actions/appointment-actions";
+import { getAppointmentSchema } from "@/schemas/appointment-validations";
 import { useRouter } from "next/navigation";
 
 const AppointmentPage = () => {

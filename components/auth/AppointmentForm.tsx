@@ -8,15 +8,15 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { SelectItem } from "@/components/ui/select";
-import { getAppointment, createAppointment, updateAppointment } from "@/lib/appointment-actions";
-import { getAppointmentSchema } from "@/lib/appointment-validations";
+import { getAppointment, createAppointment, updateAppointment } from "@/actions/appointment-actions";
+import { getAppointmentSchema } from "@/schemas/appointment-validations";
 
 import "react-datepicker/dist/react-datepicker.css";
 
 import CustomFormField, { FormFieldType } from "@/components/auth/CustomFormField";
 import { Button } from "@/components/ui/button";
 import { Form } from "../ui/form";
-import { Appointment } from "@/lib/appointment-actions"; 
+import { Appointment } from "@/actions/appointment-actions"; 
 
 const appointmentId = (searchParams?.appointmentId as string) || "";
   const appointment = await getAppointment(appointmentId);

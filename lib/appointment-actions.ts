@@ -5,13 +5,24 @@ import mongoose, { Schema, Document, model } from "mongoose";
 import { formatDateTime, parseStringify } from "@/lib/utils";
 
 // Define the schema for appointments
-const appointmentSchema = new Schema({
+export const appointmentSchema = new Schema({
   userId: { type: String, required: true },
   status: { type: String, enum: ["scheduled", "pending", "cancelled"], required: true },
   schedule: { type: Date },
-  primaryPhysician: { type: String },
-  cancellationReason: { type: String },
+  primaryPhysician: { type: String, required: false },
+  cancellationReason: { type: String, required: false },
 }, { timestamps: true });
+
+// Function to get an appointment by ID
+export async function getAppointmentById(appointmentId: string) {
+  try {
+    const appointment = await AppointmentModel.findById(appointmentId);
+    return parseStringify(appointment);
+  } catch (error) {
+    console.error("An error occurred while fetching the appointment:", error);
+    return null;
+  }
+}
 
 // Create the model for appointments
 const AppointmentModel = mongoose.models.Appointment || model("Appointment", appointmentSchema);
@@ -101,7 +112,7 @@ export const updateAppointment = async ({
           ).dateTime} is cancelled. Reason: ${appointment.cancellationReason}`
     }.`;
 
-    await sendSMSNotification(userId, smsMessage);
+    // await sendSMSNotification(userId, smsMessage);
 
     revalidatePath("/admin");
     return parseStringify(updatedAppointment);

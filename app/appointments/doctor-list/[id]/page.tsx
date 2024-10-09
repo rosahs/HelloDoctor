@@ -59,7 +59,7 @@ export default function DoctorReservePage() {
             <button className="w-1/2 h-12 bg-black text-white p-2 rounded-md mr-2">
               <MessageSquare className="inline-block mr-2" /> Message
             </button>
-            <Link href={`/doctor/doctors/${doctorId}/reserve`} className="w-1/2">
+            <Link href={`/appointments/doctor-list/${doctorId}/reserve`} className="w-1/2">
               <button className="w-full h-12 bg-black text-white p-2 rounded-md">
                 Reserve
               </button>

@@ -39,7 +39,7 @@ export const patientLinks = [
     label: "Notifications",
   },
   {
-    href: "/doctor/doctors",
+    href: "/appointments/doctor-list",
     label: "Book Appointment",
   },
   {

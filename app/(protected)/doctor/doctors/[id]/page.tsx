@@ -27,19 +27,14 @@ export default function DoctorReservePage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 overflow-y-auto">
+    <div className="min-h-screen flex flex-col">
       <div className="flex-grow p-4">
-        <div className="w-full max-w-lg mx-auto bg-white shadow-md rounded-lg p-6">
+        <div className="w-full max-w-6xl mx-auto">
           {/* Back Button */}
           <div className="mb-4">
-            <button onClick={() => router.back()} className="text-green-800">
+            <button onClick={() => router.back()} className="text-green-800 text-lg">
               ← Back
             </button>
-          </div>
-
-          {/* Logo at the Top */}
-          <div className="w-full mb-6 text-left">
-            <h1 className="text-3xl font-bold text-green-800">HelloDoctor</h1>
           </div>
 
           {/* Header */}
@@ -61,11 +56,11 @@ export default function DoctorReservePage() {
 
           {/* Buttons */}
           <div className="flex justify-between mb-4">
-            <button className="w-1/2 bg-black text-white p-2 rounded-md mr-2">
+            <button className="w-1/2 h-12 bg-black text-white p-2 rounded-md mr-2">
               <MessageSquare className="inline-block mr-2" /> Message
             </button>
             <Link href={`/doctor/doctors/${doctorId}/reserve`} className="w-1/2">
-              <button className="w-full bg-black text-white p-2 rounded-md">
+              <button className="w-full h-12 bg-black text-white p-2 rounded-md">
                 Reserve
               </button>
             </Link>
@@ -130,9 +125,7 @@ export default function DoctorReservePage() {
       </div>
 
       {/* Footer */}
-      <div className="w-full max-w-lg mx-auto mt-8">
-        <Footer />
-      </div>
+      <Footer />
     </div>
   );
 }

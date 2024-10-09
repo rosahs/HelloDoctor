@@ -55,91 +55,90 @@ export default function DoctorReservePage() {
     console.log("Form Data Submitted:", formData);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulating API call
 
-      setSuccessMessage("Appointment successfully booked!");
-      setSelectedDate('');
-      setSelectedTime('');
-      setPatientType('');
-      setFullName('');
-      setAge('');
-      setGender('');
-      setProblem('');
-
-      setTimeout(() => {
-        setSuccessMessage('');
-      }, 3000);
+      // Redirect to success page with appointment details
+      router.push(`/doctor/doctors/${doctorId}/reserve/success?date=${selectedDate}&time=${selectedTime}`);
     } catch (error) {
       console.error("Error booking appointment:", error);
+      // Handle error (you might want to show an error message to the user)
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-100 p-4 overflow-y-auto">
-      <div className="w-full max-w-lg bg-white shadow-md rounded-lg p-4 mb-4">
+    <div className="min-h-screen flex flex-col bg-black text-white">
+      <div className="flex-grow p-4 w-full max-w-6xl mx-auto">
         {/* Back Button */}
         <div className="mb-4">
-          <button onClick={() => router.back()} className="text-green-800">
+          <button onClick={() => router.back()} className="text-white">
             ← Back
           </button>
         </div>
 
         {/* Logo and Top Bar */}
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-3xl font-bold text-green-800">HelloDoctor</h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-white">HelloDoctor</h1>
           <h2 className="text-xl font-bold text-center">
             Book Appointment with<br />Dr. Emily Chen
           </h2>
         </div>
 
         {/* Doctor Info Card */}
-        <div className="bg-white rounded-lg shadow-md p-4 mb-4">
+        <div className="bg-gray-900 rounded-lg p-4 mb-8">
           <div className="flex items-center mb-4">
             <Image
               src={doctor.imageUrl}
               alt={doctor.name}
               width={100}
               height={100}
-              className="mr-4"
+              className="mr-4 rounded-full"
             />
             <div>
               <h2 className="font-medium text-lg">{doctor.name}</h2>
-              <p className="text-gray-600">{doctor.specialty}</p>
+              <p className="text-gray-400">{doctor.specialty}</p>
             </div>
           </div>
-          <div className="bg-blue-100 text-green-800 p-2 rounded-md">
+          <div className="bg-gray-800 text-white p-2 rounded-md">
             Focus: {doctor.focus}
           </div>
         </div>
 
         {/* Success Message */}
         {successMessage && (
-          <div className="mb-4 p-2 bg-green-100 text-green-800 rounded-md">
+          <div className="mb-4 p-2 bg-green-800 text-white rounded-md">
             {successMessage}
           </div>
         )}
 
         {/* Appointment Booking Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-md font-medium  text-gray-700">Select Date</label>
-            <input 
-              type="date" 
-              className="mt-1 block w-full p-2 rounded-md border border-gray-400 shadow-sm" 
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              required
-            />
+            <label className="block text-md font-medium text-white">Select Date</label>
+            <div className="relative">
+              <input 
+                type="date" 
+                className="mt-1 block w-full p-2 rounded-md border border-gray-600 bg-gray-700 text-white appearance-none" 
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                required
+                style={{ colorScheme: 'dark' }}
+              />
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
+                <svg className="h-5 w-5 fill-current" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                </svg>
+              </div>
+            </div>
           </div>
 
           <div>
-            <label className="block text-md font-medium text-gray-700">Available Time</label>
+            <label className="block text-md font-medium text-white">Available Time</label>
             <div className="grid grid-cols-4 gap-2 mt-1">
               {['9:00 AM', '9:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM'].map((time) => (
                 <button 
                   key={time} 
                   type="button" 
-                  className={`py-2 px-4 border border-gray-400 rounded-md text-md text-black hover:bg-blue-50 ${selectedTime === time ? 'bg-green-600 text-white' : 'bg-white'}`}
+                  className={`py-2 px-4 border border-gray-600 rounded-md text-md hover:bg-green-600 hover:text-white ${selectedTime === time ? 'bg-green-600 text-white' : 'bg-gray-300 text-black'}`}
                   onClick={() => handleTimeSelect(time)}
                 >
                   {time}
@@ -149,18 +148,18 @@ export default function DoctorReservePage() {
           </div>
 
           <div>
-            <label className="block text-md font-medium text-gray-700">Patient Details</label>
+            <label className="block text-md font-medium text-white">Patient Details</label>
             <div className="flex space-x-2 mt-1">
               <button 
                 type="button" 
-                className={`py-2 px-4 border border-gray-400 rounded-md text-md text-black hover:bg-blue-50 ${patientType === 'Yourself' ? 'bg-green-600 text-white' : 'bg-white'}`}
+                className={`py-2 px-4 border border-gray-600 rounded-md text-md hover:bg-green-600 hover:text-white ${patientType === 'Yourself' ? 'bg-green-600 text-white' : 'bg-gray-300 text-black'}`}
                 onClick={() => handlePatientTypeSelect('Yourself')}
               >
                 Yourself
               </button>
               <button 
                 type="button" 
-                className={`py-2 px-4 border border-gray-400 rounded-md text-md text-black hover:bg-blue-50 ${patientType === 'Another Person' ? 'bg-green-600 text-white' : 'bg-white'}`}
+                className={`py-2 px-4 border border-gray-600 rounded-md text-md hover:bg-green-600 hover:text-white ${patientType === 'Another Person' ? 'bg-green-600 text-white' : 'bg-gray-300 text-black'}`}
                 onClick={() => handlePatientTypeSelect('Another Person')}
               >
                 Another Person
@@ -171,7 +170,7 @@ export default function DoctorReservePage() {
           <input 
             type="text" 
             placeholder="Full Name" 
-            className="mt-1 p-4 block text-md w-full rounded-md border border-gray-400 shadow-sm h-12"
+            className="mt-1 p-4 block text-md w-full rounded-md border border-gray-600 bg-gray-800 text-white h-12"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
             required
@@ -179,7 +178,7 @@ export default function DoctorReservePage() {
           <input 
             type="number" 
             placeholder="Age" 
-            className="mt-1 p-4 block w-full rounded-md border text-md border-gray-400 shadow-sm h-12"
+            className="mt-1 p-4 block w-full rounded-md border text-md border-gray-600 bg-gray-800 text-white h-12"
             value={age}
             onChange={(e) => setAge(e.target.value)}
             required
@@ -190,7 +189,7 @@ export default function DoctorReservePage() {
               <button 
                 key={genderOption} 
                 type="button" 
-                className={`py-2 px-4 border border-gray-400 rounded-md text-md text-black hover:bg-blue-50 ${gender === genderOption ? 'bg-green-600 text-white' : 'bg-white'}`}
+                className={`py-2 px-4 border border-gray-600 rounded-md text-md hover:bg-green-600 hover:text-white ${gender === genderOption ? 'bg-green-600 text-white' : 'bg-gray-300 text-black'}`}
                 onClick={() => handleGenderSelect(genderOption)}
               >
                 {genderOption}
@@ -201,7 +200,7 @@ export default function DoctorReservePage() {
           <textarea 
             placeholder="Describe your problem" 
             rows={6} 
-            className="mt-1 block w-full p-4 rounded-md border text-lg border-gray-400 shadow-sm"
+            className="mt-1 block w-full p-4 rounded-md border text-lg border-gray-600 bg-gray-800 text-white"
             value={problem}
             onChange={(e) => setProblem(e.target.value)}
             required
@@ -209,7 +208,7 @@ export default function DoctorReservePage() {
 
           <button 
             type="submit" 
-            className="w-full py-4 px-4 bg-black text-white rounded-md hover:bg-green-600 border border-gray-400"
+            className="w-full py-4 px-4 bg-gray-300 text-black rounded-md hover:bg-green-600 hover:text-white"
             disabled={!selectedDate || !selectedTime || !patientType || !fullName || !age || !gender || !problem}
           >
             Book Appointment
@@ -217,7 +216,7 @@ export default function DoctorReservePage() {
         </form>
       </div>
 
-      <div className="w-full max-w-lg mx-auto mt-8">
+      <div className="w-full mx-auto mt-8">
         <Footer />
       </div>
     </div>

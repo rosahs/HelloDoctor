@@ -122,12 +122,13 @@ export default function DoctorReservePage() {
         {/* Appointment Booking Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-md font-medium text-gray-700">Select Date</label>
+            <label className="block text-md font-medium  text-gray-700">Select Date</label>
             <input 
               type="date" 
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" 
+              className="mt-1 block w-full p-2 rounded-md border border-gray-400 shadow-sm" 
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
+              required
             />
           </div>
 
@@ -138,7 +139,7 @@ export default function DoctorReservePage() {
                 <button 
                   key={time} 
                   type="button" 
-                  className={`py-2 px-4 border rounded-md text-sm text-black hover:bg-blue-50 ${selectedTime === time ? 'bg-green-600 text-white' : 'bg-white'}`}
+                  className={`py-2 px-4 border border-gray-400 rounded-md text-md text-black hover:bg-blue-50 ${selectedTime === time ? 'bg-green-600 text-white' : 'bg-white'}`}
                   onClick={() => handleTimeSelect(time)}
                 >
                   {time}
@@ -152,14 +153,14 @@ export default function DoctorReservePage() {
             <div className="flex space-x-2 mt-1">
               <button 
                 type="button" 
-                className={`py-2 px-4 border rounded-md text-sm text-black hover:bg-blue-50 ${patientType === 'Yourself' ? 'bg-green-600 text-white' : 'bg-white'}`}
+                className={`py-2 px-4 border border-gray-400 rounded-md text-md text-black hover:bg-blue-50 ${patientType === 'Yourself' ? 'bg-green-600 text-white' : 'bg-white'}`}
                 onClick={() => handlePatientTypeSelect('Yourself')}
               >
                 Yourself
               </button>
               <button 
                 type="button" 
-                className={`py-2 px-4 border rounded-md text-sm text-black hover:bg-blue-50 ${patientType === 'Another Person' ? 'bg-green-600 text-white' : 'bg-white'}`}
+                className={`py-2 px-4 border border-gray-400 rounded-md text-md text-black hover:bg-blue-50 ${patientType === 'Another Person' ? 'bg-green-600 text-white' : 'bg-white'}`}
                 onClick={() => handlePatientTypeSelect('Another Person')}
               >
                 Another Person
@@ -170,16 +171,18 @@ export default function DoctorReservePage() {
           <input 
             type="text" 
             placeholder="Full Name" 
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm h-12"
+            className="mt-1 p-4 block text-md w-full rounded-md border border-gray-400 shadow-sm h-12"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
+            required
           />
           <input 
             type="number" 
             placeholder="Age" 
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm h-12"
+            className="mt-1 p-4 block w-full rounded-md border text-md border-gray-400 shadow-sm h-12"
             value={age}
             onChange={(e) => setAge(e.target.value)}
+            required
           />
 
           <div className="flex space-x-2">
@@ -187,7 +190,7 @@ export default function DoctorReservePage() {
               <button 
                 key={genderOption} 
                 type="button" 
-                className={`py-2 px-4 border rounded-md text-sm text-black hover:bg-blue-50 ${gender === genderOption ? 'bg-green-600 text-white' : 'bg-white'}`}
+                className={`py-2 px-4 border border-gray-400 rounded-md text-md text-black hover:bg-blue-50 ${gender === genderOption ? 'bg-green-600 text-white' : 'bg-white'}`}
                 onClick={() => handleGenderSelect(genderOption)}
               >
                 {genderOption}
@@ -197,19 +200,23 @@ export default function DoctorReservePage() {
 
           <textarea 
             placeholder="Describe your problem" 
-            rows={3} 
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            rows={6} 
+            className="mt-1 block w-full p-4 rounded-md border text-lg border-gray-400 shadow-sm"
             value={problem}
             onChange={(e) => setProblem(e.target.value)}
+            required
           ></textarea>
 
-          <button type="submit" className="w-full py-4 px-4 bg-black text-white rounded-md hover:bg-green-600">
+          <button 
+            type="submit" 
+            className="w-full py-4 px-4 bg-black text-white rounded-md hover:bg-green-600 border border-gray-400"
+            disabled={!selectedDate || !selectedTime || !patientType || !fullName || !age || !gender || !problem}
+          >
             Book Appointment
           </button>
         </form>
       </div>
 
-      {/* Footer */}
       <div className="w-full max-w-lg mx-auto mt-8">
         <Footer />
       </div>

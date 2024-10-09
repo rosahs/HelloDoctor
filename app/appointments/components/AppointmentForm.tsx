@@ -15,11 +15,17 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import CustomFormField, { FormFieldType } from "@/components/auth/CustomFormField";
 import { Button } from "@/components/ui/button";
-import { Form } from "../ui/form";
-import { Appointment } from "@/actions/appointment-actions"; 
+import { Form } from "../../../components/ui/form";
 
-const appointmentId = (searchParams?.appointmentId as string) || "";
-  const appointment = await getAppointment(appointmentId);
+interface Appointment {
+  _id: string;
+  primaryPhysician: string;
+  schedule: Date;
+  reason: string;
+  note?: string;
+  status: "pending" | "scheduled" | "completed" | "cancelled";
+  cancellationReason?: string;
+}
 
 export const AppointmentForm = ({
   userId,
@@ -31,7 +37,7 @@ export const AppointmentForm = ({
   userId: string;
   patientId: string;
   type: "create" | "schedule" | "cancel";
-  appointment?: Appointment;
+  appointment?: Appointment; // Use the Appointment type here
   setOpen?: Dispatch<SetStateAction<boolean>>;
 }) => {
   const router = useRouter();
@@ -42,8 +48,8 @@ export const AppointmentForm = ({
   const form = useForm<z.infer<typeof AppointmentFormValidation>>({
     resolver: zodResolver(AppointmentFormValidation),
     defaultValues: {
-      primaryPhysician: appointment ? appointment?.primaryPhysician : "",
-      schedule: appointment ? new Date(appointment?.schedule!) : new Date(Date.now()),
+      primaryPhysician: appointment ? appointment.primaryPhysician : "",
+      schedule: appointment ? new Date(appointment.schedule) : new Date(Date.now()),
       reason: appointment ? appointment.reason : "",
       note: appointment?.note || "",
       cancellationReason: appointment?.cancellationReason || "",
@@ -94,6 +100,7 @@ export const AppointmentForm = ({
             cancellationReason: values.cancellationReason,
           },
           type,
+          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         };
 
         const updatedAppointment = await updateAppointment(appointmentToUpdate);

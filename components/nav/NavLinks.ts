@@ -46,4 +46,8 @@ export const patientLinks = [
     href: "/patient/dashboard",
     label: "My Appointments",
   },
+  {
+    href: "/payment",
+    label: "Payment",
+  },
 ];

@@ -28,64 +28,65 @@ export default function DoctorReservePage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <div className="flex-grow p-4">
+      <div className="flex-grow p-6">
         <div className="w-full max-w-6xl mx-auto">
           {/* Back Button */}
-          <div className="mb-4">
-            <button onClick={() => router.back()} className="text-green-800 text-lg">
+          <div className="mb-6">
+            <button onClick={() => router.back()} className="text-green-800 text-2xl">
               ← Back
             </button>
           </div>
 
           {/* Header */}
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-6">
             <div className="flex items-center">
               <Image
                 src={doctor.imageUrl}
                 alt={doctor.name}
                 width={100}
                 height={100}
+                className="rounded-full"
               />
-              <div className="ml-4">
-                <h2 className="font-bold text-lg">{doctor.name}</h2>
-                <p className="text-gray-600">{doctor.specialty}</p>
+              <div className="ml-6">
+                <h2 className="font-bold text-2xl">{doctor.name}</h2>
+                <p className="text-gray-600 text-xl">{doctor.specialty}</p>
               </div>
             </div>
-            <Bookmark className="text-gray-800" />
+            <Bookmark className="text-gray-800" size={32} />
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-between mb-4">
-            <button className="w-1/2 h-12 bg-black text-white p-2 rounded-md mr-2">
+          <div className="flex justify-between mb-6">
+            <button className="w-1/2 h-16 bg-black text-white text-2xl p-3 rounded-md mr-4">
               <MessageSquare className="inline-block mr-2" /> Message
             </button>
             <Link href={`/appointments/doctor-list/${doctorId}/reserve`} className="w-1/2">
-              <button className="w-full h-12 bg-black text-white p-2 rounded-md">
+              <button className="w-full h-16 bg-black text-white text-2xl p-3 rounded-md">
                 Reserve
               </button>
             </Link>
           </div>
 
           {/* Section Icons */}
-          <div className="flex justify-between mb-4">
+          <div className="flex justify-between mb-6">
             <div className="flex overflow-x-auto">
-              <User className="text-gray-800 min-w-[24px] mr-4" size={24} />
-              <ImageIcon className="text-gray-800 min-w-[24px] mr-4" size={24} />
-              <MapPin className="text-gray-800 min-w-[24px] mr-4" size={24} />
-              <Star className="text-gray-800 min-w-[24px]" size={24} />
+              <User className="text-gray-800 min-w-[32px] mr-4" size={32} />
+              <ImageIcon className="text-gray-800 min-w-[32px] mr-4" size={32} />
+              <MapPin className="text-gray-800 min-w-[32px] mr-4" size={32} />
+              <Star className="text-gray-800 min-w-[32px]" size={32} />
             </div>
           </div>
 
           {/* About */}
-          <div className="mb-4">
-            <h3 className="font-bold text-lg">About me</h3>
-            <p className="text-gray-600">{doctor.about}</p>
+          <div className="mb-6">
+            <h3 className="font-bold text-2xl">About me</h3>
+            <p className="text-gray-600 text-xl">{doctor.about}</p>
           </div>
 
           {/* Specialties */}
-          <div className="mb-4">
-            <h3 className="font-bold text-lg">Specialties</h3>
-            <ul className="list-disc ml-5 text-gray-600">
+          <div className="mb-6">
+            <h3 className="font-bold text-2xl">Specialties</h3>
+            <ul className="list-disc ml-5 text-gray-600 text-xl">
               {doctor.specialties.map((specialty, index) => (
                 <li key={index}>{specialty}</li>
               ))}
@@ -93,9 +94,9 @@ export default function DoctorReservePage() {
           </div>
 
           {/* Certifications */}
-          <div className="mb-4">
-            <h3 className="font-bold text-lg">Certifications</h3>
-            <ul className="list-disc ml-5 text-gray-600">
+          <div className="mb-6">
+            <h3 className="font-bold text-2xl">Certifications</h3>
+            <ul className="list-disc ml-5 text-gray-600 text-xl">
               {doctor.certifications.map((certification, index) => (
                 <li key={index}>{certification}</li>
               ))}
@@ -103,9 +104,9 @@ export default function DoctorReservePage() {
           </div>
 
           {/* Professional Experience */}
-          <div className="mb-4">
-            <h3 className="font-bold text-lg">Professional Experience</h3>
-            <ul className="list-disc ml-5 text-gray-600">
+          <div className="mb-6">
+            <h3 className="font-bold text-2xl">Professional Experience</h3>
+            <ul className="list-disc ml-5 text-gray-600 text-xl">
               {doctor.experience.map((exp, index) => (
                 <li key={index}>{exp}</li>
               ))}
@@ -114,8 +115,8 @@ export default function DoctorReservePage() {
 
           {/* Languages */}
           <div>
-            <h3 className="font-bold text-lg">Languages</h3>
-            <ul className="list-disc ml-5 text-gray-600">
+            <h3 className="font-bold text-2xl">Languages</h3>
+            <ul className="list-disc ml-5 text-gray-600 text-xl">
               {doctor.languages.map((language, index) => (
                 <li key={index}>{language}</li>
               ))}

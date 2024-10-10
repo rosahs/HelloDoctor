@@ -21,7 +21,6 @@ import { FormError } from "./FormError";
 import { FormSuccess } from "./FormSuccess";
 import { register } from "@/actions/register";
 import { UserRole } from "@/lib/userRole";
-import { DoctorSpecializationField } from "./DoctorSpecializationField";
 
 export const RegisterForm = () => {
   const [error, setError] = useState<string | undefined>(
@@ -41,7 +40,6 @@ export const RegisterForm = () => {
       passwordConfirm: "",
       name: "",
       role: "PATIENT",
-      specialization: "",
     },
   });
 
@@ -119,12 +117,6 @@ export const RegisterForm = () => {
                   <FormMessage />
                 </FormItem>
               )}
-            />
-
-            {/* DoctorSpecializationField  */}
-            <DoctorSpecializationField
-              form={form}
-              activeRole={activeRole}
             />
 
             <FormField

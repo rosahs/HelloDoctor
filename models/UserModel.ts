@@ -28,7 +28,6 @@ export interface UserDocument extends Document {
   isTwoFactorEnabled: boolean;
   twoFactorConfirmation?: mongoose.Types.ObjectId;
   authProviderId?: string;
-  doctor?: mongoose.Types.ObjectId;
 }
 
 const UserSchema = new Schema<UserDocument>(
@@ -66,10 +65,6 @@ const UserSchema = new Schema<UserDocument>(
     },
     authProviderId: { type: String },
     accounts: [{ type: Object }],
-    doctor: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Doctor",
-    },
   },
   { timestamps: true }
 );

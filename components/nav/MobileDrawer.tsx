@@ -46,7 +46,7 @@ function MobileDrawer({
         <div className={styles.navUser}>
           <Link href="/" className={styles.navUserLink}>
             <Image
-              src="/user2.jpg"
+              src={user.profileImage || "/profile.jpg"}
               alt="User Picture"
               width={55}
               height={55}
@@ -57,8 +57,9 @@ function MobileDrawer({
               <span className="text-lg text">
                 {user.name}
               </span>
+
               <span className="text-sm text-textLight">
-                Cardiologist
+                {user.doctor?.specialization || user.role}
               </span>
             </div>
           </Link>

@@ -6,6 +6,7 @@ import { saveOAuthUser } from "./data/saveOAuthUser";
 import { getTwoFactorConfirmationByUserId } from "./data/two-factor-confirmation";
 import { TwoFactorConfirmation } from "./models/AuthModels";
 import { connectDB } from "./lib/db";
+import { Doctor } from "./next-auth";
 
 export const { handlers, auth, signIn, signOut } = NextAuth(
   {
@@ -80,6 +81,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
 
         const user = await getUserById(token.sub);
 
+        console.log("user", user);
+
         if (!user) return token;
 
         token.isOAuth = !!user.authProviderId;
@@ -87,6 +90,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
         token.email = user.email;
         token.role = user.role;
         token.isTwoFactorEnabled = user.isTwoFactorEnabled;
+        token.profileImage = user.profileImage;
+
+        if (user.role === "DOCTOR") {
+          token.doctor = user.doctor;
+        }
 
         return token;
       },
@@ -103,6 +111,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
             token.isTwoFactorEnabled as boolean;
           session.user.image = token.image as string;
           session.user.isOAuth = token.isOAuth as boolean;
+          session.user.profileImage =
+            token.profileImage as string;
+        }
+
+        if (
+          session.user &&
+          token.role === "DOCTOR" &&
+          token.doctor
+        ) {
+          session.user.doctor = token.doctor as Doctor;
         }
 
         return session;

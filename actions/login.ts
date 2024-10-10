@@ -65,8 +65,6 @@ export const login = async (
       return { success: "Confirmation email sent!" };
     }
 
-    console.log(user.isTwoFactorEnabled);
-
     if (user.isTwoFactorEnabled) {
       if (code) {
         const twoFactorToken =

@@ -3,11 +3,14 @@
 import { getUserById } from "@/data/user";
 import { currentUser } from "@/lib/auth";
 import { UserRole } from "@/lib/userRole";
+import Doctor from "@/models/DoctorModel";
 
-export async function setUserRole(role: UserRole) {
+export async function setUserRole(
+  role: UserRole,
+  specialization?: string
+) {
   try {
     const session = await currentUser();
-
     if (!session || !session.id) {
       throw new Error("Unauthorized");
     }
@@ -26,6 +29,18 @@ export async function setUserRole(role: UserRole) {
 
     user.role = role;
 
+    if (role === UserRole.DOCTOR) {
+      if (!specialization) {
+        throw new Error(
+          "Specialization is required for doctors"
+        );
+      }
+      const doctor = await Doctor.create({
+        specialization,
+      });
+      user.doctor = doctor._id;
+    }
+
     await user.save();
 
     return {
@@ -33,7 +48,7 @@ export async function setUserRole(role: UserRole) {
     };
   } catch {
     return {
-      error: `An unexpected error occurred. Please try again.`,
+      error: `An unexpected error occurred`,
     };
   }
 }

@@ -85,26 +85,26 @@ export default auth(async (req) => {
       return NextResponse.redirect(
         new URL(redirectUrl, nextUrl)
       );
-    } else if (
-      isLoggedIn &&
-      !userRole &&
-      nextUrl.pathname !== OAUTH_ROLE_SELECTION_REDIRECT
-    ) {
-      return NextResponse.redirect(
-        new URL(OAUTH_ROLE_SELECTION_REDIRECT, nextUrl)
-      );
     }
 
     // Doctor route protection
     if (isDoctorProtectedRoute) {
-      if (userRole !== "DOCTOR") {
+      if (!isLoggedIn) {
+        return NextResponse.redirect(
+          new URL("/auth/login", nextUrl)
+        );
+      } else if (userRole !== "DOCTOR") {
         return NextResponse.redirect(new URL("/", nextUrl));
       }
     }
 
     // Patient route protection
     if (isPatientProtectedRoute) {
-      if (userRole !== "PATIENT") {
+      if (!isLoggedIn) {
+        return NextResponse.redirect(
+          new URL("/auth/login", nextUrl)
+        );
+      } else if (userRole !== "PATIENT") {
         return NextResponse.redirect(new URL("/", nextUrl));
       }
     }

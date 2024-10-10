@@ -11,6 +11,7 @@ const config: Config = {
     extend: {
       colors: {
         primaryColor: "#91BE55",
+        'custom-green': "#91BE55", 
         babyPowder: "#f8faf4",
         inputBg: "#E8E8E8", // Background color of the input
         inputBorder: "#787878", // Border color of the input
@@ -78,4 +79,5 @@ const config: Config = {
   },
   plugins: [require("tailwindcss-animate")],
 };
+
 export default config;

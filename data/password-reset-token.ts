@@ -1,15 +1,12 @@
-import { connectDB } from "@/lib/db";
-import { PasswordResetToken } from "@/models/AuthModels";
+import { db } from "@/lib/db";
 
 export const getPasswordResetTokenByToken = async (
   token: string
 ) => {
   try {
-    await connectDB();
-
     const passwordResetToken =
-      await PasswordResetToken.findOne({
-        token,
+      await db.passwordResetToken.findUnique({
+        where: { token },
       });
 
     return passwordResetToken;
@@ -22,11 +19,9 @@ export const getPasswordResetTokenByEmail = async (
   email: string
 ) => {
   try {
-    await connectDB();
-
     const passwordResetToken =
-      await PasswordResetToken.findOne({
-        email,
+      await db.passwordResetToken.findFirst({
+        where: { email },
       });
 
     return passwordResetToken;

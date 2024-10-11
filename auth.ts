@@ -1,12 +1,13 @@
 import NextAuth from "next-auth";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+
 import authConfig from "./auth.config";
 import { getUserById } from "./data/user";
 import { UserRole } from "./lib/userRole";
-import { saveOAuthUser } from "./data/saveOAuthUser";
 import { getTwoFactorConfirmationByUserId } from "./data/two-factor-confirmation";
-import { TwoFactorConfirmation } from "./models/AuthModels";
-import { connectDB } from "./lib/db";
+import { db } from "./lib/db";
 import { Doctor } from "./next-auth";
+import { getAccountByUserId } from "./data/account";
 
 export const { handlers, auth, signIn, signOut } = NextAuth(
   {
@@ -14,40 +15,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
       signIn: "/auth/login",
       error: "/auth/error",
     },
+    events: {
+      async linkAccount({ user }) {
+        await db.user.update({
+          where: { id: user.id },
+          data: { emailVerified: new Date() },
+        });
+      },
+    },
     callbacks: {
-      async signIn({ user, account, profile }) {
+      async signIn({ user, account }) {
         if (!account) {
           return false;
         }
 
-        if (account.provider === "google" && profile) {
-          try {
-            // This function should either create or retrieve the user based on their Google profile
-            const OAuthUser = await saveOAuthUser(
-              profile,
-              account
-            );
-
-            // Check if there was an error during user saving
-            if (OAuthUser && OAuthUser.error) {
-              // Redirect to the error page with the specific error message
-              return `/auth/error?error=${encodeURIComponent(
-                OAuthUser.error
-              )}`;
-            }
-
-            if (!OAuthUser) {
-              return false;
-            }
-
-            // Set the user's ID from the database (OAuthUser.id)
-            user.id = OAuthUser._id.toString();
-
-            return true;
-          } catch {
-            return false;
-          }
-        }
+        if (account?.provider !== "credentials")
+          return true;
 
         if (!user.id) {
           return false;
@@ -67,12 +50,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
 
           if (!twoFactorConfirmation) return false;
 
-          await connectDB();
-
           // Delete two factor confirmation for next sign in
-          await TwoFactorConfirmation.findByIdAndDelete(
-            twoFactorConfirmation.id
-          );
+          await db.twoFactorConfirmation.delete({
+            where: { id: twoFactorConfirmation.id },
+          });
         }
         return true;
       },
@@ -85,16 +66,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
 
         if (!user) return token;
 
-        token.isOAuth = !!user.authProviderId;
+        const existingAccount = await getAccountByUserId(
+          user.id
+        );
+
+        token.isOAuth = !!existingAccount;
         token.name = user.name;
         token.email = user.email;
         token.role = user.role;
         token.isTwoFactorEnabled = user.isTwoFactorEnabled;
         token.profileImage = user.profileImage;
-
-        if (user.role === "DOCTOR") {
-          token.doctor = user.doctor;
-        }
 
         return token;
       },
@@ -126,6 +107,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
         return session;
       },
     },
+    adapter: PrismaAdapter(db),
     session: { strategy: "jwt" },
     ...authConfig,
   }

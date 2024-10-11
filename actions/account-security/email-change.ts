@@ -2,8 +2,7 @@
 
 import { getUserByEmail, getUserById } from "@/data/user";
 import { currentUser } from "@/lib/auth";
-import { connectDB } from "@/lib/db";
-import User from "@/models/UserModel";
+import { db } from "@/lib/db";
 import { emailChangeSchema } from "@/schemas";
 import * as z from "zod";
 
@@ -11,8 +10,6 @@ export const emailChange = async (
   value: z.infer<typeof emailChangeSchema>
 ) => {
   try {
-    await connectDB();
-
     const user = await currentUser();
 
     if (!user || !user.id) {
@@ -34,8 +31,11 @@ export const emailChange = async (
         return { error: "Email already in use!" };
       }
 
-      await User.findByIdAndUpdate(dbUser.id, {
-        email: value.email,
+      await db.user.update({
+        where: { id: dbUser.id },
+        data: {
+          email: value.email,
+        },
       });
     }
 

@@ -18,19 +18,14 @@ import {
   sendTwoFactorTokenEmail,
   sendVerificationEmail,
 } from "@/lib/send-mail";
-import {
-  TwoFactorConfirmation,
-  TwoFactorToken,
-} from "@/models/AuthModels";
+
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
-import { connectDB } from "@/lib/db";
+import { db } from "@/lib/db";
 
 export const login = async (
   values: z.infer<typeof LoginSchema>
 ) => {
-  await connectDB();
-
   const validatedFields = LoginSchema.safeParse(values);
 
   if (!validatedFields.success) {
@@ -65,47 +60,89 @@ export const login = async (
       return { success: "Confirmation email sent!" };
     }
 
+    // if (user.isTwoFactorEnabled) {
+    //   if (code) {
+    //     const twoFactorToken =
+    //       await getTwoFactorTokenByEmail(user.email);
+
+    //     if (
+    //       !twoFactorToken ||
+    //       twoFactorToken.token !== code
+    //     ) {
+    //       return { error: "Invalid code!" };
+    //     }
+
+    //     if (new Date(twoFactorToken.expires) < new Date()) {
+    //       return { error: "Code expired!" };
+    //     }
+
+    //     await TwoFactorToken.findByIdAndDelete(
+    //       twoFactorToken.id
+    //     );
+
+    //     const existingConfirmation =
+    //       await getTwoFactorConfirmationByUserId(user.id);
+    //     if (existingConfirmation) {
+    //       await TwoFactorConfirmation.findByIdAndDelete(
+    //         existingConfirmation.id
+    //       );
+    //     }
+
+    //     await TwoFactorConfirmation.create({
+    //       userId: user.id,
+    //     });
+    //   } else {
+    //     const twoFactorToken = await generateTwoFactorToken(
+    //       user.email
+    //     );
+
+    //     await sendTwoFactorTokenEmail(
+    //       twoFactorToken.email,
+    //       twoFactorToken.token
+    //     );
+
+    //     return { twoFactor: true };
+    //   }
+    // }
+
     if (user.isTwoFactorEnabled) {
       if (code) {
         const twoFactorToken =
           await getTwoFactorTokenByEmail(user.email);
-
         if (
           !twoFactorToken ||
           twoFactorToken.token !== code
         ) {
           return { error: "Invalid code!" };
         }
-
         if (new Date(twoFactorToken.expires) < new Date()) {
           return { error: "Code expired!" };
         }
 
-        await TwoFactorToken.findByIdAndDelete(
-          twoFactorToken.id
-        );
+        await db.twoFactorToken.delete({
+          where: { id: twoFactorToken.id },
+        });
 
         const existingConfirmation =
           await getTwoFactorConfirmationByUserId(user.id);
         if (existingConfirmation) {
-          await TwoFactorConfirmation.findByIdAndDelete(
-            existingConfirmation.id
-          );
+          await db.twoFactorConfirmation.delete({
+            where: { id: existingConfirmation.id },
+          });
         }
-
-        await TwoFactorConfirmation.create({
-          userId: user.id,
+        await db.twoFactorConfirmation.create({
+          data: { userId: user.id },
         });
+
+        // return await attemptSignIn(email, password);
       } else {
         const twoFactorToken = await generateTwoFactorToken(
           user.email
         );
-
         await sendTwoFactorTokenEmail(
           twoFactorToken.email,
           twoFactorToken.token
         );
-
         return { twoFactor: true };
       }
     }

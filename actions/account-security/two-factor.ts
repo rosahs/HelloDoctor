@@ -2,13 +2,10 @@
 
 import { getUserById } from "@/data/user";
 import { currentUser } from "@/lib/auth";
-import { connectDB } from "@/lib/db";
-import User from "@/models/UserModel";
+import { db } from "@/lib/db";
 
 export const toggleTwoFactorAuth = async () => {
   try {
-    await connectDB();
-
     const user = await currentUser();
 
     if (!user || !user.id) {
@@ -17,14 +14,17 @@ export const toggleTwoFactorAuth = async () => {
 
     const dbUser = await getUserById(user.id);
 
-    await User.findByIdAndUpdate(dbUser.id, {
-      isTwoFactorEnabled: !dbUser.isTwoFactorEnabled,
+    await db.user.update({
+      where: { id: dbUser?.id },
+      data: {
+        isTwoFactorEnabled: !dbUser?.isTwoFactorEnabled,
+      },
     });
 
     return {
       success: true,
     };
-  } catch (error) {
+  } catch {
     return { error: "Failed to toggle 2FA" };
   }
 };

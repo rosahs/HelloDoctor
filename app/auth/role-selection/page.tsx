@@ -67,35 +67,38 @@ const RoleSelection = () => {
     setError("");
     setSuccess("");
 
-    const redirectTo =
-      values.role === UserRole.DOCTOR
-        ? DOCTOR_LOGIN_REDIRECT
-        : PATIENT_LOGIN_REDIRECT;
-
-    try {
-      // If the role is PATIENT, set specialization to null
-      const specialization =
+    // Use startTransition to make this async process non-blocking
+    startTransition(async () => {
+      const redirectTo =
         values.role === UserRole.DOCTOR
-          ? values.specialization
-          : null;
+          ? DOCTOR_LOGIN_REDIRECT
+          : PATIENT_LOGIN_REDIRECT;
 
-      const result = await setUserRole(
-        values.role,
-        specialization ?? ""
-      );
+      try {
+        // If the role is PATIENT, set specialization to null
+        const specialization =
+          values.role === UserRole.DOCTOR
+            ? values.specialization
+            : null;
 
-      if (result.success) {
-        setSuccess(result.success);
+        const result = await setUserRole(
+          values.role,
+          specialization ?? ""
+        );
 
-        await update();
+        if (result.success) {
+          setSuccess(result.success);
 
-        router.replace(redirectTo);
-      } else {
-        setError(result.error);
+          await update();
+
+          router.replace(redirectTo);
+        } else {
+          setError(result.error);
+        }
+      } catch {
+        setError("Something went wrong.");
       }
-    } catch {
-      setError("Something went wrong.");
-    }
+    });
   };
 
   return (

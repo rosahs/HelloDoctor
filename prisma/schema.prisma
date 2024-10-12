@@ -98,10 +98,10 @@ model Doctor {
   specialization         String
   images                 String[]
   aboutMe                String?
-  specialties            String[]
-  certifications         String[]
-  professionalExperience String[]
-  languages              String[]
+  specialties            String?
+  certifications         String?
+  professionalExperience String?
+  languages              String?
 
   @@map("doctors")
 }

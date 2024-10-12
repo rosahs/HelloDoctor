@@ -4,7 +4,6 @@ import bcrypt from "bcryptjs";
 import { getUserById } from "@/data/user";
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
-import User from "@/models/UserModel";
 import { passwordChangeSchema } from "@/schemas";
 import * as z from "zod";
 
@@ -24,6 +23,13 @@ export const passwordChange = async (
       return { error: "Unauthorized" };
     }
 
+    // Ensure the user's password is not null
+    if (!dbUser.password) {
+      return {
+        error: "User does not have a password set!",
+      };
+    }
+
     if (values.password && values.newPassword) {
       const passwordsMatch = await bcrypt.compare(
         values.password,
@@ -39,7 +45,7 @@ export const passwordChange = async (
         10
       );
 
-      await prisma.user.update({
+      await db.user.update({
         where: { id: dbUser.id },
         data: {
           password: hashedPassword,

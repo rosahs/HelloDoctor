@@ -24,15 +24,14 @@ enum UserRole {
 model User {
   id                     String                  @id @default(auto()) @map("_id") @db.ObjectId
   name                   String
-  email                  String                @unique
+  email                  String?                 @unique
   emailVerified          DateTime?               @map("email_verified")
   image                  String?
   password               String?
-  role                   UserRole                
+  role                   UserRole?                
   isTwoFactorEnabled     Boolean                 @default(false)
   twoFactorConfirmation  TwoFactorConfirmation?
   accounts               Account[]
-  doctor                 Doctor?                 @relation(fields: [doctorId], references: [id])
   doctorId               String?                 @db.ObjectId @map("doctor_id")
 
   @@map("users")
@@ -103,7 +102,6 @@ model Doctor {
   certifications         String[]
   professionalExperience String[]
   languages              String[]
-  users                  User[]   // This replaces the "User User[]" line
 
   @@map("doctors")
 }

@@ -6,8 +6,9 @@ import { getUserById } from "./data/user";
 import { UserRole } from "./lib/userRole";
 import { getTwoFactorConfirmationByUserId } from "./data/two-factor-confirmation";
 import { db } from "./lib/db";
-import { Doctor } from "./next-auth";
 import { getAccountByUserId } from "./data/account";
+import { getDoctorById } from "./data/doctor";
+import { Doctor } from "./next-auth";
 
 export const { handlers, auth, signIn, signOut } = NextAuth(
   {
@@ -24,13 +25,39 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
       },
     },
     callbacks: {
-      async signIn({ user, account }) {
-        if (!account) {
-          return false;
-        }
+      async signIn({ user, account, profile }) {
+        // If the sign-in provider is OAuth
+        if (account && account.provider !== "credentials") {
+          const email = profile?.email;
 
-        if (account?.provider !== "credentials")
-          return true;
+          if (email) {
+            const existingUser = await db.user.findUnique({
+              where: { email },
+            });
+
+            // If email exists in the database but the provider is different
+            if (existingUser) {
+              // Check if the user is trying to sign in with a different OAuth provider
+              const existingAccount =
+                await db.account.findFirst({
+                  where: {
+                    userId: existingUser.id,
+                    provider: account.provider,
+                  },
+                });
+
+              // If the user has already signed in with this provider, proceed
+              if (existingAccount) {
+                return true;
+              }
+
+              return `/auth/error?error=EmailExists`;
+            } else {
+              // No existing user found with the email, allow sign in and create a new user
+              return true;
+            }
+          }
+        }
 
         if (!user.id) {
           return false;
@@ -41,7 +68,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
         //Prevent sign in without email verification`
         if (!existingUser?.emailVerified) return false;
 
-        //  ADD 2FA CHECK
         if (existingUser.isTwoFactorEnabled) {
           const twoFactorConfirmation =
             await getTwoFactorConfirmationByUserId(
@@ -55,6 +81,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
             where: { id: twoFactorConfirmation.id },
           });
         }
+
         return true;
       },
       async jwt({ token }) {
@@ -75,7 +102,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
         token.email = user.email;
         token.role = user.role;
         token.isTwoFactorEnabled = user.isTwoFactorEnabled;
-        token.profileImage = user.profileImage;
+        token.image = user.image;
+
+        // Check if the user has a doctorId and if it's not null
+        if (
+          user.role === UserRole.DOCTOR &&
+          user.doctorId
+        ) {
+          const doctor = await getDoctorById(user.doctorId);
+
+          token.doctor = doctor;
+        }
 
         return token;
       },
@@ -92,15 +129,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
             token.isTwoFactorEnabled as boolean;
           session.user.image = token.image as string;
           session.user.isOAuth = token.isOAuth as boolean;
-          session.user.profileImage =
-            token.profileImage as string;
+          session.user.image = token.image as string;
         }
 
-        if (
-          session.user &&
-          token.role === "DOCTOR" &&
-          token.doctor
-        ) {
+        // Add the doctor info if available
+        if (token.doctor) {
           session.user.doctor = token.doctor as Doctor;
         }
 

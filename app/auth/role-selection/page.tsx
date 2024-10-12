@@ -79,9 +79,10 @@ const RoleSelection = () => {
 
       if (result.success) {
         setSuccess(result.success);
-        await update(); // Ensure the session is updated before redirecting
 
-        router.push(redirectTo); // Perform the navigation directly
+        await update();
+
+        router.replace(redirectTo);
       } else {
         setError(result.error);
       }

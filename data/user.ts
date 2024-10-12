@@ -27,15 +27,3 @@ export const getUserById = async (id: string) => {
     return null;
   }
 };
-
-// export const getDoctorById = async (id: string) => {
-//   try {
-//     await connectDB();
-
-//     const user = await Doctor.findById(id);
-
-//     return user;
-//   } catch {
-//     return null;
-//   }
-// };

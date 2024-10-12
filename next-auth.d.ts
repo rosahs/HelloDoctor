@@ -2,7 +2,7 @@ import { type DefaultSession } from "next-auth";
 import { UserRole } from "./lib/userRole";
 
 export type Doctor = {
-  _id: string;
+  id: string;
   specialization: string;
   images: string[];
   specialties: string[];
@@ -18,6 +18,7 @@ export type ExtendedUser = DefaultSession["user"] & {
   isTwoFactorEnabled: boolean;
   isOAuth: boolean;
   profileImage?: string;
+  doctor: Doctor;
 };
 
 declare module "next-auth" {

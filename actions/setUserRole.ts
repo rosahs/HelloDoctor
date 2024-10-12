@@ -2,8 +2,8 @@
 
 import { getUserById } from "@/data/user";
 import { currentUser } from "@/lib/auth";
+import { db } from "@/lib/db";
 import { UserRole } from "@/lib/userRole";
-import Doctor from "@/models/DoctorModel";
 
 export async function setUserRole(
   role: UserRole,
@@ -29,19 +29,35 @@ export async function setUserRole(
 
     user.role = role;
 
+    // Create or update the doctor profile if the role is DOCTOR
+    let doctorId;
+
     if (role === UserRole.DOCTOR) {
       if (!specialization) {
         throw new Error(
           "Specialization is required for doctors"
         );
       }
-      const doctor = await Doctor.create({
-        specialization,
+
+      // Create a new doctor profile
+      const doctor = await db.doctor.create({
+        data: {
+          specialization,
+        },
       });
-      user.doctor = doctor._id;
+
+      // Get the created doctor's ID
+      doctorId = doctor.id;
     }
 
-    await user.save();
+    // Update user role and doctorId
+    await db.user.update({
+      where: { id: user.id },
+      data: {
+        role,
+        doctorId: doctorId || null,
+      },
+    });
 
     return {
       success: `Role successfully set to '${role}'.`,

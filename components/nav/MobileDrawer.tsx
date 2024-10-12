@@ -46,7 +46,7 @@ function MobileDrawer({
         <div className={styles.navUser}>
           <Link href="/" className={styles.navUserLink}>
             <Image
-              src={user.profileImage || "/profile.jpg"}
+              src={user.image || "/profile.jpg"}
               alt="User Picture"
               width={55}
               height={55}

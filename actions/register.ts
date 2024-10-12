@@ -8,7 +8,6 @@ import { getUserByEmail } from "@/data/user";
 import { db } from "@/lib/db";
 import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationEmail } from "@/lib/send-mail";
-import Doctor from "@/models/DoctorModel";
 import { UserRole } from "@prisma/client";
 
 export const register = async (

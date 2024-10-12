@@ -102,14 +102,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
         token.isTwoFactorEnabled = user.isTwoFactorEnabled;
         token.image = user.image;
 
-        // Check if the user has a doctorId and if it's not null
+        // Add doctor information if the user is a doctor
         if (
           user.role === UserRole.DOCTOR &&
           user.doctorId
         ) {
           const doctor = await getDoctorById(user.doctorId);
 
-          token.doctor = doctor;
+          if (doctor) {
+            token.doctorId = user.doctorId;
+            token.doctor = doctor;
+          }
         }
 
         return token;
@@ -133,6 +136,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
         // Add the doctor info if available
         if (token.doctor) {
           session.user.doctor = token.doctor as Doctor;
+          session.user.doctorId = token.doctorId as string;
         }
 
         return session;

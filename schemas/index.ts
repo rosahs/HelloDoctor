@@ -98,3 +98,36 @@ export const passwordChangeSchema = z
       path: ["confirmNewPassword"],
     }
   );
+
+export const DoctorAboutMeSchema = z
+  .object({
+    aboutMe: z
+      .string()
+      .min(1, "About Me is required")
+      .optional(),
+    specialties: z
+      .string()
+      .min(1, "Specialties are required")
+      .optional(),
+    certifications: z
+      .string()
+      .min(1, "Certifications are required")
+      .optional(),
+    professionalExperience: z
+      .string()
+      .min(1, "Professional Experience is required")
+      .optional(),
+    languages: z
+      .string()
+      .min(1, "Languages are required")
+      .optional(),
+  })
+  .refine(
+    (data) =>
+      Object.values(data).some(
+        (value) => value !== undefined
+      ),
+    {
+      message: "At least one field must be filled out",
+    }
+  );

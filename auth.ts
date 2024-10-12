@@ -1,11 +1,14 @@
 import NextAuth from "next-auth";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+
 import authConfig from "./auth.config";
 import { getUserById } from "./data/user";
-import { UserRole } from "./lib/userRole";
-import { saveOAuthUser } from "./data/saveOAuthUser";
 import { getTwoFactorConfirmationByUserId } from "./data/two-factor-confirmation";
-import { TwoFactorConfirmation } from "./models/AuthModels";
-import { connectDB } from "./lib/db";
+import { db } from "./lib/db";
+import { getAccountByUserId } from "./data/account";
+import { getDoctorById } from "./data/doctor";
+import { Doctor } from "./next-auth";
+import { UserRole } from "@prisma/client";
 
 export const { handlers, auth, signIn, signOut } = NextAuth(
   {
@@ -13,38 +16,46 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
       signIn: "/auth/login",
       error: "/auth/error",
     },
+    events: {
+      async linkAccount({ user }) {
+        await db.user.update({
+          where: { id: user.id },
+          data: { emailVerified: new Date() },
+        });
+      },
+    },
     callbacks: {
       async signIn({ user, account, profile }) {
-        if (!account) {
-          return false;
-        }
+        // If the sign-in provider is OAuth
+        if (account && account.provider !== "credentials") {
+          const email = profile?.email;
 
-        if (account.provider === "google" && profile) {
-          try {
-            // This function should either create or retrieve the user based on their Google profile
-            const OAuthUser = await saveOAuthUser(
-              profile,
-              account
-            );
+          if (email) {
+            const existingUser = await db.user.findUnique({
+              where: { email },
+            });
 
-            // Check if there was an error during user saving
-            if (OAuthUser && OAuthUser.error) {
-              // Redirect to the error page with the specific error message
-              return `/auth/error?error=${encodeURIComponent(
-                OAuthUser.error
-              )}`;
+            // If email exists in the database but the provider is different
+            if (existingUser) {
+              // Check if the user is trying to sign in with a different OAuth provider
+              const existingAccount =
+                await db.account.findFirst({
+                  where: {
+                    userId: existingUser.id,
+                    provider: account.provider,
+                  },
+                });
+
+              // If the user has already signed in with this provider, proceed
+              if (existingAccount) {
+                return true;
+              }
+
+              return `/auth/error?error=EmailExists`;
+            } else {
+              // No existing user found with the email, allow sign in and create a new user
+              return true;
             }
-
-            if (!OAuthUser) {
-              return false;
-            }
-
-            // Set the user's ID from the database (OAuthUser.id)
-            user.id = OAuthUser._id.toString();
-
-            return true;
-          } catch {
-            return false;
           }
         }
 
@@ -57,7 +68,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
         //Prevent sign in without email verification`
         if (!existingUser?.emailVerified) return false;
 
-        //  ADD 2FA CHECK
         if (existingUser.isTwoFactorEnabled) {
           const twoFactorConfirmation =
             await getTwoFactorConfirmationByUserId(
@@ -66,13 +76,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
 
           if (!twoFactorConfirmation) return false;
 
-          await connectDB();
-
           // Delete two factor confirmation for next sign in
-          await TwoFactorConfirmation.findByIdAndDelete(
-            twoFactorConfirmation.id
-          );
+          await db.twoFactorConfirmation.delete({
+            where: { id: twoFactorConfirmation.id },
+          });
         }
+
         return true;
       },
       async jwt({ token }) {
@@ -82,11 +91,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
 
         if (!user) return token;
 
-        token.isOAuth = !!user.authProviderId;
+        const existingAccount = await getAccountByUserId(
+          user.id
+        );
+
+        token.isOAuth = !!existingAccount;
         token.name = user.name;
         token.email = user.email;
         token.role = user.role;
         token.isTwoFactorEnabled = user.isTwoFactorEnabled;
+        token.image = user.image;
+
+        // Check if the user has a doctorId and if it's not null
+        if (
+          user.role === UserRole.DOCTOR &&
+          user.doctorId
+        ) {
+          const doctor = await getDoctorById(user.doctorId);
+
+          token.doctor = doctor;
+        }
 
         return token;
       },
@@ -103,11 +127,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
             token.isTwoFactorEnabled as boolean;
           session.user.image = token.image as string;
           session.user.isOAuth = token.isOAuth as boolean;
+          session.user.image = token.image as string;
+        }
+
+        // Add the doctor info if available
+        if (token.doctor) {
+          session.user.doctor = token.doctor as Doctor;
         }
 
         return session;
       },
     },
+    adapter: PrismaAdapter(db),
     session: { strategy: "jwt" },
     ...authConfig,
   }

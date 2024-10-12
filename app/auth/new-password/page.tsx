@@ -20,7 +20,7 @@ import { CardWrapper } from "@/components/auth/FormWrapper";
 import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/auth/FormError";
 import { FormSuccess } from "@/components/auth/FormSuccess";
-import { newPassword } from "@/actions/new-password";
+import { newPassword } from "@/actions/update-password";
 
 const NewPasswordPage = () => {
   const searchParams = useSearchParams();

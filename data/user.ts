@@ -1,10 +1,13 @@
-import { connectDB } from "@/lib/db";
-import User from "@/models/UserModel";
+import { db } from "@/lib/db";
 
 export const getUserByEmail = async (email: string) => {
   try {
-    await connectDB();
-    const user = await User.findOne({ email }).exec();
+    const user = await db.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
     return user;
   } catch {
     return null;
@@ -13,9 +16,12 @@ export const getUserByEmail = async (email: string) => {
 
 export const getUserById = async (id: string) => {
   try {
-    await connectDB();
+    const user = await db.user.findUnique({
+      where: {
+        id,
+      },
+    });
 
-    const user = await User.findById(id).exec();
     return user;
   } catch {
     return null;

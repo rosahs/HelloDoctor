@@ -1,4 +1,4 @@
-import { UserRole } from "@/lib/userRole";
+import { UserRole } from "@prisma/client";
 import * as z from "zod";
 
 export const RegisterSchema = z
@@ -18,12 +18,25 @@ export const RegisterSchema = z
     role: z.enum(
       Object.values(UserRole) as [string, ...string[]]
     ),
+    specialization: z.string().optional(),
   })
   .refine(
     (data) => data.password === data.passwordConfirm,
     {
       message: "Passwords don't match",
       path: ["passwordConfirm"],
+    }
+  )
+  .refine(
+    (data) => {
+      if (data.role === "DOCTOR") {
+        return !!data.specialization;
+      }
+      return true;
+    },
+    {
+      message: "Specialization is required for doctors",
+      path: ["specialization"],
     }
   );
 

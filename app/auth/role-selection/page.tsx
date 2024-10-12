@@ -72,9 +72,15 @@ const RoleSelection = () => {
         : PATIENT_LOGIN_REDIRECT;
 
     try {
+      // If the role is PATIENT, set specialization to null
+      const specialization =
+        values.role === UserRole.DOCTOR
+          ? values.specialization
+          : null;
+
       const result = await setUserRole(
         values.role,
-        values.specialization
+        specialization ?? ""
       );
 
       if (result.success) {
@@ -86,7 +92,7 @@ const RoleSelection = () => {
       } else {
         setError(result.error);
       }
-    } catch (err) {
+    } catch {
       setError("Something went wrong.");
     }
   };

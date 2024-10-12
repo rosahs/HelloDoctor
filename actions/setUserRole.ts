@@ -7,10 +7,11 @@ import { UserRole } from "@/lib/userRole";
 
 export async function setUserRole(
   role: UserRole,
-  specialization?: string
+  specialization: string
 ) {
   try {
     const session = await currentUser();
+
     if (!session || !session.id) {
       throw new Error("Unauthorized");
     }
@@ -64,7 +65,7 @@ export async function setUserRole(
     };
   } catch {
     return {
-      error: `An unexpected error occurred`,
+      error: `An unexpected error occurred. Please try again.`,
     };
   }
 }

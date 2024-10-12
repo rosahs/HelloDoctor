@@ -48,6 +48,12 @@ export const login = async (
       };
     }
 
+    if (!user.email) {
+      return {
+        error: "Email is missing from the user profile",
+      };
+    }
+
     if (!user.emailVerified) {
       const verificationToken =
         await generateVerificationToken(user.email);
@@ -59,51 +65,6 @@ export const login = async (
 
       return { success: "Confirmation email sent!" };
     }
-
-    // if (user.isTwoFactorEnabled) {
-    //   if (code) {
-    //     const twoFactorToken =
-    //       await getTwoFactorTokenByEmail(user.email);
-
-    //     if (
-    //       !twoFactorToken ||
-    //       twoFactorToken.token !== code
-    //     ) {
-    //       return { error: "Invalid code!" };
-    //     }
-
-    //     if (new Date(twoFactorToken.expires) < new Date()) {
-    //       return { error: "Code expired!" };
-    //     }
-
-    //     await TwoFactorToken.findByIdAndDelete(
-    //       twoFactorToken.id
-    //     );
-
-    //     const existingConfirmation =
-    //       await getTwoFactorConfirmationByUserId(user.id);
-    //     if (existingConfirmation) {
-    //       await TwoFactorConfirmation.findByIdAndDelete(
-    //         existingConfirmation.id
-    //       );
-    //     }
-
-    //     await TwoFactorConfirmation.create({
-    //       userId: user.id,
-    //     });
-    //   } else {
-    //     const twoFactorToken = await generateTwoFactorToken(
-    //       user.email
-    //     );
-
-    //     await sendTwoFactorTokenEmail(
-    //       twoFactorToken.email,
-    //       twoFactorToken.token
-    //     );
-
-    //     return { twoFactor: true };
-    //   }
-    // }
 
     if (user.isTwoFactorEnabled) {
       if (code) {

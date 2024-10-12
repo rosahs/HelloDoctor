@@ -18,13 +18,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/auth/FormError";
 import { FormSuccess } from "@/components/auth/FormSuccess";
-import { UserRole } from "@/lib/userRole";
+
 import {
   DOCTOR_LOGIN_REDIRECT,
   PATIENT_LOGIN_REDIRECT,
 } from "@/routes";
 import { setUserRole } from "@/actions/setUserRole";
 import { DoctorSpecializationField } from "@/components/auth/DoctorSpecializationField";
+import { UserRole } from "@prisma/client";
 
 const RoleSelectionSchema = z.object({
   role: z.enum([UserRole.PATIENT, UserRole.DOCTOR]),

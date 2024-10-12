@@ -58,7 +58,7 @@ function MobileDrawer({
                 {user.name}
               </span>
               <span className="text-sm text-textLight">
-                Cardiologist
+                {user.doctor?.specialization || user.role}
               </span>
             </div>
           </Link>

@@ -3,12 +3,12 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 
 import authConfig from "./auth.config";
 import { getUserById } from "./data/user";
-import { UserRole } from "./lib/userRole";
 import { getTwoFactorConfirmationByUserId } from "./data/two-factor-confirmation";
 import { db } from "./lib/db";
 import { getAccountByUserId } from "./data/account";
 import { getDoctorById } from "./data/doctor";
 import { Doctor } from "./next-auth";
+import { UserRole } from "@prisma/client";
 
 export const { handlers, auth, signIn, signOut } = NextAuth(
   {

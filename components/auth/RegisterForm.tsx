@@ -20,8 +20,8 @@ import { Button } from "../ui/button";
 import { FormError } from "./FormError";
 import { FormSuccess } from "./FormSuccess";
 import { register } from "@/actions/register";
-import { UserRole } from "@/lib/userRole";
 import { DoctorSpecializationField } from "./DoctorSpecializationField";
+import { UserRole } from "@prisma/client";
 
 export const RegisterForm = () => {
   const [error, setError] = useState<string | undefined>(

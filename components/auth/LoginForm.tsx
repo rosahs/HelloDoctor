@@ -155,7 +155,7 @@ export const LoginForm = () => {
                         asChild
                         className="px-0 font-normal"
                       >
-                        <Link href="/reset-password">
+                        <Link href="/auth/reset-password">
                           Forgot Password?
                         </Link>
                       </Button>

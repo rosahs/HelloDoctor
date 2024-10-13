@@ -73,7 +73,7 @@ function ResetPasswordPage() {
                     <Input
                       {...field}
                       disabled={isPending}
-                      placeholder="john.doe@example.com"
+                      placeholder="Your email address"
                       type="email"
                     />
                   </FormControl>
@@ -87,7 +87,7 @@ function ResetPasswordPage() {
           <Button
             disabled={isPending}
             type="submit"
-            className="w-full"
+            className="w-full bg-primaryColor hover:bg-primaryColor/80"
           >
             Send reset email
           </Button>

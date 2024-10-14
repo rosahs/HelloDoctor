@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Doctor as PrismaDoctor } from '@prisma/client';
 import { Doctor } from '@/lib/doctors'; // Assuming the interface is defined in this path
 
 const prisma = new PrismaClient();
@@ -14,15 +14,13 @@ export async function getDoctorById(id: string): Promise<Doctor | null> {
   
     return {
       id: doctor.id,
-      name: doctor.name || 'Unknown Doctor',
-      specialty: doctor.specialization || doctor.specialty,
-      experience: doctor.experience || 0,
-      rating: doctor.rating || 0,
-      images: doctor.images || ['/images/placeholder-doctor-image.jpg'], // Ensure images array exists
+      name: doctor.name,
+      specialty: doctor.specialization,
+      imageUrl: doctor.images[0] || '/images/placeholder-doctor-image.jpg',
       about: doctor.aboutMe || 'No information available.',
-      specialties: doctor.specialties || [],
-      certifications: doctor.certifications || [],
-      professionalExperience: doctor.professionalExperience || [],
-      languages: doctor.languages || [],
+      specialties: doctor.specialties || null,
+      certifications: doctor.certifications || null,
+      experience: doctor.professionalExperience || null,
+      languages: doctor.languages || null,
     };
   }

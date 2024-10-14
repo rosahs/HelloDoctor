@@ -1,76 +1,122 @@
-'use client'; 
-
-import { useRouter } from 'next/navigation';
-import { MessageSquare, Bookmark } from 'lucide-react';
+import Image from 'next/image';
+import { Bookmark, MessageSquare, User, Image as ImageIcon, MapPin, Star } from 'lucide-react'; // Icons
 import Link from 'next/link';
 
-const DoctorProfileDetails = ({ doctor }: { doctor: any }) => {
-  const router = useRouter();
+interface DoctorProfileDetailsProps {
+  doctor: {
+    id: string;
+    name: string;
+    specialty: string;
+    imageUrl: string;
+    about: string;
+    specialties: string | string[] | null;
+    certifications: string | string[] | null;
+    experience: string | string[] | null;
+    languages: string | string[] | null;
+  };
+}
+
+export default function DoctorProfilePage({ doctor }: DoctorProfileDetailsProps) {
+  const specialtiesArray = Array.isArray(doctor.specialties) ? doctor.specialties : doctor.specialties?.split(',') || [];
+  const certificationsArray = Array.isArray(doctor.certifications) ? doctor.certifications : doctor.certifications?.split(',') || [];
+  const experienceArray = Array.isArray(doctor.experience) ? doctor.experience : doctor.experience?.split(',') || [];
+  const languagesArray = Array.isArray(doctor.languages) ? doctor.languages : doctor.languages?.split(',') || [];
 
   return (
-    <div>
-      {/* Back Button */}
-      <div className="mb-6">
-        <button onClick={() => router.back()} className="text-green-800 text-2xl">
-          ← Back
-        </button>
-      </div>
+    <div className="min-h-screen bg-white flex flex-col p-8">
+      <div className="flex-grow max-w-6xl mx-auto w-full">
+        {/* Header Section */}
+        <div className="flex items-center justify-between mb-10">
+          <div className="flex items-center">
+            <Image
+              src={doctor.imageUrl || '/placeholder-doctor-image.jpg'}
+              alt={doctor.name}
+              width={150}
+              height={150}
+            //   className="rounded-full"
+            />
+            <div className="ml-8">
+              <h2 className="text-4xl font-bold">{doctor.name}</h2>
+              <p className="text-3xl text-gray-600">{doctor.specialty}</p>
+            </div>
+          </div>
+          <Bookmark className="text-gray-800" size={48} />
+        </div>
 
-      {/* Buttons */}
-      <div className="flex justify-between mb-6">
-        <button className="w-1/2 h-16 bg-black text-white text-2xl p-3 rounded-md mr-4">
-          <MessageSquare className="inline-block mr-2" /> Message
-        </button>
-        <Link href={`/appointments/doctor-list/${doctor.id}/reserve`} className="w-1/2">
-          <button className="w-full h-16 bg-black text-white text-2xl p-3 rounded-md">
-            Reserve
+        {/* Action Buttons */}
+        <div className="flex justify-between mb-10">
+          <button className="w-[48%] h-24 bg-black text-white text-2xl font-semibold rounded-md flex items-center justify-center">
+            <MessageSquare className="mr-3" size={40} /> Message
           </button>
-        </Link>
-      </div>
+          <Link href={`/appointments/doctor-list/${doctor.id}/reserve`} className="w-[48%]">
+            <button className="w-full h-24 bg-black text-white text-2xl font-semibold rounded-md flex items-center justify-center">
+              <Star className="mr-3" size={40} /> Reserve
+            </button>
+          </Link>
+        </div>
 
-      {/* Doctor Info */}
-      <div className="mb-6">
-        <h3 className="font-bold text-2xl">About me</h3>
-        <p className="text-gray-600 text-xl">{doctor.aboutMe || 'No information available.'}</p>
-      </div>
+        {/* Icons Row */}
+        <div className="flex justify-between mb-10 bg-gray-200 p-6 rounded-md">
+          <User className="text-gray-800" size={48} />
+          <ImageIcon className="text-gray-800" size={48} />
+          <MapPin className="text-gray-800" size={48} />
+          <Star className="text-gray-800" size={48} />
+        </div>
 
-      {/* Specialties */}
-      <div className="mb-6">
-        <h3 className="font-bold text-2xl">Specialties</h3>
-        <ul className="list-disc ml-5 text-gray-600 text-xl">
-          {doctor.specialties
-            ? doctor.specialties.split(',').map((specialty: string, index: number) => (
-                <li key={index}>{specialty}</li>
-              ))
-            : <li>No specialties listed.</li>}
-        </ul>
-      </div>
+        {/* About Section */}
+        <div className="mb-10">
+          <h3 className="font-bold text-3xl mb-4">About me</h3>
+          <p className="text-2xl text-gray-600">{doctor.about || 'No information available.'}</p>
+        </div>
 
-      {/* Certifications */}
-      <div className="mb-6">
-        <h3 className="font-bold text-2xl">Certifications</h3>
-        <ul className="list-disc ml-5 text-gray-600 text-xl">
-          {doctor.certifications
-            ? doctor.certifications.split(',').map((cert: string, index: number) => (
-                <li key={index}>{cert}</li>
-              ))
-            : <li>No certifications listed.</li>}
-        </ul>
-      </div>
+        {/* Specialties */}
+        <div className="mb-10">
+          <h3 className="font-bold text-3xl mb-4">Specialties</h3>
+          <ul className="list-disc ml-8 text-2xl text-gray-600">
+            {specialtiesArray.length > 0 ? (
+              specialtiesArray.map((specialty, index) => <li key={index}>{specialty}</li>)
+            ) : (
+              <li>Not specified</li>
+            )}
+          </ul>
+        </div>
 
-      {/* Languages */}
-      <div>
-        <h3 className="font-bold text-2xl">Languages</h3>
-        <ul className="list-disc ml-5 text-gray-600 text-xl">
-          {doctor.languages
-            ? doctor.languages.split(',').map((language: string, index: number) => (
-                <li key={index}>{language}</li>
-              ))
-            : <li>No languages listed.</li>}
-        </ul>
+        {/* Certifications */}
+        <div className="mb-10">
+          <h3 className="font-bold text-3xl mb-4">Certifications</h3>
+          <ul className="list-disc ml-8 text-2xl text-gray-600">
+            {certificationsArray.length > 0 ? (
+              certificationsArray.map((certification, index) => <li key={index}>{certification}</li>)
+            ) : (
+              <li>Not specified</li>
+            )}
+          </ul>
+        </div>
+
+        {/* Professional Experience */}
+        <div className="mb-10">
+          <h3 className="font-bold text-3xl mb-4">Professional Experience</h3>
+          <ul className="list-disc ml-8 text-2xl text-gray-600">
+            {experienceArray.length > 0 ? (
+              experienceArray.map((exp, index) => <li key={index}>{exp}</li>)
+            ) : (
+              <li>Not specified</li>
+            )}
+          </ul>
+        </div>
+
+        {/* Languages */}
+        <div className="mb-10">
+          <h3 className="font-bold text-3xl mb-4">Languages</h3>
+          <ul className="list-disc ml-8 text-2xl text-gray-600">
+            {languagesArray.length > 0 ? (
+              languagesArray.map((language, index) => <li key={index}>{language}</li>)
+            ) : (
+              <li>Not specified</li>
+            )}
+          </ul>
+        </div>
       </div>
     </div>
   );
-};
-
-export default DoctorProfileDetails;
+}

@@ -56,7 +56,7 @@ export default function DoctorReservePage({ params }: { params: { doctorId: stri
               value={date}
               onChange={(e) => setDate(e.target.value)}
               className="shadow appearance-none border rounded-lg w-full py-6 px-6 text-2xl text-gray-700 leading-tight 
-                         focus:outline-none focus:shadow-outline cursor-pointer 
+                         focus:outline-none focus:shadow-outline cursor-pointer
                          hover:bg-gray-100 focus:bg-white transition-colors duration-200"
               required
             />

@@ -1,115 +1,64 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Calendar } from "@/components/ui/calendar"
+import { Calendar } from "@/components/ui/calendar";
 
-export default function DoctorReservePage({ params }: { params: { doctorId: string } }) {
+export default function DoctorReservePage() {
   const router = useRouter();
+  const params = useParams();
+  const [doctorId, setDoctorId] = useState<string | undefined>(undefined);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [time, setTime] = useState('');
   const [reason, setReason] = useState('');
 
+  // Check if params contain a valid doctorId
+  useEffect(() => {
+    const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
+    console.log('Doctor ID:', id);
+    setDoctorId(id || '');
+  }, [params?.id]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!doctorId) {
+      console.error("Doctor ID is missing!");
+      return;
+    }
 
-    // Mock appointment - replace with an actual API call)
-    console.log('Booking appointment:', {
-      doctorId: params.doctorId,
-      date: date?.toISOString(),
-      time,
-      reason,
-    });
-
-    // Redirect to the success page after booking
-    router.push(`/doctors/${params.doctorId}/success`);
+    console.log('Booking appointment:', { doctorId, date: date?.toISOString(), time, reason });
+    router.push(`/doctors/${doctorId}/reserve/success`);
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center p-8">
-      <div className="w-full max-w-3xl">
-        <h2 className="text-5xl font-bold mb-8 text-center">Reserve an Appointment</h2>
-
-        <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg px-16 pt-12 pb-14 mb-8">
-          
-          {/* Doctor Information Section */}
-          <div className="text-center mb-10">
-            <Image
-              src="/images/placeholder-doctor-image.jpg" // Replace with actual dynamic image URL
-              alt="Doctor's Image"
-              width={150}
-              height={150}
-              className="mx-auto mb-4"
-            />
-            <h3 className="text-3xl font-bold">Dr. John Doe</h3> {/* Replace with dynamic name */}
-            <p className="text-2xl text-gray-600">Cardiologist</p> {/* Replace with dynamic specialty */}
-            <p className="mt-4 text-lg text-gray-600">
-              Dr. John Doe is an experienced cardiologist with over 20 years of expertise in treating heart diseases.
-            </p>
+    <div className="min-h-screen flex justify-center items-center p-4">
+      <div className="w-full max-w-2xl">
+        <h2 className="text-4xl font-bold mb-6 text-center">Reserve an Appointment</h2>
+        <form onSubmit={handleSubmit} className="rounded-lg px-8 pt-6 pb-8 mb-4">
+          <div className="text-center mb-6">
+            <Image src="/images/placeholder-doctor-image.jpg" alt="Doctor's Image" width={100} height={100} className="mx-auto mb-2" />
+            <h3 className="text-2xl font-bold">Dr. John Doe</h3>
+            <p className="text-xl text-gray-600">Cardiologist</p>
+            <p className="mt-2 text-sm text-gray-600">Experienced cardiologist with 20+ years in treating heart diseases.</p>
           </div>
-
-          {/* Calendar */}
-          <div className="mb-8">
-            <label className="block text-gray-700 text-3xl font-bold mb-4">Select Date</label>
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={setDate}
-              className="rounded-md border"
-            />
+          <div className="mb-4">
+            <label className="block text-gray-700 text-xl font-bold mb-2">Select Date</label>
+            <Calendar mode="single" selected={date} onSelect={setDate} className="bg-white rounded-md border" />
           </div>
-
-          {/* Date Input */}
-          <div className="mb-8">
-            <label className="block text-gray-700 text-3xl font-bold mb-4">Date</label>
-            <input
-              type="date"
-              value={date ? date.toISOString().split('T')[0] : ''}
-              onChange={(e) => setDate(new Date(e.target.value))}
-              className="shadow appearance-none border rounded-lg w-full py-6 px-6 text-2xl text-gray-700 leading-tight 
-                         focus:outline-none focus:shadow-outline cursor-pointer 
-                         hover:bg-gray-100 focus:bg-white transition-colors duration-200"
-              required
-            />
+          <div className="mb-4">
+            <label className="block text-gray-700 text-xl font-bold mb-2">Time</label>
+            <input type="time" value={time} onChange={(e) => setTime(e.target.value)}
+              className="shadow appearance-none cursor-pointer border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
           </div>
-
-          {/* Time Input */}
-          <div className="mb-8">
-            <label className="block text-gray-700 text-3xl font-bold mb-4">Time</label>
-            <input
-              type="time"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-              className="shadow appearance-none border rounded-lg w-full py-6 px-6 text-2xl text-gray-700 leading-tight 
-                         focus:outline-none focus:shadow-outline cursor-pointer 
-                         hover:bg-gray-100 focus:bg-white transition-colors duration-200"
-              required
-            />
+          <div className="mb-6">
+            <label className="block text-gray-700 text-xl font-bold mb-2">Reason for Visit</label>
+            <textarea value={reason} onChange={(e) => setReason(e.target.value)}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="Enter the reason for your visit" rows={3} required />
           </div>
-
-          {/* Reason for Visit */}
-          <div className="mb-8">
-            <label className="block text-gray-700 text-3xl font-bold mb-4">Reason for Visit</label>
-            <textarea
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-              className="shadow appearance-none border rounded-lg w-full py-6 px-6 text-2xl text-gray-700 leading-tight 
-                         focus:outline-none focus:shadow-outline 
-                         hover:bg-gray-100 focus:bg-white transition-colors duration-200"
-              placeholder="Enter the reason for your visit"
-              rows={5}
-              required
-            />
-          </div>
-
-          {/* Submit Button */}
           <div className="flex items-center justify-center">
-            <button
-              type="submit"
-              className="bg-green-800 hover:bg-green-700 text-white text-3xl font-bold py-5 px-12 rounded-lg 
-                         focus:outline-none focus:shadow-outline transition duration-300"
-            >
+            <button type="submit" className="bg-green-700 hover:bg-green-600 text-white text-xl font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
               Book Appointment
             </button>
           </div>

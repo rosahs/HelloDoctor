@@ -33,33 +33,34 @@ export default function DoctorProfilePage({ doctor }: DoctorProfileDetailsProps)
               alt={doctor.name}
               width={150}
               height={150}
+              className="cursor-pointer"
             />
             <div className="ml-8">
               <h2 className="text-4xl font-bold">{doctor.name}</h2>
               <p className="text-3xl font-bold text-gray-600">{doctor.specialty}</p>
             </div>
           </div>
-          <Bookmark className="text-gray-800" size={48} />
+          <Bookmark className="text-gray-800 cursor-pointer" size={48} />
         </div>
 
         {/* Action Buttons */}
         <div className="flex justify-between mb-10">
-          <button className="w-[48%] h-24 bg-black text-white text-2xl font-semibold rounded-md flex items-center justify-center transition-colors duration-300 hover:bg-green-600">
+          <button className="w-[48%] h-24 bg-black text-white text-2xl font-semibold rounded-md flex items-center justify-center transition-colors duration-300 hover:bg-green-600 cursor-pointer">
             <MessageSquare className="mr-3" size={40} /> Message
           </button>
           <Link href={`/doctors/${doctor.id}/reserve`} className="w-[48%]">
-            <button className="w-full h-24 bg-black text-white text-2xl font-semibold rounded-md flex items-center justify-center transition-colors duration-300 hover:bg-green-600">
+            <button className="w-full h-24 bg-black text-white text-2xl font-semibold rounded-md flex items-center justify-center transition-colors duration-300 hover:bg-green-600 cursor-pointer">
               <Star className="mr-3" size={40} /> Reserve
             </button>
           </Link>
         </div>
 
         {/* Icons Row */}
-        <div className="flex justify-between mb-10 bg-gray-200 p-6 rounded-md">
-          <User className="text-gray-800" size={48} />
-          <ImageIcon className="text-gray-800" size={48} />
-          <MapPin className="text-gray-800" size={48} />
-          <Star className="text-gray-800" size={48} />
+        <div className="flex justify-between mb-10 p-6 rounded-md">
+          <User className="text-gray-800 cursor-pointer" size={48} />
+          <ImageIcon className="text-gray-800 cursor-pointer" size={48} />
+          <MapPin className="text-gray-800 cursor-pointer" size={48} />
+          <Star className="text-gray-800 cursor-pointer" size={48} />
         </div>
 
         {/* About Section */}
@@ -73,7 +74,7 @@ export default function DoctorProfilePage({ doctor }: DoctorProfileDetailsProps)
           <h3 className="font-bold text-3xl mb-4">Specialties</h3>
           <ul className="list-disc ml-8 text-2xl text-gray-600">
             {specialtiesArray.length > 0 ? (
-              specialtiesArray.map((specialty, index) => <li key={index}>{specialty}</li>)
+              specialtiesArray.map((specialty, index) => <li key={index} className="cursor-pointer">{specialty}</li>)
             ) : (
               <li>Not specified</li>
             )}
@@ -85,7 +86,7 @@ export default function DoctorProfilePage({ doctor }: DoctorProfileDetailsProps)
           <h3 className="font-bold text-3xl mb-4">Certifications</h3>
           <ul className="list-disc ml-8 text-2xl text-gray-600">
             {certificationsArray.length > 0 ? (
-              certificationsArray.map((certification, index) => <li key={index}>{certification}</li>)
+              certificationsArray.map((certification, index) => <li key={index} className="cursor-pointer">{certification}</li>)
             ) : (
               <li>Not specified</li>
             )}
@@ -97,7 +98,7 @@ export default function DoctorProfilePage({ doctor }: DoctorProfileDetailsProps)
           <h3 className="font-bold text-3xl mb-4">Professional Experience</h3>
           <ul className="list-disc ml-8 text-2xl text-gray-600">
             {experienceArray.length > 0 ? (
-              experienceArray.map((exp, index) => <li key={index}>{exp}</li>)
+              experienceArray.map((exp, index) => <li key={index} className="cursor-pointer">{exp}</li>)
             ) : (
               <li>Not specified</li>
             )}
@@ -109,7 +110,7 @@ export default function DoctorProfilePage({ doctor }: DoctorProfileDetailsProps)
           <h3 className="font-bold text-3xl mb-4">Languages</h3>
           <ul className="list-disc ml-8 text-2xl text-gray-600">
             {languagesArray.length > 0 ? (
-              languagesArray.map((language, index) => <li key={index}>{language}</li>)
+              languagesArray.map((language, index) => <li key={index} className="cursor-pointer">{language}</li>)
             ) : (
               <li>Not specified</li>
             )}

@@ -2,11 +2,19 @@
 import { useSearchParams } from 'next/navigation';
 import { CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function AppointmentSuccessPage({ params }: { params: { id: string } }) {
   const searchParams = useSearchParams();
-  const date = searchParams.get('date');
-  const time = searchParams.get('time');
+  const [date, setDate] = useState<string | null>(null);
+  const [time, setTime] = useState<string | null>(null);
+
+  useEffect(() => {
+    setDate(searchParams.get('date'));
+    setTime(searchParams.get('time'));
+    console.log('Date:', searchParams.get('date'));
+    console.log('Time:', searchParams.get('time'));
+  }, [searchParams]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white p-4">

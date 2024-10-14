@@ -5,8 +5,8 @@ const DoctorSettings = async () => {
   const user = await currentUser();
   const doctorLinks = [
     {
-      href: "/doctor/settings/edit-profile",
-      label: "Edit Profile",
+      href: "/doctor/settings/update-profile",
+      label: "Update Profile",
     },
     {
       href: "/doctor/settings/edit-about-me",

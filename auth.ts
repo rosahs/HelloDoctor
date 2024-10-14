@@ -8,7 +8,8 @@ import { db } from "./lib/db";
 import { getAccountByUserId } from "./data/account";
 import { getDoctorById } from "./data/doctor";
 import { Doctor } from "./next-auth";
-import { UserRole } from "@prisma/client";
+import { Patient, UserRole } from "@prisma/client";
+import { getPatientById } from "./data/patient";
 
 export const { handlers, auth, signIn, signOut } = NextAuth(
   {
@@ -115,6 +116,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
           }
         }
 
+        // Add patient information if the user is a patient
+        if (
+          user.role === UserRole.PATIENT &&
+          user.patientId
+        ) {
+          const patient = await getPatientById(
+            user.patientId
+          );
+
+          if (patient) {
+            token.patientId = user.patientId;
+            token.patient = patient;
+          }
+        }
+
         return token;
       },
       async session({ token, session }) {
@@ -137,6 +153,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
         if (token.doctor) {
           session.user.doctor = token.doctor as Doctor;
           session.user.doctorId = token.doctorId as string;
+        }
+
+        // Add the patient info if available
+        if (token.patient) {
+          session.user.patient = token.patient as Patient;
+          session.user.patientId =
+            token.patientId as string;
         }
 
         return session;

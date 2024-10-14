@@ -32,24 +32,29 @@ export const EmailChangeForm = () => {
     string | undefined
   >();
 
-  const emailForm = useForm({
+  const emailForm = useForm<
+    z.infer<typeof emailChangeSchema>
+  >({
     resolver: zodResolver(emailChangeSchema),
     defaultValues: {
-      email: user?.email as string,
+      email: user?.email || "",
     },
   });
 
   const onSubmit = (
-    value: z.infer<typeof emailChangeSchema>
+    values: z.infer<typeof emailChangeSchema>
   ) => {
+    setError(undefined);
+    setSuccess(undefined);
+
     startTransition(() => {
-      emailChange(value)
+      emailChange(values)
         .then((data) => {
           if (data?.error) {
             setError(data.error);
           } else if (data?.success) {
             update({
-              user: { ...user, email: value.email },
+              user: { ...user, email: values.email },
             });
             setSuccess(data.success);
           }
@@ -81,8 +86,9 @@ export const EmailChangeForm = () => {
                 </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder={user?.email as string}
                     {...field}
+                    placeholder="Enter your new email"
+                    type="email"
                     className="bg-inputBg border-inputBorder placeholder-placeholder"
                   />
                 </FormControl>

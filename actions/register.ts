@@ -33,6 +33,7 @@ export const register = async (
     const hashedPassword = await bcrypt.hash(password, 12);
 
     let doctorId;
+    let patientId;
 
     // If the role is "DOCTOR", create a doctor document and save its ID
     if (role === "DOCTOR") {
@@ -53,13 +54,27 @@ export const register = async (
       doctorId = doctor.id;
     }
 
+    // Create a Patient record
+    if (role === UserRole.PATIENT) {
+      const patient = await db.patient.create({
+        data: {
+          savedDoctors: [],
+        },
+      });
+
+      patientId = patient.id;
+    }
+
     await db.user.create({
       data: {
         name,
         email,
         password: hashedPassword,
         role: role as UserRole,
-        doctorId,
+        doctorId:
+          role === UserRole.DOCTOR ? doctorId : null,
+        patientId:
+          role === UserRole.PATIENT ? patientId : null,
       },
     });
 

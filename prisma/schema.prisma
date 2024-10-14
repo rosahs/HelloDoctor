@@ -33,6 +33,7 @@ model User {
   twoFactorConfirmation  TwoFactorConfirmation?
   accounts               Account[]
   doctorId               String?                 @db.ObjectId @map("doctor_id")
+  patientId               String?                 @db.ObjectId @map("patient_id")
 
   @@map("users")
   @@index([doctorId])
@@ -104,4 +105,13 @@ model Doctor {
   languages              String?
 
   @@map("doctors")
+}
+
+model Patient {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  country      String?
+  city         String?
+  savedDoctors String[] @db.ObjectId  // an array of doctor IDs as ObjectId references
+
+  @@map("patients")
 }

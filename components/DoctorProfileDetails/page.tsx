@@ -47,7 +47,7 @@ export default function DoctorProfilePage({ doctor }: DoctorProfileDetailsProps)
           <button className="w-[48%] h-24 bg-black text-white text-2xl font-semibold rounded-md flex items-center justify-center transition-colors duration-300 hover:bg-green-600">
             <MessageSquare className="mr-3" size={40} /> Message
           </button>
-          <Link href={`/appointments/doctor-list/${doctor.id}/reserve`} className="w-[48%]">
+          <Link href={`/doctors/${doctor.id}/reserve`} className="w-[48%]">
             <button className="w-full h-24 bg-black text-white text-2xl font-semibold rounded-md flex items-center justify-center transition-colors duration-300 hover:bg-green-600">
               <Star className="mr-3" size={40} /> Reserve
             </button>

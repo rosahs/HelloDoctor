@@ -23,7 +23,7 @@ export default function DoctorReservePage({ params }: { params: { doctorId: stri
     });
 
     // Redirect to the success page after booking
-    router.push(`/doctors/[id]/success?doctorId=${params.doctorId}`);
+    router.push(`/doctors/${params.doctorId}/success`);
   };
 
   return (
@@ -36,11 +36,11 @@ export default function DoctorReservePage({ params }: { params: { doctorId: stri
           {/* Doctor Information Section */}
           <div className="text-center mb-10">
             <Image
-              src="/path-to-doctor-image.jpg" // Replace with actual dynamic image URL
+              src="/images/placeholder-doctor-image.jpg" // Replace with actual dynamic image URL
               alt="Doctor's Image"
-              width={100}
-              height={100}
-              className="rounded-full mx-auto mb-4"
+              width={150}
+              height={150}
+              className="mx-auto mb-4"
             />
             <h3 className="text-3xl font-bold">Dr. John Doe</h3> {/* Replace with dynamic name */}
             <p className="text-2xl text-gray-600">Cardiologist</p> {/* Replace with dynamic specialty */}

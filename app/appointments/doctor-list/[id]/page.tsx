@@ -1,16 +1,21 @@
-// pages/doctors/[id].tsx
 import { useRouter } from 'next/router';
-import { getDoctorById } from '@/lib/doctors'; // Function to fetch doctor by ID
+import { getDoctorById } from '@/data/doctor';
+import { Doctor } from '@/lib/doctors'
 import Image from 'next/image';
 
-const DoctorProfilePage = () => {
+interface DoctorProfilePageProps {
+  doctor: Doctor; // Add the Doctor interface as the type
+}
+
+const DoctorProfilePage = ({ doctor }: DoctorProfilePageProps) => {
   const router = useRouter();
-  const { id } = router.query; // Get the doctor ID from the route
 
-  // Fetch the doctor's data by ID
-  const doctor = getDoctorById(id as string); // Ensure the ID is a string
-
-  if (!doctor) {
+  // Loading while fetching data or if the router isn't ready
+  if (router.isFallback || !doctor) {
+    return <p>Loading...</p>;
+  }
+  // Show loading while fetching data or if router isn't ready
+  if (router.isFallback || !doctor) {
     return <p>Loading...</p>;
   }
 
@@ -21,15 +26,22 @@ const DoctorProfilePage = () => {
       <p>Specialty: {doctor.specialty}</p>
       <p>Experience: {doctor.experience} years</p>
       <p>About: {doctor.about}</p>
-      {/* Add more details as needed */}
-      <button onClick={() => router.push(`/doctors/${doctor.id}/book`)}>Book Appointment</button>
+      {/* Add more details */}
     </div>
   );
 };
 
+export async function getServerSideProps({ params }: { params: { id: string } }) {
+  const doctor = await getDoctorById(params.id); // Fetch doctor by ID
+
+  return {
+    props: {
+      doctor,
+    },
+  };
+}
+
 export default DoctorProfilePage;
-
-
 
 
 

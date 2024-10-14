@@ -14,12 +14,21 @@ export type Doctor = {
   updatedAt: string;
 };
 
+export type Patient = {
+  id: string;
+  country: string | null;
+  city: string | null;
+  savedDoctors: string[];
+};
+
 export type ExtendedUser = DefaultSession["user"] & {
   role: UserRole;
   isTwoFactorEnabled: boolean;
   isOAuth: boolean;
   doctorId?: string;
+  patientId?: string;
   doctor: Doctor;
+  patient: Patient;
 };
 
 declare module "next-auth" {

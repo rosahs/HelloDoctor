@@ -11,6 +11,15 @@ export const passwordChange = async (
   values: z.infer<typeof passwordChangeSchema>
 ) => {
   try {
+    const validatedFields =
+      passwordChangeSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+      return { error: "Invalid fields" };
+    }
+
+    const { password, newPassword } = validatedFields.data;
+
     const user = await currentUser();
 
     if (!user || !user.id) {
@@ -30,9 +39,9 @@ export const passwordChange = async (
       };
     }
 
-    if (values.password && values.newPassword) {
+    if (password && newPassword) {
       const passwordsMatch = await bcrypt.compare(
-        values.password,
+        password,
         dbUser.password
       );
 
@@ -41,7 +50,7 @@ export const passwordChange = async (
       }
 
       const hashedPassword = await bcrypt.hash(
-        values.newPassword,
+        newPassword,
         10
       );
 

@@ -29,8 +29,8 @@ export async function setUserRole(
 
     user.role = role;
 
-    // Create or update the doctor profile if the role is DOCTOR
     let doctorId;
+    let patientId;
 
     if (role === UserRole.DOCTOR) {
       if (!specialization) {
@@ -50,12 +50,26 @@ export async function setUserRole(
       doctorId = doctor.id;
     }
 
+    // Create a Patient record
+    if (role === UserRole.PATIENT) {
+      const patient = await db.patient.create({
+        data: {
+          savedDoctors: [],
+        },
+      });
+
+      patientId = patient.id;
+    }
+
     // Update user role and doctorId
     await db.user.update({
       where: { id: user.id },
       data: {
         role,
-        doctorId: doctorId || null,
+        doctorId:
+          role === UserRole.DOCTOR ? doctorId : null,
+        patientId:
+          role === UserRole.PATIENT ? patientId : null,
       },
     });
 

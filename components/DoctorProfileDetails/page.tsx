@@ -33,7 +33,6 @@ export default function DoctorProfilePage({ doctor }: DoctorProfileDetailsProps)
               alt={doctor.name}
               width={150}
               height={150}
-              className="rounded-full"
             />
             <div className="ml-8">
               <h2 className="text-4xl font-bold">{doctor.name}</h2>

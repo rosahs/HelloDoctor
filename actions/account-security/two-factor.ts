@@ -2,12 +2,12 @@
 
 import { getUserById } from "@/data/user";
 import { currentUser } from "@/lib/auth";
-import { connectDB } from "@/lib/db";
+import { db } from "@/lib/db";
 import User from "@/models/UserModel";
 
 export const toggleTwoFactorAuth = async () => {
   try {
-    await connectDB();
+    await db();
 
     const user = await currentUser();
 

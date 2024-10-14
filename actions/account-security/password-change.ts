@@ -3,7 +3,7 @@
 import bcrypt from "bcryptjs";
 import { getUserByEmail, getUserById } from "@/data/user";
 import { currentUser } from "@/lib/auth";
-import { connectDB } from "@/lib/db";
+import { db } from "@/lib/db";
 import User from "@/models/UserModel";
 import { passwordChangeSchema } from "@/schemas";
 import * as z from "zod";
@@ -12,7 +12,7 @@ export const passwordChange = async (
   values: z.infer<typeof passwordChangeSchema>
 ) => {
   try {
-    await connectDB();
+    await db();
 
     const user = await currentUser();
 

@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 import { NewPasswordSchema } from "@/schemas";
 import { getPasswordResetTokenByToken } from "@/data/password-reset-token";
 import { getUserByEmail } from "@/data/user";
-import { connectDB } from "@/lib/db";
+import { db } from "@/lib/db";
 import User from "@/models/UserModel";
 import { PasswordResetToken } from "@/models/AuthModels";
 
@@ -14,7 +14,7 @@ export const newPassword = async (
   values: z.infer<typeof NewPasswordSchema>,
   token?: string | null
 ) => {
-  await connectDB();
+  await db();
 
   if (!token) {
     return { error: "Missing token!" };

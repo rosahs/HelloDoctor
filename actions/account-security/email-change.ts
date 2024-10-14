@@ -2,7 +2,7 @@
 
 import { getUserByEmail, getUserById } from "@/data/user";
 import { currentUser } from "@/lib/auth";
-import { connectDB } from "@/lib/db";
+import { db } from "@/lib/db";
 import User from "@/models/UserModel";
 import { emailChangeSchema } from "@/schemas";
 import * as z from "zod";
@@ -11,7 +11,7 @@ export const emailChange = async (
   value: z.infer<typeof emailChangeSchema>
 ) => {
   try {
-    await connectDB();
+    await db();
 
     const user = await currentUser();
 

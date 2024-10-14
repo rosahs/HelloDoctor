@@ -1,4 +1,4 @@
-import { UserRole } from "@/lib/userRole";
+import { UserRole } from "@prisma/client";
 import * as z from "zod";
 
 export const RegisterSchema = z
@@ -18,12 +18,25 @@ export const RegisterSchema = z
     role: z.enum(
       Object.values(UserRole) as [string, ...string[]]
     ),
+    specialization: z.string().optional(),
   })
   .refine(
     (data) => data.password === data.passwordConfirm,
     {
       message: "Passwords don't match",
       path: ["passwordConfirm"],
+    }
+  )
+  .refine(
+    (data) => {
+      if (data.role === "DOCTOR") {
+        return !!data.specialization;
+      }
+      return true;
+    },
+    {
+      message: "Specialization is required for doctors",
+      path: ["specialization"],
     }
   );
 
@@ -83,5 +96,38 @@ export const passwordChangeSchema = z
     {
       message: "Passwords don't match",
       path: ["confirmNewPassword"],
+    }
+  );
+
+export const DoctorAboutMeSchema = z
+  .object({
+    aboutMe: z
+      .string()
+      .min(1, "About Me is required")
+      .optional(),
+    specialties: z
+      .string()
+      .min(1, "Specialties are required")
+      .optional(),
+    certifications: z
+      .string()
+      .min(1, "Certifications are required")
+      .optional(),
+    professionalExperience: z
+      .string()
+      .min(1, "Professional Experience is required")
+      .optional(),
+    languages: z
+      .string()
+      .min(1, "Languages are required")
+      .optional(),
+  })
+  .refine(
+    (data) =>
+      Object.values(data).some(
+        (value) => value !== undefined
+      ),
+    {
+      message: "At least one field must be filled out",
     }
   );

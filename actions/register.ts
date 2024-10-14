@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 
 import { RegisterSchema } from "@/schemas";
 import { getUserByEmail } from "@/data/user";
-import { connectDB } from "@/lib/db";
+import { db } from "@/lib/db";
 import User from "@/models/UserModel";
 import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationEmail } from "@/lib/send-mail";
@@ -24,7 +24,7 @@ export const register = async (
     const { email, password, name, role } =
       validatedFields.data;
 
-    await connectDB();
+    await db();
 
     const existingUser = await getUserByEmail(email);
 

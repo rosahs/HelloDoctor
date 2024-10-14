@@ -24,12 +24,12 @@ import {
 } from "@/models/AuthModels";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
-import { connectDB } from "@/lib/db";
+import { db } from "@/lib/db";
 
 export const login = async (
   values: z.infer<typeof LoginSchema>
 ) => {
-  await connectDB();
+  await db();
 
   const validatedFields = LoginSchema.safeParse(values);
 

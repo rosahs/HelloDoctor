@@ -2,12 +2,7 @@ import crypto from "crypto";
 import { v4 as uuidv4 } from "uuid";
 
 import { getVerificationTokenByEmail } from "@/data/verification-token";
-import { connectDB } from "./db";
-import {
-  PasswordResetToken,
-  TwoFactorToken,
-  VerificationToken,
-} from "@/models/AuthModels";
+import { db } from "./db";
 import { getPasswordResetTokenByEmail } from "@/data/password-reset-token";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 
@@ -20,25 +15,28 @@ export const generateVerificationToken = async (
     new Date().getTime() + 15 * 60 * 1000
   ); // 15 minutes;
 
-  await connectDB();
-
   const existingToken = await getVerificationTokenByEmail(
     email
   );
 
   if (existingToken) {
     // Delete the existing token
-    await VerificationToken.findByIdAndDelete(
-      existingToken._id
-    );
+    await db.verificationToken.delete({
+      where: {
+        id: existingToken.id,
+      },
+    });
   }
 
   // Create a new verification token
-  const verificationToken = await VerificationToken.create({
-    email,
-    token,
-    expires,
-  });
+  const verificationToken =
+    await db.verificationToken.create({
+      data: {
+        email,
+        token,
+        expires,
+      },
+    });
 
   return verificationToken;
 };
@@ -56,16 +54,20 @@ export const generatePasswordResetToken = async (
   );
 
   if (existingToken) {
-    await PasswordResetToken.findByIdAndDelete(
-      existingToken.id
-    );
+    await db.passwordResetToken.delete({
+      where: {
+        id: existingToken.id,
+      },
+    });
   }
 
   const passwordResetToken =
-    await PasswordResetToken.create({
-      email,
-      token,
-      expires,
+    await db.passwordResetToken.create({
+      data: {
+        email,
+        token,
+        expires,
+      },
     });
 
   return passwordResetToken;
@@ -87,15 +89,19 @@ export const generateTwoFactorToken = async (
   );
 
   if (existingToken) {
-    await TwoFactorToken.findByIdAndDelete(
-      existingToken.id
-    );
+    await db.twoFactorToken.delete({
+      where: {
+        id: existingToken.id,
+      },
+    });
   }
 
-  const twoFactorToken = await TwoFactorToken.create({
-    email,
-    token,
-    expires,
+  const twoFactorToken = await db.twoFactorToken.create({
+    data: {
+      email,
+      token,
+      expires,
+    },
   });
 
   return twoFactorToken;

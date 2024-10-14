@@ -1,43 +1,63 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import Image from "next/image";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import DoctorsList from "@/components/protected/doctor-list/DoctorList"; // Import Doctor and DoctorsListDisplay
 
-interface DoctorListProps {
-  initialDoctors: Doctor[];
-}
+const DoctorsListPage: React.FC = () => {
+  const router = useRouter();
+  const [doctorsList, setDoctorsList] = useState<Doctor[]>([]); // Use Doctor[] type for doctorsList
+  const [loading, setLoading] = useState<boolean>(true);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
-export default function DoctorsList({ initialDoctors }: DoctorListProps) {
-  if (!initialDoctors || initialDoctors.length === 0) {
-    return <p className="text-center">No doctors found.</p>;
+  // Fetch doctors based on search term
+  const fetchDoctors = async (query: string = "") => {
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/doctors?query=${query}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch doctors");
+      }
+      const data: Doctor[] = await response.json();
+      setDoctorsList(data);
+    } catch (error) {
+      console.error("Failed to fetch doctors", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch all doctors on initial page load
+  useEffect(() => {
+    fetchDoctors();
+  }, []);
+
+  // Handle search submission
+  const handleSearch = () => {
+    fetchDoctors(searchTerm);
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
   return (
-    <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {initialDoctors.map((doctor) => (
-        <li
-          key={doctor.id}
-          className="bg-white shadow-lg rounded-lg overflow-hidden">
-          <Link href={`/appointments/doctor-list/${doctor.id}`}>
-            <div className="p-6">
-              {doctor.imageUrl && (
-                <Image
-                  src={doctor.imageUrl}
-                  alt={doctor.name}
-                  width={100}
-                  height={100}
-                  className="rounded-full mx-auto mb-4"
-                />
-              )}
-              <h2 className="text-xl font-semibold text-center">
-                {doctor.name}
-              </h2>
-              <p className="text-gray-600 text-center">{doctor.specialty}</p>
-            </div>
-          </Link>
-        </li>
-      ))}
-    </ul>
+    <div>
+      {/* Search input and button */}
+      <div>
+        <input
+          type="text"
+          placeholder="Search doctors by name or specialization"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)} // Update search term
+        />
+        <button onClick={handleSearch}>Search</button>
+      </div>
+
+      {/* Doctor list */}
+      <DoctorsList initialDoctors={doctorsList} />
+    </div>
   );
-}
+};
+
+export default DoctorsListPage;

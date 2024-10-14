@@ -1,191 +1,147 @@
-"use client";
+'use client';
+
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
-import { useState } from 'react';
+import { MessageSquare, Bookmark, User, Image as ImageIcon, MapPin, Star } from 'lucide-react';
 import Footer from "@/components/footer/page";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
 
 export default function DoctorReservePage() {
   const params = useParams();
   const router = useRouter();
   const doctorId = params.id as string;
+  
+  const [doctor, setDoctor] = useState<any | null>(null); // State to hold doctor data
+  const [loading, setLoading] = useState<boolean>(true); // Loading state
 
-  const [selectedDate, setSelectedDate] = useState('');
-  const [selectedTime, setSelectedTime] = useState('');
-  const [patientType, setPatientType] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [age, setAge] = useState('');
-  const [gender, setGender] = useState('');
-  const [problem, setProblem] = useState('');
-
-  const doctor = {
-    id: 1,
-    name: "Dr. Emily Chen",
-    specialty: "Cardiology",
-    imageUrl: "/user2.jpg", 
-    focus: "Cardiology"
-  };
-
-  const handleTimeSelect = (time: string) => {
-    setSelectedTime(time);
-  };
-
-  const handlePatientTypeSelect = (type: string) => {
-    setPatientType(type);
-  };
-
-  const handleGenderSelect = (genderOption: string) => {
-    setGender(genderOption);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const formData = {
-      doctorId,
-      selectedDate,
-      selectedTime,
-      patientType,
-      fullName,
-      age,
-      gender,
-      problem,
+  // Fetch doctor data from API
+  useEffect(() => {
+    const fetchDoctor = async () => {
+      try {
+        const response = await fetch(`/api/doctors/${doctorId}`);
+        const data = await response.json();
+        setDoctor(data); // Set the doctor data
+      } catch (error) {
+        console.error('Failed to fetch doctor:', error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    console.log("Form Data Submitted:", formData);
+    fetchDoctor();
+  }, [doctorId]);
 
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+  // If still loading, show loading state
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-      router.push(`/appointments/doctor-list/${doctorId}/reserve/success?date=${selectedDate}&time=${selectedTime}`);
-    } catch (error) {
-      console.error("Error booking appointment:", error);
-    }
-  };
+  // If no doctor is found, show an error message
+  if (!doctor) {
+    return <div>No doctor found</div>;
+  }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 text-gray-900">
-      <div className="flex-grow p-6 w-full max-w-2xl mx-auto">
-        <div className="mb-4">
-          <button onClick={() => router.back()} className="text-green-800 hover:text-green-600 transition duration-300">
-            ← Back
-          </button>
-        </div>
+    <div className="min-h-screen flex flex-col">
+      <div className="flex-grow p-6">
+        <div className="w-full max-w-6xl mx-auto">
+          {/* Back Button */}
+          <div className="mb-6">
+            <button onClick={() => router.back()} className="text-green-800 text-2xl">
+              ← Back
+            </button>
+          </div>
 
-        <div className="bg-white rounded-lg p-6 mb-8 shadow-md">
-          <div className="flex items-center mb-4">
-            <Image
-              src={doctor.imageUrl}
-              alt={doctor.name}
-              width={100}
-              height={100}
-              className="mr-4 "
-            />
-            <div>
-              <h2 className="font-medium text-xl">{doctor.name}</h2>
-              <p className="text-gray-500">{doctor.specialty}</p>
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center">
+              <Image
+                src={doctor.images[0]} // Assuming the first image
+                alt={doctor.name}
+                width={100}
+                height={100}
+                className="rounded-full"
+              />
+              <div className="ml-6">
+                <h2 className="font-bold text-2xl">{doctor.name}</h2>
+                <p className="text-gray-600 text-xl">{doctor.specialization}</p>
+              </div>
+            </div>
+            <Bookmark className="text-gray-800" size={32} />
+          </div>
+
+          {/* Buttons */}
+          <div className="flex justify-between mb-6">
+            <button className="w-1/2 h-16 bg-black text-white text-2xl p-3 rounded-md mr-4">
+              <MessageSquare className="inline-block mr-2" /> Message
+            </button>
+            <Link href={`/appointments/doctor-list/${doctorId}/reserve`} className="w-1/2">
+              <button className="w-full h-16 bg-black text-white text-2xl p-3 rounded-md">
+                Reserve
+              </button>
+            </Link>
+          </div>
+
+          {/* Section Icons */}
+          <div className="flex justify-between mb-6">
+            <div className="flex overflow-x-auto">
+              <User className="text-gray-800 min-w-[32px] mr-4" size={32} />
+              <ImageIcon className="text-gray-800 min-w-[32px] mr-4" size={32} />
+              <MapPin className="text-gray-800 min-w-[32px] mr-4" size={32} />
+              <Star className="text-gray-800 min-w-[32px]" size={32} />
             </div>
           </div>
-          <div className="bg-black text-white p-4 rounded-md">
-            Focus: {doctor.focus}
-          </div>
-        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-lg font-bold">Select Date</label>
-            <input 
-              type="date" 
-              className="mt-1 block w-full p-2 rounded-md border border-gray-300 bg-white hover:border-green-400 focus:border-green-500 transition duration-300"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              required
-            />
+          {/* About */}
+          <div className="mb-6">
+            <h3 className="font-bold text-2xl">About me</h3>
+            <p className="text-gray-600 text-xl">{doctor.aboutMe}</p>
           </div>
 
-          <div>
-            <label className="block text-lg font-bold">Available Time</label>
-            <div className="grid grid-cols-2 gap-2 mt-1">
-              {['9:00 AM', '9:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM'].map((time) => (
-                <button 
-                  key={time} 
-                  type="button" 
-                  className={`py-2 px-4 border rounded-md ${selectedTime === time ? 'bg-green-500 text-white' : 'bg-white text-gray-900'} hover:bg-green-600 hover:text-white transition duration-300`}
-                  onClick={() => handleTimeSelect(time)}
-                >
-                  {time}
-                </button>
+          {/* Specialties */}
+          <div className="mb-6">
+            <h3 className="font-bold text-2xl">Specialties</h3>
+            <ul className="list-disc ml-5 text-gray-600 text-xl">
+              {doctor.specialties?.split(', ').map((specialty: string, index: number) => (
+                <li key={index}>{specialty}</li>
               ))}
-            </div>
+            </ul>
           </div>
 
+          {/* Certifications */}
+          <div className="mb-6">
+            <h3 className="font-bold text-2xl">Certifications</h3>
+            <ul className="list-disc ml-5 text-gray-600 text-xl">
+              {doctor.certifications?.split(', ').map((certification: string, index: number) => (
+                <li key={index}>{certification}</li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Professional Experience */}
+          <div className="mb-6">
+            <h3 className="font-bold text-2xl">Professional Experience</h3>
+            <ul className="list-disc ml-5 text-gray-600 text-xl">
+              {doctor.professionalExperience?.split(', ').map((exp: string, index: number) => (
+                <li key={index}>{exp}</li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Languages */}
           <div>
-            <label className="block text-lg font-bold">Patient Details</label>
-            <div className="flex space-x-2 mt-1">
-              <button 
-                type="button" 
-                className={`py-2 px-4 border rounded-md ${patientType === 'Yourself' ? 'bg-green-500 text-white' : 'bg-white text-gray-900'} hover:bg-green-600 hover:text-white transition duration-300`}
-                onClick={() => handlePatientTypeSelect('Yourself')}
-              >
-                Yourself
-              </button>
-              <button 
-                type="button" 
-                className={`py-2 px-4 border rounded-md ${patientType === 'Another Person' ? 'bg-green-500 text-white' : 'bg-white text-gray-900'} hover:bg-green-600 hover:text-white transition duration-300`}
-                onClick={() => handlePatientTypeSelect('Another Person')}
-              >
-                Another Person
-              </button>
-            </div>
+            <h3 className="font-bold text-2xl">Languages</h3>
+            <ul className="list-disc ml-5 text-gray-600 text-xl">
+              {doctor.languages?.split(', ').map((language: string, index: number) => (
+                <li key={index}>{language}</li>
+              ))}
+            </ul>
           </div>
-
-          <input 
-            type="text" 
-            placeholder="Full Name" 
-            className="mt-1 p-3 block w-full rounded-md border border-gray-300 bg-white hover:border-green-400 focus:border-green-500 transition duration-300"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            required
-          />
-          <input 
-            type="number" 
-            placeholder="Age" 
-            className="mt-1 p-3 block w-full rounded-md border border-gray-300 bg-white hover:border-green-400 focus:border-green-500 transition duration-300"
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
-            required
-          />
-
-          <div className="flex space-x-2">
-            {['Male', 'Female', 'Other'].map((genderOption) => (
-              <button 
-                key={genderOption} 
-                type="button" 
-                className={`py-2 px-4 border rounded-md ${gender === genderOption ? 'bg-green-500 text-white' : 'bg-white text-gray-900'} hover:bg-green-600 hover:text-white transition duration-300`}
-                onClick={() => handleGenderSelect(genderOption)}
-              >
-                {genderOption}
-              </button>
-            ))}
-          </div>
-
-          <textarea 
-            placeholder="Describe your problem" 
-            rows={4} 
-            className="mt-1 block w-full p-3 rounded-md border border-gray-300 bg-white hover:border-green-400 focus:border-green-500 transition duration-300"
-            value={problem}
-            onChange={(e) => setProblem(e.target.value)}
-            required
-          ></textarea>
-
-          <button 
-            type="submit" 
-            className="w-full py-3 bg-custom-green text-white rounded-md hover:bg-green-600 transition duration-300"
-            disabled={!selectedDate || !selectedTime || !patientType || !fullName || !age || !gender || !problem}
-          >
-            Book Appointment
-          </button>
-        </form>
+        </div>
       </div>
 
+      {/* Footer */}
       <Footer />
     </div>
   );

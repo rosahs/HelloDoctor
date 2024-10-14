@@ -1,66 +1,103 @@
-'use client'
+'use client';
 
-import DoctorsList from "@/app/appointments/components/doctor-list";
+import DoctorsList from "@/components/protected/doctor-list/DoctorList";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-const DoctorsListPage: React.FC = () => {
-  const router = useRouter();
+export interface Doctor {
+  id: string;
+  specialization: string;
+  images: string[];
+  aboutMe?: string;
+  specialties?: string;
+  certifications?: string;
+  professionalExperience?: string;
+  languages?: string;
+}
 
-  const doctorsList: Doctor[] = [
-    {
-      id: "1",
-      name: "Dr. Emily Chen",
-      specialty: "Cardiology",
-      experience: 15,
-      rating: 4.8,
-      imageUrl: "/doctor1.jpg",
-      about:
-        "Dr. Chen is a board-certified cardiologist with over 15 years of experience in treating complex heart conditions. She specializes in interventional cardiology and has performed over 1000 successful procedures.",
-      specialties: ["Cardiology", "Interventional Cardiology"],
-      certifications: ["Board Certified Cardiologist", "Interventional Cardiology Certification"],
-      professionalExperience: ["15 years of cardiology experience"],
-      languages: ["English", "Mandarin"],
-    },
-    {
-      id: "2",
-      name: "Dr. Michael Johnson",
-      specialty: "Neurology",
-      experience: 20,
-      rating: 4.9,
-      imageUrl: "/doctor2.jpg",
-      about:
-        "Dr. Johnson is a renowned neurologist with two decades of experience in diagnosing and treating neurological disorders. He has a particular interest in neurodegenerative diseases and has published numerous papers on Alzheimer's research.",
-      specialties: ["Neurology", "Neurodegenerative Diseases"],
-      certifications: ["Board Certified Neurologist"],
-      professionalExperience: ["20 years of neurology experience"],
-      languages: ["English", "Spanish"],
-    },
-    {
-      id: "3",
-      name: "Dr. Sarah Patel",
-      specialty: "Pediatrics",
-      experience: 10,
-      rating: 4.7,
-      imageUrl: "/doctor3.jpg",
-      about:
-        "Dr. Patel is a compassionate pediatrician dedicated to providing comprehensive care for children from infancy through adolescence. She has a special focus on childhood nutrition and obesity prevention.",
-      specialties: ["Pediatrics", "Childhood Nutrition"],
-      certifications: ["Board Certified Pediatrician"],
-      professionalExperience: ["10 years of pediatric experience"],
-      languages: ["English", "Hindi", "Gujarati"],
-    },
-  ];
-  // Function to handle doctor selection and redirect
-  const handleDoctorSelect = (doctorId: string) => {
-    router.push(`/appointments/doctor-list/${doctorId}`); // Redirect to the doctor's appointment page by ID
-  };
-
+// Renaming the component to avoid conflict
+const DoctorsDisplay: React.FC<{ initialDoctors: Doctor[] }> = ({ initialDoctors = [] }) => {
   return (
-    <DoctorsList
-      initialDoctors={doctorsList}
-    />
+    <div>
+      {initialDoctors.length > 0 ? (
+        initialDoctors.map((doctor) => (
+          <div key={doctor.id}>
+            <h2>{doctor.specialization}</h2>
+            <p>{doctor.aboutMe}</p>
+          </div>
+        ))
+      ) : (
+        <p>No doctors found.</p> // Handle empty state
+      )}
+    </div>
   );
 };
 
-export default DoctorsListPage;
+export default DoctorsDisplay;
+
+// 'use client';
+
+// import DoctorsList from "@/app/appointments/components/doctor-list";
+// import { useRouter } from "next/navigation";
+// import React, { useEffect, useState } from "react";
+
+// // Type definition for Doctor (this should match your Prisma schema or API structure)
+// interface Doctor {
+//   id: string;
+//   name: string;
+//   specialty: string;
+//   experience: number;
+//   rating: number;
+//   imageUrl: string;
+//   about: string;
+//   specialties: string[];
+//   certifications: string[];
+//   professionalExperience: string[];
+//   languages: string[];
+// }
+
+// const DoctorsListPage: React.FC = () => {
+//   const router = useRouter();
+//   const [doctorsList, setDoctorsList] = useState<Doctor[]>([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState<string | null>(null); // Error state
+
+//   // Fetch doctors from API
+//   useEffect(() => {
+//     const fetchDoctors = async () => {
+//       try {
+//         const response = await fetch("/api/doctors"); // Assuming the backend API is set up correctly
+//         if (!response.ok) {
+//           throw new Error("Failed to fetch doctors.");
+//         }
+//         const data = await response.json();
+//         setDoctorsList(data); // Set the fetched doctors
+//       } catch (error: any) {
+//         setError(error.message);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     fetchDoctors();
+//   }, []);
+
+//   // Handle doctor selection and redirect
+//   const handleDoctorSelect = (doctorId: string) => {
+//     router.push(`/appointments/doctor-list/${doctorId}`);
+//   };
+
+//   // Show a loading indicator while fetching data
+//   if (loading) {
+//     return <div>Loading...</div>;
+//   }
+
+//   // Display an error message if fetching fails
+//   if (error) {
+//     return <div>Error: {error}</div>;
+//   }
+
+//   // Render the DoctorsList component with the fetched doctors
+//   return <DoctorsList initialDoctors={doctorsList} />;
+// };
+
+// export default DoctorsListPage;

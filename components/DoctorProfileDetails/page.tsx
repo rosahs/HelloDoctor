@@ -33,11 +33,11 @@ export default function DoctorProfilePage({ doctor }: DoctorProfileDetailsProps)
               alt={doctor.name}
               width={150}
               height={150}
-            //   className="rounded-full"
+              className="rounded-full"
             />
             <div className="ml-8">
               <h2 className="text-4xl font-bold">{doctor.name}</h2>
-              <p className="text-3xl text-gray-600">{doctor.specialty}</p>
+              <p className="text-3xl font-bold text-gray-600">{doctor.specialty}</p>
             </div>
           </div>
           <Bookmark className="text-gray-800" size={48} />
@@ -45,11 +45,11 @@ export default function DoctorProfilePage({ doctor }: DoctorProfileDetailsProps)
 
         {/* Action Buttons */}
         <div className="flex justify-between mb-10">
-          <button className="w-[48%] h-24 bg-black text-white text-2xl font-semibold rounded-md flex items-center justify-center">
+          <button className="w-[48%] h-24 bg-black text-white text-2xl font-semibold rounded-md flex items-center justify-center transition-colors duration-300 hover:bg-green-600">
             <MessageSquare className="mr-3" size={40} /> Message
           </button>
           <Link href={`/appointments/doctor-list/${doctor.id}/reserve`} className="w-[48%]">
-            <button className="w-full h-24 bg-black text-white text-2xl font-semibold rounded-md flex items-center justify-center">
+            <button className="w-full h-24 bg-black text-white text-2xl font-semibold rounded-md flex items-center justify-center transition-colors duration-300 hover:bg-green-600">
               <Star className="mr-3" size={40} /> Reserve
             </button>
           </Link>

@@ -1,10 +1,16 @@
 import { signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 import { Button } from "../ui/button";
+import { useSearchParams } from "next/navigation";
 
 export const Social = () => {
-  const onClick = (provider: "google") => {
-    signIn(provider, {});
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
+
+  const onClick = (provider: "google" | "github") => {
+    signIn(provider, {
+      callbackUrl: callbackUrl || "/",
+    });
   };
   return (
     <div className="flex items-center w-full gap-x-2">

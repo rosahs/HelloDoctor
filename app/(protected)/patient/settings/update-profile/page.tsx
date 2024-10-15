@@ -6,7 +6,7 @@ async function DoctorEditProfilePage() {
 
   return (
     <div>
-      <UserProfileEditForm isPatient={false} user={user} />
+      <UserProfileEditForm isPatient={true} user={user} />
     </div>
   );
 }

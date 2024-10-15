@@ -155,7 +155,7 @@ export const LoginForm = () => {
                         asChild
                         className="px-0 font-normal"
                       >
-                        <Link href="/reset-password">
+                        <Link href="/auth/reset-password">
                           Forgot Password?
                         </Link>
                       </Button>
@@ -171,6 +171,7 @@ export const LoginForm = () => {
 
           <Button
             type="submit"
+            disabled={isPending}
             className="w-full bg-primaryColor hover:bg-primaryColor/80"
           >
             {showTwoFactor ? "Confirm" : "Login"}

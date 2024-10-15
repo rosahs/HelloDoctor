@@ -5,16 +5,19 @@ import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { useSearchParams } from "next/navigation";
 
 const AuthErrorPage = () => {
-  // const router = useRouter();
-  // const { error } = router.query;
-
   const searchParams = useSearchParams();
-  const errorParam = searchParams.get("error");
+  const error = searchParams.get("error");
+
+  let errorMessage = "Oops! Something went wrong!";
+
+  if (error === "EmailExists") {
+    errorMessage = "Email already in use";
+  }
 
   return (
     <CardWrapper
       headerLabel={
-        errorParam || "Oops! Something went wrong!"
+        errorMessage || "Oops! Something went wrong!"
       }
       backButtonHref="/auth/login"
       backButtonLabel="Back to login"

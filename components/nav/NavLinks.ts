@@ -8,7 +8,7 @@ export const doctorLinks = [
     label: "Settings",
   },
   {
-    href: "/",
+    href: "/doctor/messages",
     label: "Messages",
   },
   {
@@ -31,7 +31,7 @@ export const patientLinks = [
     label: "Settings",
   },
   {
-    href: "/",
+    href: "/patient/messages",
     label: "Messages",
   },
   {

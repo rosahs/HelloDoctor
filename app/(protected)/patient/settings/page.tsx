@@ -6,8 +6,8 @@ const PatientSettings = async () => {
 
   const patientLinks = [
     {
-      href: "/patient/settings/edit-profile",
-      label: "Edit Profile",
+      href: "/patient/settings/update-profile",
+      label: "Update Profile",
     },
     {
       href: "/patient/settings/change-location",

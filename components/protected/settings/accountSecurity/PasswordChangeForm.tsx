@@ -16,14 +16,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { passwordChangeSchema } from "@/schemas";
 import { useSession } from "next-auth/react";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { passwordChange } from "@/actions/account-security/password-change";
 import { FormError } from "@/components/auth/FormError";
 import { FormSuccess } from "@/components/auth/FormSuccess";
 
 export const PasswordChangeForm = () => {
-  const user = useCurrentUser();
-
   const { update } = useSession();
   const [isPending, startTransition] = useTransition();
 
@@ -137,6 +134,7 @@ export const PasswordChangeForm = () => {
 
           <Button
             type="submit"
+            disabled={isPending}
             className="bg-primaryColor hover:bg-primaryColor/80 text-babyPowder"
           >
             Change Password

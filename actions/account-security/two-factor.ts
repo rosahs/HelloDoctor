@@ -5,8 +5,7 @@ import * as z from "zod";
 import { DoctorAboutMeSchema } from "@/schemas";
 import { currentUser } from "@/lib/auth";
 import { getUserById } from "@/data/user";
-import { UserRole } from "@prisma/client";
-import { getDoctorById } from "@/data/doctor";
+import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 
 export const editAboutMe = async (
@@ -21,29 +20,17 @@ export const editAboutMe = async (
 
     const dbUser = await getUserById(user.id);
 
-    if (!dbUser) {
-      return { error: "Unauthorized" };
-    }
+    await db.user.update({
+      where: { id: dbUser?.id },
+      data: {
+        isTwoFactorEnabled: !dbUser?.isTwoFactorEnabled,
+      },
+    });
 
-    if (
-      dbUser.role === UserRole.DOCTOR &&
-      dbUser.doctorId
-    ) {
-      const dbDoctor = await getDoctorById(dbUser.doctorId);
-
-      if (!dbDoctor) {
-        return { error: "Doctor not found" };
-      }
-
-      await db.doctor.update({
-        where: { id: dbDoctor.id },
-        data: values,
-      });
-    }
-
-    return { success: "Saved Successfully" };
-  } catch (error) {
-    console.log(error);
-    return { error: "Something went wrong" };
+    return {
+      success: true,
+    };
+  } catch {
+    return { error: "Failed to toggle 2FA" };
   }
 };

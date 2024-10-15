@@ -1,12 +1,12 @@
-import { VerificationToken } from "@/models/AuthModels";
+import { db } from "@/lib/db";
 
 export const getVerificationTokenByToken = async (
   token: string
 ) => {
   try {
     const verificationToken =
-      await VerificationToken.findOne({
-        token,
+      await db.verificationToken.findUnique({
+        where: { token },
       });
 
     return verificationToken;
@@ -20,8 +20,8 @@ export const getVerificationTokenByEmail = async (
 ) => {
   try {
     const verificationToken =
-      await VerificationToken.findOne({
-        email,
+      await db.verificationToken.findFirst({
+        where: { email },
       });
 
     return verificationToken;

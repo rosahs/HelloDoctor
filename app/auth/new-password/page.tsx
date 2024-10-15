@@ -114,7 +114,7 @@ const NewPasswordPage = () => {
           <Button
             disabled={isPending}
             type="submit"
-            className="w-full"
+            className="w-full bg-primaryColor hover:bg-primaryColor/80"
           >
             Reset password
           </Button>

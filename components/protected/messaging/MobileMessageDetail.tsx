@@ -55,6 +55,7 @@ const MobileMessageDetail = ({ userType, chatId }) => {
         <Avatar className="w-8 h-8 mr-3">
           <AvatarImage
             src={message.avatar || "/profile.jpg"}
+            alt="user"
           />
         </Avatar>
 
@@ -67,7 +68,7 @@ const MobileMessageDetail = ({ userType, chatId }) => {
       <ScrollArea className="flex-1 p-4 overflow-y-auto bg-babyPowder">
         {messages.map((msg) => (
           <div
-            key={msg.id}
+            key={msg.content}
             className={`mb-4 ${
               msg.sender === userType
                 ? "text-right"
@@ -98,6 +99,7 @@ const MobileMessageDetail = ({ userType, chatId }) => {
             variant="ghost"
             className="mr-2"
           >
+            {/* eslint-disable-next-line jsx-a11y/alt-text */}
             <Image className="h-5 w-5" />
           </Button>
 

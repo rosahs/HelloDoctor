@@ -4,6 +4,7 @@ import { getUserById } from "@/data/user";
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { UserRole } from "@prisma/client";
+
 export async function setUserRole(
   role: UserRole,
   specialization: string

@@ -2,28 +2,43 @@
 
 import { toggleTwoFactorAuth } from "@/actions/account-security/two-factor";
 import { Switch } from "@/components/ui/switch";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { ExtendedUser } from "@/next-auth";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 
-export const TwoFactorAuth = () => {
-  const user = useCurrentUser();
-
+export const TwoFactorAuth = ({
+  user,
+}: {
+  user: ExtendedUser;
+}) => {
   const { update } = useSession();
+
+  const [isToggling, setIsToggling] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(
+    user?.isTwoFactorEnabled
+  );
 
   const onToggle = async () => {
     try {
+      setIsToggling(true);
+      setIsEnabled(!isEnabled);
+
       const result = await toggleTwoFactorAuth();
       if (result.success) {
         await update({
           user: {
             ...user,
-            isTwoFactorEnabled: user?.isTwoFactorEnabled,
+            isTwoFactorEnabled: !isEnabled,
           },
         });
+      } else {
+        throw new Error("Failed to toggle 2FA");
       }
     } catch (error) {
       console.error("Failed to toggle 2FA:", error);
+      setIsEnabled(user?.isTwoFactorEnabled);
+    } finally {
+      setIsToggling(false);
     }
   };
 
@@ -37,19 +52,16 @@ export const TwoFactorAuth = () => {
       </p>
       <div className="flex items-center space-x-2">
         <Switch
-          checked={user?.isTwoFactorEnabled}
+          checked={isEnabled}
           onCheckedChange={onToggle}
+          disabled={isToggling}
           className={`${
-            user?.isTwoFactorEnabled
+            isEnabled
               ? "data-[state=checked]:bg-primaryColor"
               : "data-[state=unchecked]:bg-inputBg"
           }`}
         />
-        <span>
-          {user?.isTwoFactorEnabled
-            ? "Enabled"
-            : "Disabled"}
-        </span>
+        <span>{isEnabled ? "Enabled" : "Disabled"}</span>
       </div>
     </section>
   );

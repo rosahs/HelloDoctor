@@ -1,13 +1,17 @@
 import { UserRole } from "@prisma/client";
 import * as z from "zod";
 
+export const DoctorSpecializationSchema = z.object({
+  specialization: z.string().optional(),
+});
+
 export const RegisterSchema = z
   .object({
     name: z.string().min(1, {
       message: "Name is required",
     }),
     email: z.string().email({
-      message: "email is required",
+      message: "Email is required",
     }),
     password: z.string().min(8, {
       message: "Minimum 8 characters required",
@@ -15,9 +19,9 @@ export const RegisterSchema = z
     passwordConfirm: z.string().min(8, {
       message: "Password confirmation is required",
     }),
-    role: z.enum(
-      Object.values(UserRole) as [string, ...string[]]
-    ),
+    role: z.enum([UserRole.PATIENT, UserRole.DOCTOR]),
+  })
+  .extend({
     specialization: z.string().optional(),
   })
   .refine(
@@ -29,7 +33,43 @@ export const RegisterSchema = z
   )
   .refine(
     (data) => {
-      if (data.role === "DOCTOR") {
+      if (data.role === UserRole.DOCTOR) {
+        return !!data.specialization;
+      }
+      return true;
+    },
+    {
+      message: "Specialization is required for doctors",
+      path: ["specialization"],
+    }
+  );
+
+// export const RoleSelectionSchema = z
+//   .object({
+//     role: z.enum([UserRole.PATIENT, UserRole.DOCTOR]),
+//   })
+//   .merge(DoctorSpecializationSchema)
+//   .refine(
+//     (data) => {
+//       if (data.role === UserRole.DOCTOR) {
+//         return !!data.specialization;
+//       }
+//       return true;
+//     },
+//     {
+//       message: "Specialization is required for doctors",
+//       path: ["specialization"],
+//     }
+//   );
+
+export const RoleSelectionSchema = z
+  .object({
+    role: z.enum([UserRole.PATIENT, UserRole.DOCTOR]),
+    specialization: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.role === UserRole.DOCTOR) {
         return !!data.specialization;
       }
       return true;
@@ -145,6 +185,10 @@ export const UpdateProfileSchema = z.object({
     .min(2, "Name must be at least 2 characters"),
   avatar: z
     .any()
+    .refine(
+      (file) => !file || file instanceof File,
+      "Avatar must be a file or empty"
+    )
     .refine(
       (file) => !file || file.size <= MAX_FILE_SIZE,
       "Max file size is 5MB."

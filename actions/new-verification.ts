@@ -3,12 +3,8 @@
 import { db } from "@/lib/db";
 import { getUserByEmail } from "@/data/user";
 import { getVerificationTokenByToken } from "@/data/verification-token";
-import User from "@/models/UserModel";
-import { VerificationToken } from "@/models/AuthModels";
 
 export const newVerification = async (token: string) => {
-  await db();
-
   const existingToken = await getVerificationTokenByToken(
     token
   );
@@ -32,18 +28,19 @@ export const newVerification = async (token: string) => {
     return { error: "Email does not exist!" };
   }
 
-  await User.findByIdAndUpdate(
-    existingUser.id,
-    {
+  // Update user's email and emailVerified fields
+  await db.user.update({
+    where: { id: existingUser.id },
+    data: {
       emailVerified: new Date(),
       email: existingToken.email,
     },
-    { runValidators: true, new: true }
-  );
+  });
 
-  await VerificationToken.findByIdAndDelete(
-    existingToken.id
-  );
+  // Delete the verification token
+  await db.verificationToken.delete({
+    where: { id: existingToken.id },
+  });
 
   return { success: "Email verified!" };
 };

@@ -6,9 +6,9 @@ import bcrypt from "bcryptjs";
 import { RegisterSchema } from "@/schemas";
 import { getUserByEmail } from "@/data/user";
 import { db } from "@/lib/db";
-import User from "@/models/UserModel";
 import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationEmail } from "@/lib/send-mail";
+import { UserRole } from "@prisma/client";
 
 export const register = async (
   values: z.infer<typeof RegisterSchema>
@@ -21,10 +21,8 @@ export const register = async (
       return { error: "Invalid fields" };
     }
 
-    const { email, password, name, role } =
+    const { email, password, name, role, specialization } =
       validatedFields.data;
-
-    await db();
 
     const existingUser = await getUserByEmail(email);
 
@@ -34,11 +32,50 @@ export const register = async (
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    await User.create({
-      role,
-      name,
-      email,
-      password: hashedPassword,
+    let doctorId;
+    let patientId;
+
+    // If the role is "DOCTOR", create a doctor document and save its ID
+    if (role === "DOCTOR") {
+      if (!specialization) {
+        console.error(
+          "Specialization missing for doctor role"
+        );
+        return {
+          error: "Specialization is required for doctors",
+        };
+      }
+
+      const doctor = await db.doctor.create({
+        data: {
+          specialization,
+        },
+      });
+      doctorId = doctor.id;
+    }
+
+    // Create a Patient record
+    if (role === UserRole.PATIENT) {
+      const patient = await db.patient.create({
+        data: {
+          savedDoctors: [],
+        },
+      });
+
+      patientId = patient.id;
+    }
+
+    await db.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        role: role as UserRole,
+        doctorId:
+          role === UserRole.DOCTOR ? doctorId : null,
+        patientId:
+          role === UserRole.PATIENT ? patientId : null,
+      },
     });
 
     const verificationToken =

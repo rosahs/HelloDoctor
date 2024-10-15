@@ -1,10 +1,9 @@
 "use server";
 
 import bcrypt from "bcryptjs";
-import { getUserByEmail, getUserById } from "@/data/user";
+import { getUserById } from "@/data/user";
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
-import User from "@/models/UserModel";
 import { passwordChangeSchema } from "@/schemas";
 import * as z from "zod";
 
@@ -12,7 +11,14 @@ export const passwordChange = async (
   values: z.infer<typeof passwordChangeSchema>
 ) => {
   try {
-    await db();
+    const validatedFields =
+      passwordChangeSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+      return { error: "Invalid fields" };
+    }
+
+    const { password, newPassword } = validatedFields.data;
 
     const user = await currentUser();
 
@@ -26,9 +32,16 @@ export const passwordChange = async (
       return { error: "Unauthorized" };
     }
 
-    if (values.password && values.newPassword) {
+    // Ensure the user's password is not null
+    if (!dbUser.password) {
+      return {
+        error: "User does not have a password set!",
+      };
+    }
+
+    if (password && newPassword) {
       const passwordsMatch = await bcrypt.compare(
-        values.password,
+        password,
         dbUser.password
       );
 
@@ -37,12 +50,15 @@ export const passwordChange = async (
       }
 
       const hashedPassword = await bcrypt.hash(
-        values.newPassword,
+        newPassword,
         10
       );
 
-      await User.findByIdAndUpdate(dbUser.id, {
-        password: hashedPassword,
+      await db.user.update({
+        where: { id: dbUser.id },
+        data: {
+          password: hashedPassword,
+        },
       });
     }
 

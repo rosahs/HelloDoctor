@@ -7,15 +7,11 @@ import { NewPasswordSchema } from "@/schemas";
 import { getPasswordResetTokenByToken } from "@/data/password-reset-token";
 import { getUserByEmail } from "@/data/user";
 import { db } from "@/lib/db";
-import User from "@/models/UserModel";
-import { PasswordResetToken } from "@/models/AuthModels";
 
 export const newPassword = async (
   values: z.infer<typeof NewPasswordSchema>,
   token?: string | null
 ) => {
-  await db();
-
   if (!token) {
     return { error: "Missing token!" };
   }
@@ -52,28 +48,16 @@ export const newPassword = async (
     return { error: "Email does not exist!" };
   }
 
-  // Check if the new password is the same as the current one
-  const isSamePassword = await bcrypt.compare(
-    password,
-    existingUser.password
-  );
-
-  if (isSamePassword) {
-    return {
-      error:
-        "New password cannot be the same as the old password!",
-    };
-  }
-
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  await User.findByIdAndUpdate(existingUser.id, {
-    password: hashedPassword,
+  await db.user.update({
+    where: { id: existingUser.id },
+    data: { password: hashedPassword },
   });
 
-  await PasswordResetToken.findByIdAndDelete(
-    existingToken.id
-  );
+  await db.passwordResetToken.delete({
+    where: { id: existingToken.id },
+  });
 
   return { success: "Password updated!" };
 };

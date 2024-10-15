@@ -150,3 +150,23 @@ export const getAppointment = async (appointmentId: string) => {
 //     console.error("An error occurred while sending sms:", error);
 //   }
 // };
+
+// SEND SMS NOTIFICATION
+// This part would depend on which SMS service you're using with Node.js. For example, Twilio:
+// import twilio from 'twilio';
+
+// const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+
+// export const sendSMSNotification = async (userId: string, content: string) => {
+//   try {
+//     const message = await client.messages.create({
+//       body: content,
+//       from: process.env.TWILIO_PHONE_NUMBER,
+//       to: userId, // Ensure userId is the phone number in the correct format
+//     });
+
+//     return parseStringify(message);
+//   } catch (error) {
+//     console.error("An error occurred while sending sms:", error);
+//   }
+// };

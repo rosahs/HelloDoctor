@@ -1,14 +1,18 @@
 "use server";
 
-import { getUserById } from "@/data/user";
+import * as z from "zod";
+
+import { DoctorAboutMeSchema } from "@/schemas";
 import { currentUser } from "@/lib/auth";
+import { getUserById } from "@/data/user";
+import { UserRole } from "@prisma/client";
+import { getDoctorById } from "@/data/doctor";
 import { db } from "@/lib/db";
-import User from "@/models/UserModel";
 
-export const toggleTwoFactorAuth = async () => {
+export const editAboutMe = async (
+  values: z.infer<typeof DoctorAboutMeSchema>
+) => {
   try {
-    await db();
-
     const user = await currentUser();
 
     if (!user || !user.id) {
@@ -17,14 +21,29 @@ export const toggleTwoFactorAuth = async () => {
 
     const dbUser = await getUserById(user.id);
 
-    await User.findByIdAndUpdate(dbUser.id, {
-      isTwoFactorEnabled: !dbUser.isTwoFactorEnabled,
-    });
+    if (!dbUser) {
+      return { error: "Unauthorized" };
+    }
 
-    return {
-      success: true,
-    };
+    if (
+      dbUser.role === UserRole.DOCTOR &&
+      dbUser.doctorId
+    ) {
+      const dbDoctor = await getDoctorById(dbUser.doctorId);
+
+      if (!dbDoctor) {
+        return { error: "Doctor not found" };
+      }
+
+      await db.doctor.update({
+        where: { id: dbDoctor.id },
+        data: values,
+      });
+    }
+
+    return { success: "Saved Successfully" };
   } catch (error) {
-    return { error: "Failed to toggle 2FA" };
+    console.log(error);
+    return { error: "Something went wrong" };
   }
 };

@@ -1,138 +1,63 @@
 "use server";
 
 import * as z from "zod";
-import { AuthError } from "next-auth";
-import { signIn } from "@/auth";
+import bcrypt from "bcryptjs";
 
-import { LoginSchema } from "@/schemas";
+import { NewPasswordSchema } from "@/schemas";
+import { getPasswordResetTokenByToken } from "@/data/password-reset-token";
 import { getUserByEmail } from "@/data/user";
-import {
-  DOCTOR_LOGIN_REDIRECT,
-  PATIENT_LOGIN_REDIRECT,
-} from "@/routes";
-import {
-  generateTwoFactorToken,
-  generateVerificationToken,
-} from "@/lib/tokens";
-import {
-  sendTwoFactorTokenEmail,
-  sendVerificationEmail,
-} from "@/lib/send-mail";
-import {
-  TwoFactorConfirmation,
-  TwoFactorToken,
-} from "@/models/AuthModels";
-import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
-import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 import { db } from "@/lib/db";
 
-export const login = async (
-  values: z.infer<typeof LoginSchema>
+export const newPassword = async (
+  values: z.infer<typeof NewPasswordSchema>,
+  token?: string | null
 ) => {
-  await db();
+  if (!token) {
+    return { error: "Missing token!" };
+  }
 
-  const validatedFields = LoginSchema.safeParse(values);
+  const validatedFields =
+    NewPasswordSchema.safeParse(values);
 
   if (!validatedFields.success) {
-    return { error: "Invalid fields" };
+    return { error: "Invalid fields!" };
   }
 
-  const { email, password, code } = validatedFields.data;
+  const { password } = validatedFields.data;
 
-  try {
-    const user = await getUserByEmail(email);
+  const existingToken = await getPasswordResetTokenByToken(
+    token
+  );
 
-    if (!user) {
-      return { error: "Email does not exist" };
-    }
-
-    if (!user.password) {
-      return {
-        error:
-          "This account was created with Google Sign-In. Please log in using Google.",
-      };
-    }
-
-    if (!user.emailVerified) {
-      const verificationToken =
-        await generateVerificationToken(user.email);
-
-      await sendVerificationEmail(
-        verificationToken.email,
-        verificationToken.token
-      );
-
-      return { success: "Confirmation email sent!" };
-    }
-
-    console.log(user.isTwoFactorEnabled);
-
-    if (user.isTwoFactorEnabled) {
-      if (code) {
-        const twoFactorToken =
-          await getTwoFactorTokenByEmail(user.email);
-
-        if (
-          !twoFactorToken ||
-          twoFactorToken.token !== code
-        ) {
-          return { error: "Invalid code!" };
-        }
-
-        if (new Date(twoFactorToken.expires) < new Date()) {
-          return { error: "Code expired!" };
-        }
-
-        await TwoFactorToken.findByIdAndDelete(
-          twoFactorToken.id
-        );
-
-        const existingConfirmation =
-          await getTwoFactorConfirmationByUserId(user.id);
-        if (existingConfirmation) {
-          await TwoFactorConfirmation.findByIdAndDelete(
-            existingConfirmation.id
-          );
-        }
-
-        await TwoFactorConfirmation.create({
-          userId: user.id,
-        });
-      } else {
-        const twoFactorToken = await generateTwoFactorToken(
-          user.email
-        );
-
-        await sendTwoFactorTokenEmail(
-          twoFactorToken.email,
-          twoFactorToken.token
-        );
-
-        return { twoFactor: true };
-      }
-    }
-
-    const redirectTo =
-      user.role === "DOCTOR"
-        ? DOCTOR_LOGIN_REDIRECT
-        : PATIENT_LOGIN_REDIRECT;
-
-    await signIn("credentials", {
-      email,
-      password,
-      redirectTo,
-    });
-
-    return { success: "Login successful!" };
-  } catch (err) {
-    if (err instanceof AuthError) {
-      switch (err.type) {
-        case "CredentialsSignin":
-          return { error: "Invalid credentials" };
-        default:
-          return { error: "Something went wrong" };
-      }
-    }
-    throw err;
+  if (!existingToken) {
+    return { error: "Invalid token!" };
   }
+
+  const hasExpired =
+    new Date(existingToken.expires) < new Date();
+
+  if (hasExpired) {
+    return { error: "Token has expired!" };
+  }
+
+  const existingUser = await getUserByEmail(
+    existingToken.email
+  );
+
+  if (!existingUser) {
+    return { error: "Email does not exist!" };
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  await db.user.update({
+    where: { id: existingUser.id },
+    data: { password: hashedPassword },
+  });
+
+  await db.passwordResetToken.delete({
+    where: { id: existingToken.id },
+  });
+
+  return { success: "Password updated!" };
 };

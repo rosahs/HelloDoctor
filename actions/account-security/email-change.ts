@@ -3,7 +3,6 @@
 import { getUserByEmail, getUserById } from "@/data/user";
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
-import User from "@/models/UserModel";
 import { emailChangeSchema } from "@/schemas";
 import * as z from "zod";
 
@@ -11,7 +10,12 @@ export const emailChange = async (
   value: z.infer<typeof emailChangeSchema>
 ) => {
   try {
-    await db();
+    const validatedField =
+      emailChangeSchema.safeParse(value);
+
+    if (!validatedField.success) {
+      return { error: "Invalid email address" };
+    }
 
     const user = await currentUser();
 
@@ -19,25 +23,33 @@ export const emailChange = async (
       return { error: "Unauthorized" };
     }
 
+    const newEmail = validatedField.data.email;
+
     const dbUser = await getUserById(user.id);
 
     if (!dbUser) {
       return { error: "Unauthorized" };
     }
 
-    if (value.email) {
-      const existingUser = await getUserByEmail(
-        value.email
-      );
-
-      if (existingUser && existingUser.id !== user.id) {
-        return { error: "Email already in use!" };
-      }
-
-      await User.findByIdAndUpdate(dbUser.id, {
-        email: value.email,
-      });
+    if (newEmail === dbUser.email) {
+      return {
+        error:
+          "New email must be different from the current one",
+      };
     }
+
+    const existingUser = await getUserByEmail(newEmail);
+
+    if (existingUser && existingUser.id !== user.id) {
+      return { error: "Email already in use!" };
+    }
+
+    await db.user.update({
+      where: { id: dbUser.id },
+      data: {
+        email: newEmail,
+      },
+    });
 
     return {
       success: "You changed your email successfully!",

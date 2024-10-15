@@ -1,10 +1,10 @@
 "use server";
 
 import * as z from "zod";
-import { AuthError } from "next-auth";
-import { signIn } from "@/auth";
+import bcrypt from "bcryptjs";
 
-import { LoginSchema } from "@/schemas";
+import { NewPasswordSchema } from "@/schemas";
+import { getPasswordResetTokenByToken } from "@/data/password-reset-token";
 import { getUserByEmail } from "@/data/user";
 import {
   DOCTOR_LOGIN_REDIRECT,
@@ -29,10 +29,10 @@ export const login = async (
   const validatedFields = LoginSchema.safeParse(values);
 
   if (!validatedFields.success) {
-    return { error: "Invalid fields" };
+    return { error: "Invalid fields!" };
   }
 
-  const { email, password, code } = validatedFields.data;
+  const { password } = validatedFields.data;
 
   try {
     const user = await getUserByEmail(email);

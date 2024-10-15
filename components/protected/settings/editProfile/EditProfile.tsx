@@ -1,5 +1,6 @@
 "use client";
 
+import * as z from "zod";
 import React, {
   useState,
   useEffect,
@@ -36,6 +37,13 @@ import { FormSuccess } from "@/components/auth/FormSuccess";
 import { UpdateProfileSchema } from "@/schemas";
 import { ExtendedUser } from "@/next-auth";
 
+type FormData = z.infer<typeof UpdateProfileSchema>;
+
+type Country = {
+  code: string;
+  name: string;
+};
+
 export const UserProfileEditForm = ({
   isPatient,
   user,
@@ -46,50 +54,59 @@ export const UserProfileEditForm = ({
   const { update } = useSession();
 
   const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [avatarPreview, setAvatarPreview] = useState(
-    user?.image || ""
-  );
-  const [countries, setCountries] = useState([]);
+  const [error, setError] = useState<string>("");
+  const [success, setSuccess] = useState<string>("");
+  const [avatarPreview, setAvatarPreview] =
+    useState<string>(user?.image || "");
+
+  const [countries, setCountries] = useState<Country[]>([]);
 
   useEffect(() => {
     fetch(
       "https://restcountries.com/v3.1/all?fields=name,cca2"
     )
       .then((response) => response.json())
-      .then((data) => {
-        const sortedCountries = data
-          .map((country) => ({
-            code: country.cca2,
-            name: country.name.common,
-          }))
-          .sort((a, b) => a.name.localeCompare(b.name));
-        setCountries(sortedCountries);
-      })
+      .then(
+        (
+          data: { name: { common: string }; cca2: string }[]
+        ) => {
+          const sortedCountries = data
+            .map((country) => ({
+              code: country.cca2,
+              name: country.name.common,
+            }))
+            .sort((a, b) => a.name.localeCompare(b.name));
+          setCountries(sortedCountries);
+        }
+      )
       .catch((error) =>
         console.error("Error fetching countries:", error)
       );
   }, []);
 
-  const form = useForm({
+  const form = useForm<FormData>({
     resolver: zodResolver(UpdateProfileSchema),
     defaultValues: {
       name: user?.name || "",
-      country: user?.patient?.country || "", // Set the default value to user.patient.country
-      city: user?.patient?.city || "", // Set the default value to user.patient.city
+      country: user?.patient?.country || "",
+      city: user?.patient?.city || "",
     },
   });
 
-  const onSubmit = async (values) => {
+  // Update type of the `onSubmit` function
+  const onSubmit = async (
+    values: z.infer<typeof UpdateProfileSchema>
+  ) => {
     startTransition(async () => {
       const formData = new FormData();
+
       formData.append("name", values.name);
-      if (values.avatar) {
-        formData.append("avatar", values.avatar);
-      }
-      formData.append("country", values.country);
-      formData.append("city", values.city);
+
+      formData.append("avatar", values.avatar);
+
+      formData.append("country", values.country as string);
+
+      formData.append("city", values.city as string);
 
       const result = await updateProfile(formData);
 
@@ -106,12 +123,16 @@ export const UserProfileEditForm = ({
     });
   };
 
-  const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
+  const handleAvatarChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setAvatarPreview(reader.result);
+        if (typeof reader.result === "string") {
+          setAvatarPreview(reader.result);
+        }
       };
       reader.readAsDataURL(file);
       form.setValue("avatar", file);
@@ -135,6 +156,7 @@ export const UserProfileEditForm = ({
             control={form.control}
             name="avatar"
             render={({
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
               field: { value, onChange, ...field },
             }) => (
               <FormItem>
@@ -157,7 +179,7 @@ export const UserProfileEditForm = ({
                         id="avatar-upload"
                         onChange={(e) => {
                           handleAvatarChange(e);
-                          onChange(e.target.files[0]);
+                          onChange(e.target.files?.[0]);
                         }}
                         {...field}
                       />
@@ -165,11 +187,15 @@ export const UserProfileEditForm = ({
                         type="button"
                         variant="outline"
                         className="bg-inputBg border-inputBorder text-textDark"
-                        onClick={() =>
-                          document
-                            .getElementById("avatar-upload")
-                            .click()
-                        }
+                        onClick={() => {
+                          const avatarUploadElement =
+                            document.getElementById(
+                              "avatar-upload"
+                            );
+                          if (avatarUploadElement) {
+                            avatarUploadElement.click();
+                          }
+                        }}
                       >
                         Choose Image
                       </Button>

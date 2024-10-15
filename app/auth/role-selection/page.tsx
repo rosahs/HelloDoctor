@@ -26,11 +26,7 @@ import {
 import { setUserRole } from "@/actions/setUserRole";
 import { DoctorSpecializationField } from "@/components/auth/DoctorSpecializationField";
 import { UserRole } from "@prisma/client";
-
-const RoleSelectionSchema = z.object({
-  role: z.enum([UserRole.PATIENT, UserRole.DOCTOR]),
-  specialization: z.string().optional(),
-});
+import { RoleSelectionSchema } from "@/schemas";
 
 const RoleSelection = () => {
   const router = useRouter();

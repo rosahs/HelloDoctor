@@ -7,8 +7,8 @@ import { getTwoFactorConfirmationByUserId } from "./data/two-factor-confirmation
 import { db } from "./lib/db";
 import { getAccountByUserId } from "./data/account";
 import { getDoctorById } from "./data/doctor";
-import { Doctor } from "./next-auth";
-import { Patient, UserRole } from "@prisma/client";
+import { Doctor, Patient } from "./next-auth";
+import { UserRole } from "@prisma/client";
 import { getPatientById } from "./data/patient";
 
 export const { handlers, auth, signIn, signOut } = NextAuth(
@@ -27,6 +27,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
     },
     callbacks: {
       async signIn({ user, account, profile }) {
+        console.log(profile);
         // If the sign-in provider is OAuth
         if (account && account.provider !== "credentials") {
           const email = profile?.email;

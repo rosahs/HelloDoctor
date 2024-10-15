@@ -31,7 +31,9 @@ export const RegisterForm = () => {
     string | undefined
   >("");
   const [isPending, startTransition] = useTransition();
-  const [activeRole, setActiveRole] = useState("PATIENT");
+  const [activeRole, setActiveRole] = useState<UserRole>(
+    UserRole.PATIENT
+  );
 
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -40,12 +42,12 @@ export const RegisterForm = () => {
       password: "",
       passwordConfirm: "",
       name: "",
-      role: "PATIENT",
+      role: UserRole.PATIENT,
       specialization: "",
     },
   });
 
-  const handleRoleChange = (role: string) => {
+  const handleRoleChange = (role: UserRole) => {
     setActiveRole(role);
     form.setValue("role", role);
   };
@@ -94,7 +96,7 @@ export const RegisterForm = () => {
                       }
                       disabled={isPending}
                       className={`flex-1 ${
-                        activeRole === "PATIENT"
+                        activeRole === UserRole.PATIENT
                           ? "bg-primaryColor text-white hover:bg-primaryColor/80"
                           : "bg-white text-textDark  hover:bg-primaryColor/15"
                       }`}
@@ -108,7 +110,7 @@ export const RegisterForm = () => {
                       }
                       disabled={isPending}
                       className={`flex-1 ${
-                        activeRole === "DOCTOR"
+                        activeRole === UserRole.DOCTOR
                           ? "bg-primaryColor text-white hover:bg-primaryColor/80 "
                           : "bg-white text-textDark  hover:bg-primaryColor/15"
                       }`}

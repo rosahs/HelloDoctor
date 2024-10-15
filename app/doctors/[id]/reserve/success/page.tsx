@@ -4,7 +4,7 @@ import { CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-export default function AppointmentSuccessPage({ params }: { params: { id: string } }) {
+export default function AppointmentSuccessPage() {
   const searchParams = useSearchParams();
   const [date, setDate] = useState<string | null>(null);
   const [time, setTime] = useState<string | null>(null);
@@ -26,7 +26,7 @@ export default function AppointmentSuccessPage({ params }: { params: { id: strin
           Your appointment request has been successfully submitted!
         </h1>
         <p className="text-gray-400 mb-8">
-          We'll be in touch shortly to confirm.
+          We&apos;ll be in touch shortly to confirm.
         </p>
         <div className="bg-gray-800 rounded-lg p-4 mb-8">
           <h2 className="text-xl mb-4">Requested appointment details:</h2>

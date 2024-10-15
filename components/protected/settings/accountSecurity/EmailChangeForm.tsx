@@ -15,15 +15,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { emailChangeSchema } from "@/schemas";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
+
 import { FormError } from "@/components/auth/FormError";
 import { FormSuccess } from "@/components/auth/FormSuccess";
 import { useSession } from "next-auth/react";
 import { emailChange } from "@/actions/account-security/email-change";
+import { ExtendedUser } from "@/next-auth";
 
-export const EmailChangeForm = () => {
-  const user = useCurrentUser();
-
+export const EmailChangeForm = ({
+  user,
+}: {
+  user: ExtendedUser;
+}) => {
   const { update } = useSession();
   const [isPending, startTransition] = useTransition();
 

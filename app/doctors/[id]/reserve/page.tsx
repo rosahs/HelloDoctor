@@ -3,45 +3,26 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import Calendar from 'react-calendar'; // Using react-calendar instead of the Radix DayPicker
-import 'react-calendar/dist/Calendar.css'; // Ensure you have this to style the calendar
+import { Calendar } from "@/components/ui/calendar";
 
 export default function DoctorReservePage() {
   const router = useRouter();
   const params = useParams();
   const [doctorId, setDoctorId] = useState<string | undefined>(undefined);
-  const [date, setDate] = useState<Date | null>(null); // Update the type to handle react-calendar's value
+  const [date, setDate] = useState<Date | undefined>(undefined);
   const [time, setTime] = useState('');
   const [reason, setReason] = useState('');
 
-  // Example doctor data
-  const [doctorInfo, setDoctorInfo] = useState({
-    name: 'Dr. John Doe',
-    specialty: 'Cardiologist',
-    experience: '20+ years in treating heart diseases',
-    imageUrl: '/images/placeholder-doctor-image.jpg',
-  });
-
-  // Fetch doctor data dynamically if needed
   useEffect(() => {
     const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
+    console.log('Doctor ID:', id);
     setDoctorId(id || '');
-
-    // Example of how you might fetch doctor data based on the ID
-    if (id) {
-      // Replace with actual API call to fetch doctor data
-      console.log(`Fetching doctor info for doctor ID: ${id}`);
-      // Example API fetch:
-      // fetch(`/api/doctors/${id}`)
-      //   .then((response) => response.json())
-      //   .then((data) => setDoctorInfo(data));
-    }
   }, [params?.id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!doctorId) {
-      console.error('Doctor ID is missing!');
+      console.error("Doctor ID is missing!");
       return;
     }
 
@@ -55,49 +36,35 @@ export default function DoctorReservePage() {
         <h2 className="text-4xl font-bold mb-6 text-center">Reserve an Appointment</h2>
         <form onSubmit={handleSubmit} className="rounded-lg px-8 pt-6 pb-8 mb-4">
           <div className="text-center mb-6">
-            <Image src={doctorInfo.imageUrl} alt="Doctor's Image" width={100} height={100} className="mx-auto mb-2" />
-            <h3 className="text-2xl font-bold">{doctorInfo.name}</h3>
-            <p className="text-xl text-gray-600">{doctorInfo.specialty}</p>
-            <p className="mt-2 text-sm text-gray-600">{doctorInfo.experience}</p>
+            <Image src="/images/placeholder-doctor-image.jpg" alt="Doctor's Image" width={100} height={100} className="mx-auto mb-2" />
+            <h3 className="text-2xl font-bold">Dr. John Doe</h3>
+            <p className="text-xl text-gray-600">Cardiologist</p>
+            <p className="mt-2 text-sm text-gray-600">Experienced cardiologist with 20+ years in treating heart diseases.</p>
           </div>
-          {/* Date Input */}
           <div className="mb-4">
             <label className="block text-gray-700 text-xl font-bold mb-2">Select Date</label>
-            <Calendar
-              onChange={(value: Date | Date[]) => setDate(value as Date)} // Cast value to Date
-              value={date}
-              className="w-full border rounded-md p-2"
-            />
+            <div className="bg-white rounded-md border p-3">
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={setDate}
+                className="mx-auto"
+              />
+            </div>
           </div>
-          {/* Time Input */}
           <div className="mb-4">
             <label className="block text-gray-700 text-xl font-bold mb-2">Time</label>
-            <input
-              type="time"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-              className="shadow appearance-none cursor-pointer border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              required
-            />
+            <input type="time" value={time} onChange={(e) => setTime(e.target.value)}
+              className="shadow appearance-none cursor-pointer border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
           </div>
-          {/* Reason for Visit */}
           <div className="mb-6">
             <label className="block text-gray-700 text-xl font-bold mb-2">Reason for Visit</label>
-            <textarea
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
+            <textarea value={reason} onChange={(e) => setReason(e.target.value)}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="Enter the reason for your visit"
-              rows={3}
-              required
-            />
+              placeholder="Enter the reason for your visit" rows={3} required />
           </div>
-          {/* Submit Button */}
           <div className="flex items-center justify-center">
-            <button
-              type="submit"
-              className="bg-green-700 hover:bg-green-600 text-white text-xl font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >
+            <button type="submit" className="bg-green-700 hover:bg-green-600 text-white text-xl font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
               Book Appointment
             </button>
           </div>

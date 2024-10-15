@@ -6,10 +6,10 @@ export default async function DoctorProfilePage({ params }: { params: { id: stri
     const doctor = await getDoctorById(params.id);
 
     if (!doctor) {
-      return <p className="text-center text-red-500">Doctor not found.</p>; // Improve user feedback
+      return <p className="text-center text-red-500">Doctor not found.</p>; 
     }
 
-    // Ensure doctor object contains all the required fields for DoctorProfileDetails
+    
     return (
       <div className="min-h-screen flex flex-col items-center p-4 bg-gray-50">
         <DoctorProfileDetails 
@@ -26,7 +26,7 @@ export default async function DoctorProfilePage({ params }: { params: { id: stri
   } catch (error) {
     console.error('Error fetching doctor data:', error);
 
-    // Provide clear feedback on the page
+    
     return (
       <div className="min-h-screen flex flex-col justify-center items-center p-4">
         <p className="text-red-500 text-lg font-semibold">Error loading doctor profile.</p>

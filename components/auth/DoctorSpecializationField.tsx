@@ -9,8 +9,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
 
+interface FormValues {
+  specialization: string;
+}
+
 interface DoctorSpecializationFieldProps {
-  form: UseFormReturn<any>;
+  form: UseFormReturn<FormValues>;
   activeRole: string;
 }
 

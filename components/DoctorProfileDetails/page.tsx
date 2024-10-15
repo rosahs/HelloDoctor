@@ -2,7 +2,6 @@ import Image from 'next/image';
 import { Bookmark, MessageSquare, User, Image as ImageIcon, MapPin, Star } from 'lucide-react'; // Icons
 import Link from 'next/link';
 import { Avatar } from "@/components/ui/avatar";
-import { AvatarImage } from "@radix-ui/react-avatar";
 
 interface DoctorProfileDetailsProps {
   doctor: {
@@ -32,7 +31,13 @@ export default function DoctorProfilePage({ doctor }: DoctorProfileDetailsProps)
         <div className="flex flex-col md:flex-row items-center justify-between mb-8">
           <div className="flex items-center mb-6 md:mb-0">
             <Avatar className="w-20 h-20 mr-3">
-              <AvatarImage src={doctor.imageUrl || "/profile.jpg"} />
+              <Image
+                src={doctor.imageUrl || "/profile.jpg"}
+                alt={`${doctor.name}'s profile picture`}
+                width={80}
+                height={80}
+                className="rounded-full"
+              />
             </Avatar>
             <div className="ml-4 md:ml-8 text-center md:text-left">
               <h2 className="text-3xl md:text-4xl font-bold">{doctor.name}</h2>

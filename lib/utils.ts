@@ -1,16 +1,22 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
-export const parseStringify = (value: any) => JSON.parse(JSON.stringify(value));
+export const parseStringify = (value: unknown) =>
+  JSON.parse(JSON.stringify(value));
 
-export const convertFileToUrl = (file: File) => URL.createObjectURL(file);
+export const convertFileToUrl = (file: File) =>
+  URL.createObjectURL(file);
 
 // FORMAT DATE TIME
-export const formatDateTime = (dateString: Date | string, timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone) => {
+export const formatDateTime = (
+  dateString: Date | string,
+  timeZone: string = Intl.DateTimeFormat().resolvedOptions()
+    .timeZone
+) => {
   const dateTimeOptions: Intl.DateTimeFormatOptions = {
     // weekday: "short", // abbreviated weekday name (e.g., 'Mon')
     month: "short", // abbreviated month name (e.g., 'Oct')
@@ -44,25 +50,21 @@ export const formatDateTime = (dateString: Date | string, timeZone: string = Int
     timeZone: timeZone, // use the provided timezone
   };
 
-  const formattedDateTime: string = new Date(dateString).toLocaleString(
-    "en-US",
-    dateTimeOptions
-  );
+  const formattedDateTime: string = new Date(
+    dateString
+  ).toLocaleString("en-US", dateTimeOptions);
 
-  const formattedDateDay: string = new Date(dateString).toLocaleString(
-    "en-US",
-    dateDayOptions
-  );
+  const formattedDateDay: string = new Date(
+    dateString
+  ).toLocaleString("en-US", dateDayOptions);
 
-  const formattedDate: string = new Date(dateString).toLocaleString(
-    "en-US",
-    dateOptions
-  );
+  const formattedDate: string = new Date(
+    dateString
+  ).toLocaleString("en-US", dateOptions);
 
-  const formattedTime: string = new Date(dateString).toLocaleString(
-    "en-US",
-    timeOptions
-  );
+  const formattedTime: string = new Date(
+    dateString
+  ).toLocaleString("en-US", timeOptions);
 
   return {
     dateTime: formattedDateTime,

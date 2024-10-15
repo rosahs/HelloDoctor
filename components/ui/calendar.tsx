@@ -52,8 +52,24 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        IconLeft: ({ ...props }) => <ChevronLeftIcon className="h-4 w-4" />,
-        IconRight: ({ ...props }) => <ChevronRightIcon className="h-4 w-4" />,
+        Nav: ({ onPreviousClick, onNextClick }) => (
+          <div className="flex justify-between items-center">
+            <button
+              type="button"
+              onClick={onPreviousClick}
+              className="h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100"
+            >
+              <ChevronLeftIcon className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={onNextClick}
+              className="h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100"
+            >
+              <ChevronRightIcon className="h-4 w-4" />
+            </button>
+          </div>
+        ),
       }}
       {...props}
     />

@@ -1,7 +1,6 @@
 import Image from 'next/image';
-import Link from 'next/link'; // Import the Link component
-import { Doctor, getDoctors } from '@/lib/doctors'; 
-import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { Doctor, getDoctors } from '@/lib/doctors';
 
 export default async function DoctorSearchResults({
   searchParams
@@ -14,14 +13,14 @@ export default async function DoctorSearchResults({
 
   const searchCriteria = { name, specialty, location };
 
-  const doctors = (await getDoctors(searchCriteria)).map((doctor: any) => ({
+  const doctors = (await getDoctors(searchCriteria)).map((doctor: Doctor) => ({
     id: doctor.id,
     name: doctor.name || 'Unknown Doctor',
-    specialty: doctor.specialization || doctor.specialty,
+    specialty: doctor.specialty,
     experience: doctor.experience || 0,
     rating: doctor.rating || 0,
-    imageUrl: doctor.images[0] || '/placeholder-doctor-image.jpg',
-    about: doctor.aboutMe || 'No information available.',
+    imageUrl: doctor.imageUrl || '/placeholder-doctor-image.jpg',
+    about: doctor.about || 'No information available.',
     specialties: doctor.specialties || [],
     certifications: doctor.certifications || [],
     professionalExperience: doctor.professionalExperience || [],
@@ -35,10 +34,8 @@ export default async function DoctorSearchResults({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {doctors.map((doctor: Doctor) => (
-        // Wrap the entire card content with a Link component
         <Link key={doctor.id} href={`/doctors/${doctor.id}`} passHref>
           <div className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow duration-300">
-            {/* Doctor Image */}
             <Image
               src={doctor.imageUrl || '/placeholder-doctor-image.jpg'}
               alt={`Doctor specializing in ${doctor.specialty}`}
@@ -46,7 +43,6 @@ export default async function DoctorSearchResults({
               height={200}
               className="w-full h-48 object-cover"
             />
-            {/* Doctor Info */}
             <div className="p-4">
               <h2 className="text-xl font-semibold mb-2">{doctor.name}</h2>
               <p className="text-gray-600 mb-2">{doctor.specialty}</p>

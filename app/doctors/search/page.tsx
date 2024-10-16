@@ -2,11 +2,7 @@ import Image from 'next/image';
 import DoctorSearchForm from '@/components/DoctorSearchForm/page';
 import DoctorSearchResults from '@/components/DoctorSearchResults/page';
 
-export default function DoctorSearchPage({
-  searchParams
-}: {
-  searchParams: { [key: string]: string | string[] | undefined }
-}) {
+export default function DoctorSearchPage({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
   return (
     <div className="relative min-h-screen">
       {/* Background Image */}
@@ -22,7 +18,7 @@ export default function DoctorSearchPage({
       </div>
 
       {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-black bg-opacity-80 z-1"></div>
+      <div className="absolute inset-0 bg-black bg-opacity-70 z-1"></div>
 
       {/* Main Content */}
       <div className="relative z-10 container mx-auto px-4 py-8">

@@ -1,12 +1,14 @@
-'use client'
+'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Modal from '@/components/Specialty-Modal/page'; 
 
 const DoctorSearchForm = () => {
   const [name, setName] = useState('');
   const [specialty, setSpecialty] = useState('');
   const [location, setLocation] = useState('');
+  const [showModal, setShowModal] = useState(false);
   const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -16,6 +18,14 @@ const DoctorSearchForm = () => {
     if (specialty) searchParams.append('specialty', specialty);
     if (location) searchParams.append('location', location);
     router.push(`/doctors/search?${searchParams.toString()}`);
+  };
+
+  const handleSpecialtyClick = () => {
+    setShowModal(true); // Show the modal when the specialty input is clicked
+  };
+
+  const handleSpecialtySelect = (selectedSpecialty: string) => {
+    setSpecialty(selectedSpecialty); // Update the specialty input with the selected value
   };
 
   return (
@@ -28,13 +38,17 @@ const DoctorSearchForm = () => {
           placeholder="Doctor's name"
           className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
+
+        {/* Specialty Input (Read-Only) */}
         <input
           type="text"
           value={specialty}
-          onChange={(e) => setSpecialty(e.target.value)}
-          placeholder="Specialty"
-          className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          onClick={handleSpecialtyClick}
+          readOnly
+          placeholder="Select Specialty"
+          className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
         />
+
         <input
           type="text"
           value={location}
@@ -43,12 +57,20 @@ const DoctorSearchForm = () => {
           className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
+
       <button
         type="submit"
         className="mt-4 px-6 py-2 bg-black text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         Search
       </button>
+
+      {/* Modal */}
+      <Modal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        onSelectSpecialty={handleSpecialtySelect}
+      />
     </form>
   );
 };

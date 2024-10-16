@@ -45,9 +45,8 @@ export default function DoctorReservePage() {
             <label className="block text-gray-700 text-xl font-bold mb-2">Select Date</label>
             <div className="bg-white rounded-md border p-3">
               <Calendar
-                mode="single"
-                selected={date}
-                onSelect={setDate}
+                value={date}
+                onChange={(value) => setDate(value as Date)}
                 className="mx-auto"
               />
             </div>

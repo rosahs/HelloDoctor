@@ -239,7 +239,7 @@ export const UserProfileEditForm = ({
                     </FormLabel>
                     <Select
                       onValueChange={field.onChange}
-                      value={field.value || ""} // Ensure the select uses the correct value
+                      value={field.value || ""}
                     >
                       <FormControl>
                         <SelectTrigger className="bg-inputBg border-inputBorder text-textDark placeholder:text-placeholder">

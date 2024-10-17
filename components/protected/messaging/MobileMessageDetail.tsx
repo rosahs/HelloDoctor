@@ -21,7 +21,7 @@ const MobileMessageDetail = ({ userType, chatId }) => {
   const currentChat = { id: chatId, name: "Rosa" };
 
   const handleSendMessage = () => {
-    if (message.trim() === "") return; // Prevent sending empty messages
+    if (message.trim() === "") return;
 
     const newMessage = {
       id: messages.length + 1,

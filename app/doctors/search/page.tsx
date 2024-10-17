@@ -8,7 +8,7 @@ export default function DoctorSearchPage({ searchParams }: { searchParams: { [ke
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/images/mapimage9.png"
+          src="/images/1.jpg"
           alt="World Map"
           layout="fill"
           objectFit="cover"
@@ -18,7 +18,7 @@ export default function DoctorSearchPage({ searchParams }: { searchParams: { [ke
       </div>
 
       {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-black bg-opacity-70 z-1"></div>
+      <div className="absolute inset-0 bg-black bg-opacity-30 z-1"></div>
 
       {/* Main Content */}
       <div className="relative z-10 container mx-auto px-4 py-8">

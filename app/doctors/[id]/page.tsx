@@ -11,7 +11,7 @@ export default async function DoctorProfilePage({ params }: { params: { id: stri
 
     
     return (
-      <div className="min-h-screen flex flex-col items-center p-4 bg-gray-50">
+      <div className="min-h-screen flex flex-col items-center p-4 bg-gray-100">
         <DoctorProfileDetails 
           doctor={{
             ...doctor, 

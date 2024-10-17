@@ -31,12 +31,29 @@ export default function DoctorReservePage() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center p-4">
-      <div className="w-full max-w-2xl">
-        <h2 className="text-4xl font-bold mb-6 text-center">Reserve an Appointment</h2>
+    <div className="min-h-screen flex justify-center items-center p-4 relative">
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/images/map8.jpg"
+          alt="World Map"
+          layout="fill"
+          objectFit="cover"
+          quality={100}
+          className="opacity-30"
+        />
+      </div>
+      <div className="w-full max-w-2xl relative z-10 bg-white bg-opacity-90 rounded-lg shadow-xl">
+        <h2 className="text-4xl font-bold mb-6 text-center pt-6">Reserve an Appointment</h2>
         <form onSubmit={handleSubmit} className="rounded-lg px-8 pt-6 pb-8 mb-4">
           <div className="text-center mb-6">
-            <Image src="/images/placeholder-doctor-image.jpg" alt="Doctor's Image" width={100} height={100} className="mx-auto mb-2" />
+            <Image 
+              src="/images/placeholder-doctor-image.jpg" 
+              alt="Doctor's Image" 
+              width={150} 
+              height={150} 
+              className="mx-auto mb-2"
+              unoptimized
+            />
             <h3 className="text-2xl font-bold">Dr. John Doe</h3>
             <p className="text-xl text-gray-600">Cardiologist</p>
             <p className="mt-2 text-sm text-gray-600">Experienced cardiologist with 20+ years in treating heart diseases.</p>
@@ -63,7 +80,7 @@ export default function DoctorReservePage() {
               placeholder="Enter the reason for your visit" rows={3} required />
           </div>
           <div className="flex items-center justify-center">
-            <button type="submit" className="bg-green-700 hover:bg-green-600 text-white text-xl font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            <button type="submit" className="bg-blue-600 hover:bg-blue-800 text-white text-xl font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
               Book Appointment
             </button>
           </div>

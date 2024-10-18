@@ -1,13 +1,13 @@
 import React from 'react';
-// import { getDoctorById } from '@//api/getDoctors'; 
+import { getDoctorById } from '@/data/doctor'; 
 
 export default async function DoctorProfile({ params }: { params: { id: string } }) {
   try {
-    const doctor = await getDoctorById(parseInt(params.id));
-    console.log('Fetched doctor:', doctor);  // Add this line
+    const doctor = await getDoctorById(params.id);
+    console.log('Fetched doctor:', doctor);
 
     if (!doctor) {
-      console.log('Doctor not found');  // Add this line
+      console.log('Doctor not found');
       return <div>Doctor not found</div>;
     }
 
@@ -23,23 +23,23 @@ export default async function DoctorProfile({ params }: { params: { id: string }
 
         {/* Doctor Info */}
         <div className="flex flex-col items-center">
-          <div className="bg-blue-500 text-white px-2 py-1 rounded-full text-sm mb-2">{doctor.experience} years experience</div>
+          <div className="bg-blue-500 text-white px-2 py-1 rounded-full text-sm mb-2">{doctor.professionalExperience || 'Experience not available'}</div>
           <div className="bg-blue-200 text-blue-800 p-3 rounded-lg text-sm w-full text-center">
-            Focus: {doctor.specialties.join(', ') || "Information not available"}
+            Focus: {doctor.specialties || "Information not available"}
           </div>
         </div>
 
         {/* Doctor Name and Specialization */}
         <div className="text-center mt-4">
-          <h2 className="text-xl font-bold">Dr. {doctor.name}</h2>
-          <p className="text-gray-600">{doctor.specialty}</p>
+          <h2 className="text-xl font-bold">Dr. {doctor.id}</h2>
+          <p className="text-gray-600">{doctor.specialization}</p>
         </div>
 
         {/* Rating and Time */}
         <div className="flex justify-center items-center space-x-2 mt-2">
           <span className="flex items-center">
             <span className="text-yellow-500 mr-1">★</span>
-            <span className="text-sm">{doctor.rating}</span>
+            <span className="text-sm">Rating not available</span>
           </span>
           <span className="border-l-2 border-gray-300 mx-2 h-6"></span>
           <span className="flex items-center">
@@ -50,7 +50,7 @@ export default async function DoctorProfile({ params }: { params: { id: string }
 
         {/* Profile Description */}
         <p className="text-sm mt-4 text-center px-2">
-          {doctor.about || "No description available."}
+          {doctor.aboutMe || "No description available."}
         </p>
 
         {/* Calendar Section */}
@@ -97,7 +97,7 @@ export default async function DoctorProfile({ params }: { params: { id: string }
       </div>
     );
   } catch (error) {
-    console.error('Error in DoctorProfile:', error);  // Add this line
+    console.error('Error in DoctorProfile:', error);
     return <div>Error loading doctor profile</div>;
   }
 }

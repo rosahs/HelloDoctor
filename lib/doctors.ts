@@ -14,7 +14,7 @@ export interface Doctor {
     languages: string[];
 }
 
-interface DoctorSearchCriteria {
+export interface DoctorSearchCriteria {
   name?: { contains: string; mode: 'insensitive' };
   specialties?: { contains: string; mode: 'insensitive' };
   location?: { contains: string; mode: 'insensitive' };

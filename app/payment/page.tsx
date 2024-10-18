@@ -58,7 +58,7 @@ export default function Home() {
                         href={stripeLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block text-center bg-green-500 hover:bg-green-800 text-white font-semibold py-4 px-16 rounded-md text-2xl transition duration-300"
+                        className="block text-center bg-custom-green hover:bg-green-800 text-white font-semibold py-4 px-16 rounded-md text-2xl transition duration-300"
                     >
                         Pay with Stripe
                     </a>

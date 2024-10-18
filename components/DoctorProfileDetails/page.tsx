@@ -55,7 +55,7 @@ export default function DoctorProfilePage({ doctor }: DoctorProfileDetailsProps)
             <div className="absolute inset-0 bg-gray-100 bg-opacity-10"></div>
           </div>
           <div className="flex items-start mb-6 md:mb-0 relative z-10">
-            <Avatar className="w-40 h-40 mr-6 border-4 border-gray-300 shadow-lg">
+            <Avatar className="w-40 h-40 mr-6 border-4 bg-gray-300 border-gray-800 shadow-lg">
               <Image
                 src={doctor.imageUrl || "/profile.jpg"}
                 alt={`${doctor.name}'s profile picture`}
@@ -74,7 +74,7 @@ export default function DoctorProfilePage({ doctor }: DoctorProfileDetailsProps)
 
         {/* Action Buttons */}
         <div className="flex flex-col md:flex-row justify-between gap-6 mb-8 w-full">
-  <button className="w-full md:w-[48%] h-16 bg-black opacity-80 text-white text-lg md:text-2xl font-semibold rounded-lg shadow-lg hover:bg-green-700 transition-transform duration-300 hover:scale-105 flex items-center justify-center cursor-pointer">
+  <button className="w-full md:w-[48%] h-16 bg-black opacity-80 text-white text-lg md:text-2xl font-semibold rounded-lg shadow-lg hover:bg-custom-green transition-transform duration-300 hover:scale-105 flex items-center justify-center cursor-pointer">
     <MessageSquare className="mr-3" size={32} /> Message
   </button>
   <Link href={`/doctors/${doctor.id}/reserve`} className="w-full md:w-[48%]">

@@ -20,7 +20,7 @@ export default function HomePage() {
       </div>
 
       {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-black bg-opacity-80 z-1"></div>
+      <div className="absolute inset-0 bg-black bg-opacity-70 z-1"></div>
 
       {/* Main Content */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 text-white">

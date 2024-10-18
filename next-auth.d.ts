@@ -27,8 +27,10 @@ export type ExtendedUser = DefaultSession["user"] & {
   isOAuth: boolean;
   doctorId?: string;
   patientId?: string;
-  doctor: Doctor;
-  patient: Patient;
+  doctor?: Doctor;
+  patient?: Patient;
+  conversationIds: string[];
+  seenMessageIds: string[];
 };
 
 declare module "next-auth" {

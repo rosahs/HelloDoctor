@@ -48,9 +48,10 @@ export default function DoctorProfilePage({ doctor }: DoctorProfileDetailsProps)
             <Image
               src="/images/2.jpg"
               alt="Background Map"
-              layout="fill"
-              objectFit="cover"
+              fill
               quality={100}
+              style={{ objectFit: 'cover' }}
+              className="opacity-80"
             />
             <div className="absolute inset-0 bg-gray-100 bg-opacity-10"></div>
           </div>
@@ -124,6 +125,17 @@ export default function DoctorProfilePage({ doctor }: DoctorProfileDetailsProps)
   <ul className="list-disc pl-5 text-lg text-gray-600">
     {certificationsArray.length > 0 ? (
       certificationsArray.map((certification, index) => <li key={index}>{certification}</li>)
+    ) : (
+      <li>Not specified</li>
+    )}
+  </ul>
+</div>
+
+<div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+  <h3 className="font-bold text-2xl mb-4">Experience</h3>
+  <ul className="list-disc pl-5 text-lg text-gray-600">
+    {experienceArray.length > 0 ? (
+      experienceArray.map((exp, index) => <li key={index}>{exp}</li>)
     ) : (
       <li>Not specified</li>
     )}

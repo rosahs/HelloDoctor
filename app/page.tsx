@@ -1,10 +1,42 @@
+'use client'
+
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { MapPin } from 'lucide-react'; 
 import DoctorSearchForm from '@/components/DoctorSearchForm/page';
 import './HomePage.css';
 
+interface Doctor {
+  id: string;
+  name: string;
+  specialty: string;
+  location: string;
+  imageUrl: string;
+}
+
 export default function HomePage() {
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
+
+  useEffect(() => {
+    // Fetch featured doctors from the backend
+    const fetchDoctors = async () => {
+      try {
+        const response = await fetch('/api/doctors/featured'); // Update this endpoint to match your backend
+        if (response.ok) {
+          const data = await response.json();
+          setDoctors(data);
+        } else {
+          console.error('Failed to fetch featured doctors');
+        }
+      } catch (error) {
+        console.error('Error fetching featured doctors:', error);
+      }
+    };
+
+    fetchDoctors();
+  }, []);
+
   return (
     <div className="relative min-h-screen">
       {/* Background Image */}
@@ -12,10 +44,11 @@ export default function HomePage() {
         <Image
           src="/images/mapimage9.png"
           alt="World Map"
-          layout="fill"
-          objectFit="cover"
+          fill
+          style={{ objectFit: 'cover' }}
           quality={100}
           className="opacity-80"
+          priority
         />
       </div>
 
@@ -29,8 +62,8 @@ export default function HomePage() {
           Find Your Doctor <br />
           Anywhere in the W🌍rld
         </h1>
-        <p className="text-lg sm:text-2xl md:text-3xl text-white text-center mb-6 sm:mb-8 max-w-3xl">
-          Search and book appointments with top-rated doctors across the globe, wherever you are.
+        <p className="text-lg sm:text-2xl md:text-3xl text-gray-300 text-center mb-6 sm:mb-8 max-w-3xl">
+          Connect with trusted doctors worldwide, access affordable medical care, and find the right specialist wherever you are.
         </p>
 
         {/* Doctor Search Form */}
@@ -47,31 +80,31 @@ export default function HomePage() {
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {/* Example Doctor Card */}
-            <div className="rounded-lg shadow-lg p-4 sm:p-6 transform hover:scale-105 transition-transform duration-300">
-              <Image
-                src="/images/placeholder-doctor-image.jpg" 
-                alt="Doctor"
-                width={200}
-                height={200}
-                className="mx-auto object-cover"
-              />
-              <h3 className="text-xl sm:text-2xl font-bold text-white text-center mt-3 sm:mt-4">Dr. John Doe</h3>
-              <p className="text-center text-white text-sm sm:text-base">Cardiologist</p>
-              
-              {/* Location Section with Icon */}
-              <div className="flex justify-center text-white items-center mt-3 sm:mt-4">
-                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-white mr-2" /> {/* Location Icon */}
-                <span className="text-sm sm:text-base">New York, USA</span> {/* Replace with dynamic location */}
-              </div>
+            {doctors.map((doctor) => (
+              <div key={doctor.id} className="bg-white text-black rounded-lg shadow-lg p-4 sm:p-6 transform hover:scale-105 transition-transform duration-300">
+                <Image
+                  src={doctor.imageUrl} 
+                  alt={doctor.name}
+                  width={200}
+                  height={200}
+                  className="mx-auto object-cover"
+                />
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-800 text-center mt-3 sm:mt-4">{doctor.name}</h3>
+                <p className="text-center text-gray-600 text-sm sm:text-base">{doctor.specialty}</p>
+                
+                {/* Location Section with Icon */}
+                <div className="flex justify-center text-gray-600 items-center mt-3 sm:mt-4">
+                  <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 mr-2" />
+                  <span className="text-sm sm:text-base">{doctor.location}</span>
+                </div>
 
-              <Link href="/doctors/1/reserve">
-                <button className="block mt-4 sm:mt-6 w-full text-center bg-blue-600 hover:bg-green-600 text-white text-base sm:text-lg font-bold py-2 sm:py-3 rounded-lg">
-                  Book Now
-                </button>
-              </Link>
-            </div>
-            {/* Add more doctor cards similarly */}
+                <Link href={`/doctors/${doctor.id}/reserve`}>
+                  <button className="block mt-4 sm:mt-6 w-full text-center bg-blue-600 hover:bg-green-600 text-white text-base sm:text-lg font-bold py-2 sm:py-3 rounded-lg">
+                    Book Now
+                  </button>
+                </Link>
+              </div>
+            ))}
           </div>
         </div>
       </div>

@@ -7,13 +7,14 @@ export default function DoctorSearchPage({ searchParams }: { searchParams: { [ke
     <div className="relative min-h-screen">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
-        <Image
-          src="/images/1.jpg"
+      <Image
+          src="/images/mapimage9.png"
           alt="World Map"
-          layout="fill"
-          objectFit="cover"
+          fill
+          style={{ objectFit: 'cover' }}
           quality={100}
           className="opacity-80"
+          priority
         />
       </div>
 

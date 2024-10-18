@@ -67,14 +67,14 @@ export default function DoctorReservePage() {
               />
               <h3 className="text-2xl text-green-600 font-bold">Dr. John Doe</h3>
               <p className="text-xl text-white">Cardiologist</p>
-              <p className="mt-2 text-sm text-gray-500">Experienced cardiologist with 20+ years in treating heart diseases.</p>
+              <p className="mt-2 text-md text-gray-500">Experienced cardiologist with 20+ years in treating heart diseases.</p>
             </div>
             <div className="mb-4">
               <label className="block text-white text-xl font-bold mb-2">Select Date</label>
               <div className="bg-gray-200 rounded-md border p-3">
                 <Calendar
                   value={date}
-                  onChange={(value) => setDate(value as Date)}
+                  onChange={(value: Date | null) => setDate(value as Date)}
                   className="mx-auto"
                 />
               </div>
@@ -91,7 +91,7 @@ export default function DoctorReservePage() {
                 placeholder="Enter the reason for your visit" rows={3} required />
             </div>
             <div className="flex items-center justify-center">
-              <button type="submit" className="bg-custom-green hover:bg-blue-800 text-white text-xl font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+              <button type="submit" className="bg-green-600 hover:bg-blue-800 text-white text-xl font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                 Book Appointment
               </button>
             </div>

@@ -76,8 +76,7 @@ export async function setUserRole(
     return {
       success: `Role successfully set to '${role}'.`,
     };
-  } catch (err) {
-    console.log(err);
+  } catch {
     return {
       error: `An unexpected error occurred. Please try again.`,
     };

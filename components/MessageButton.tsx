@@ -5,9 +5,10 @@ import { useRouter } from "next/navigation";
 import { MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createConversation } from "@/actions/messaging/conversation";
+import { useCurrentRole } from "@/hooks/useCurrentRole";
 
 interface MessageButtonProps {
-  doctorId: string;
+  doctorId: string | undefined;
 }
 
 const MessageButton = ({
@@ -15,6 +16,13 @@ const MessageButton = ({
 }: MessageButtonProps) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const userRole = useCurrentRole();
+
+  const role = userRole.toLowerCase();
+
+  if (!doctorId) {
+    return null;
+  }
 
   const handleClick = async () => {
     try {
@@ -22,10 +30,10 @@ const MessageButton = ({
       const { conversationId } = await createConversation(
         doctorId
       );
-      router.push(`/patient/messages/${conversationId}`);
+      router.push(`/${role}/messages/${conversationId}`);
     } catch (error) {
       console.error("MESSAGE_BUTTON_ERROR", error);
-      // You might want to add error handling UI here
+      return null;
     } finally {
       setIsLoading(false);
     }

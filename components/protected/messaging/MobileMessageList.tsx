@@ -19,6 +19,7 @@ import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { pusherClient } from "@/lib/pusher";
 import Avatar from "@/components/Avatar";
+import SearchInput from "./SearchInput";
 
 interface Message {
   id: string;
@@ -31,7 +32,7 @@ interface Message {
   };
 }
 
-interface Conversation {
+export interface Conversation {
   id: string;
   users: Array<{
     id: string;
@@ -55,6 +56,10 @@ const MobileMessageList = ({
   const [conversations, setConversations] = useState<
     Conversation[]
   >([]);
+  const [
+    filteredConversationsSearch,
+    setFilteredConversationsSearch,
+  ] = useState<Conversation[]>([]);
   const [swipedMessageId, setSwipedMessageId] = useState<
     string | null
   >(null);
@@ -64,6 +69,7 @@ const MobileMessageList = ({
     const initConversations = async () => {
       const result = await getConversations();
       setConversations(result);
+      setFilteredConversationsSearch(result);
     };
 
     initConversations();
@@ -262,12 +268,12 @@ const MobileMessageList = ({
   return (
     <div className="flex flex-col h-screen bg-bgLight">
       <div className="p-4 border-b border-border">
-        <Input
-          type="text"
-          placeholder="Search conversation"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="mb-4 bg-inputBg border-inputBorder placeholder-placeholder text-textDark"
+        <SearchInput
+          conversations={conversations}
+          setFilteredConversationsSearch={
+            setFilteredConversationsSearch
+          }
+          currentUserId={currentUserId}
         />
         <Tabs
           defaultValue="all"
@@ -282,7 +288,8 @@ const MobileMessageList = ({
         </Tabs>
       </div>
       <ScrollArea className="flex-1">
-        {filteredConversations.map((conversation) => {
+        {/* Use filteredConversationsSearch for rendering */}
+        {filteredConversationsSearch.map((conversation) => {
           const otherUser = getOtherUser(conversation);
           const lastMessage = conversation.messages[0];
           const isRead = isConversationRead(conversation);

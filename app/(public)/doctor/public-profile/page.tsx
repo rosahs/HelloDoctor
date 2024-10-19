@@ -1,16 +1,43 @@
 "use client";
 
-import MessageButton from "@/components/message/MessageButton";
+import { useEffect, useState } from "react";
+import MessageButton from "@/components/MessageButton";
 import Link from "next/link";
+import { getDoctors } from "@/actions/getDoctors";
+import { ExtendedUser } from "@/next-auth";
+import { User } from "next-auth";
 
-const doctors = [
-  {
-    id: "6712c513e2343a63bdd3a330",
-    name: "Rosa Hadi",
-  },
-];
+interface Doctor {
+  id: string;
+  user: User | null;
+  specialization: string;
+}
 
 const DoctorList = () => {
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchDoctors() {
+      try {
+        const fetchedDoctors = await getDoctors();
+        setDoctors(fetchedDoctors);
+      } catch (err) {
+        setError("Failed to fetch doctors");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchDoctors();
+  }, []);
+
+  console.log(doctors);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">
@@ -24,10 +51,11 @@ const DoctorList = () => {
               className="text-blue-600 hover:underline"
             >
               <h3 className="text-lg font-semibold">
-                {doctor.name}
+                {doctor?.user?.name}
               </h3>
             </Link>
-            <MessageButton doctorId={doctor.id} />
+            <p>{doctor.specialization}</p>
+            <MessageButton doctorId={doctor?.user?.id} />
           </li>
         ))}
       </ul>

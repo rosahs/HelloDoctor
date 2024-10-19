@@ -1,10 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-
 import { Send, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { pusherClient } from "@/lib/pusher";
@@ -38,9 +36,19 @@ const MobileMessageDetail = ({
   const [messages, setMessages] =
     useState<ExtendedMessage[]>(initialMessages);
   const [isLoading, setIsLoading] = useState(false);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Mark conversation as read when component mounts
+    // Disable body scrolling when component mounts
+    document.body.style.overflow = "hidden";
+
+    // Re-enable body scrolling when component unmounts
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
+
+  useEffect(() => {
     const markAsRead = async () => {
       try {
         if (currentUser.id) {
@@ -58,12 +66,10 @@ const MobileMessageDetail = ({
     };
 
     markAsRead();
-
     pusherClient.subscribe(conversationId);
 
     const messageHandler = (message: ExtendedMessage) => {
       setMessages((current) => {
-        // Mark new messages as seen by current user
         if (
           currentUser.id &&
           message.senderId !== currentUser.id
@@ -85,6 +91,14 @@ const MobileMessageDetail = ({
     };
   }, [conversationId, currentUser.id]);
 
+  // Scroll to the bottom when messages change
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTop =
+        scrollAreaRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   const handleSendMessage = async () => {
     if (message.trim() === "" || isLoading) return;
 
@@ -102,18 +116,9 @@ const MobileMessageDetail = ({
     }
   };
 
-  const handleKeyPress = (
-    e: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
-  };
-
   return (
     <div className="flex flex-col h-screen bg-background">
-      <div className="pl-3 p-2 border-b border-border sticky top-14 bg-bgLight z-10 flex items-center">
+      <div className="pl-3 p-2 border-b border-border bg-bgLight z-10 flex items-center">
         <Link href={`/${userType}/messages`}>
           <Button
             variant="ghost"
@@ -123,63 +128,64 @@ const MobileMessageDetail = ({
             <ArrowLeft className="h-6 w-6" />
           </Button>
         </Link>
-
         <Avatar
           user={otherUser}
           width={50}
           height={50}
           className="mr-3"
         />
-
         <h2 className="text-lg font-semibold">
           {otherUser?.name}
         </h2>
       </div>
 
-      <ScrollArea className="flex-1 p-4 overflow-y-auto bg-babyPowder">
-        {messages?.map((msg) => (
-          <div
-            key={msg.id}
-            className={`mb-4 ${
-              msg.senderId === currentUser.id
-                ? "text-right"
-                : "text-left"
-            }`}
-          >
+      <div
+        ref={scrollAreaRef}
+        className="flex-1 overflow-y-auto p-4 pb-20 flex flex-col-reverse"
+      >
+        {messages
+          .slice()
+          .reverse()
+          .map((msg) => (
             <div
-              className={`inline-block p-3 rounded-lg ${
+              key={msg.id}
+              className={`mb-4 ${
                 msg.senderId === currentUser.id
-                  ? "bg-bgBlack text-primary-foreground"
-                  : "bg-primaryColor/70"
+                  ? "text-right"
+                  : "text-left"
               }`}
             >
-              {msg.body && <p>{msg.body}</p>}
-              <span className="text-xs opacity-50">
-                {new Date(msg.createdAt).toLocaleTimeString(
-                  [],
-                  {
+              <div
+                className={`inline-block p-3 rounded-lg ${
+                  msg.senderId === currentUser.id
+                    ? "bg-bgBlack text-primary-foreground"
+                    : "bg-primaryColor/70"
+                }`}
+              >
+                {msg.body && <p>{msg.body}</p>}
+                <span className="text-xs opacity-50">
+                  {new Date(
+                    msg.createdAt
+                  ).toLocaleTimeString([], {
                     hour: "2-digit",
                     minute: "2-digit",
-                  }
-                )}
-              </span>
+                  })}
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
-      </ScrollArea>
+          ))}
+      </div>
 
-      <div className="p-4 border-t border-border bg-bgLight fixed bottom-0 left-0 right-0 z-10">
+      <div className="p-4 border-t border-border bg-bgLight sticky bottom-0 left-0 right-0 z-10">
         <div className="flex items-center">
           <Input
             type="text"
             placeholder="Type a message..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
             className="flex-1 mr-2"
             disabled={isLoading}
           />
-
           <Button
             className="!bg-primaryColor"
             size="icon"

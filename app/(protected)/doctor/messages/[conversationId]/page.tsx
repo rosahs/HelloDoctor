@@ -12,7 +12,7 @@ export default async function DoctorChatDetailPage({
   const user = await currentUser();
 
   if (!user || !user?.id) {
-    redirect("/login");
+    return null;
   }
 
   const conversation = await db.conversation.findUnique({

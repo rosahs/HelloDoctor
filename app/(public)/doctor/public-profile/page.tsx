@@ -5,11 +5,7 @@ import Link from "next/link";
 
 const doctors = [
   {
-    id: "670bf4b019ae2fa8cd2cca3d",
-    name: "Raj Mahtaj",
-  },
-  {
-    id: "6712038d835ebec7b2db7830",
+    id: "6712c513e2343a63bdd3a330",
     name: "Rosa Hadi",
   },
 ];

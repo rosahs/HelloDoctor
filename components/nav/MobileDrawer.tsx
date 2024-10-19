@@ -12,7 +12,11 @@ import { ExtendedUser } from "@/next-auth";
 import { useDrawerStore } from "@/store/drawerStore";
 import Avatar from "../Avatar";
 
-function MobileDrawer({ user }: { user: ExtendedUser }) {
+function MobileDrawer({
+  user,
+}: {
+  user: ExtendedUser | undefined;
+}) {
   const { isDrawerOpen, closeDrawer } = useDrawerStore();
 
   const loggedInLinks =

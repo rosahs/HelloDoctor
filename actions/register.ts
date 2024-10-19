@@ -32,11 +32,21 @@ export const register = async (
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    let doctorId;
-    let patientId;
+    // Create the user first
+    const user = await db.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        role: role as UserRole,
+      },
+    });
+
+    let doctorId = null;
+    let patientId = null;
 
     // If the role is "DOCTOR", create a doctor document and save its ID
-    if (role === "DOCTOR") {
+    if (role === UserRole.DOCTOR) {
       if (!specialization) {
         console.error(
           "Specialization missing for doctor role"
@@ -49,32 +59,32 @@ export const register = async (
       const doctor = await db.doctor.create({
         data: {
           specialization,
+          userId: user.id,
         },
       });
+
       doctorId = doctor.id;
     }
 
-    // Create a Patient record
+    // Create a Patient record if the role is "PATIENT"
     if (role === UserRole.PATIENT) {
       const patient = await db.patient.create({
         data: {
           savedDoctors: [],
+          userId: user.id,
         },
       });
 
       patientId = patient.id;
     }
 
-    await db.user.create({
+    // Update the user with role, doctorId, and patientId in a single call
+    await db.user.update({
+      where: { id: user.id },
       data: {
-        name,
-        email,
-        password: hashedPassword,
-        role: role as UserRole,
-        doctorId:
-          role === UserRole.DOCTOR ? doctorId : null,
-        patientId:
-          role === UserRole.PATIENT ? patientId : null,
+        role,
+        doctorId: doctorId, // Will be null if not a doctor
+        patientId: patientId, // Will be null if not a patient
       },
     });
 
@@ -86,7 +96,7 @@ export const register = async (
       verificationToken.token
     );
 
-    return { success: "Confirmation email" };
+    return { success: "Confirmation email sent" };
   } catch {
     return {
       error: "An error occurred during registration",

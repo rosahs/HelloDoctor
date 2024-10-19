@@ -120,8 +120,8 @@ model Doctor {
   professionalExperience String?
   languages              String?
 
-  user               User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId             String  @db.ObjectId @map("user_id")
+  user               User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId             String?  @db.ObjectId @map("user_id")
 
   @@map("doctors")
 }
@@ -132,8 +132,8 @@ model Patient {
   city         String?
   savedDoctors String[] @db.ObjectId
 
-  user               User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId             String  @db.ObjectId @map("user_id")
+  user               User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId             String?  @db.ObjectId @map("user_id")
 
   @@map("patients")
 }

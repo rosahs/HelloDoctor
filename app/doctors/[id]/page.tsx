@@ -1,38 +1,61 @@
-import DoctorProfileDetails from '@/components/DoctorProfileDetails/page';
-import { getDoctorById } from '@/data/doctor';
+'use client';
 
-export default async function DoctorProfilePage({ params }: { params: { id: string } }) {
-  try {
-    const doctor = await getDoctorById(params.id);
+import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
+import Image from 'next/image';
 
-    if (!doctor) {
-      return <p className="text-center text-red-500">Doctor not found.</p>; 
+interface DoctorProfile {
+  id: string;
+  name: string;
+  specialty: string;
+  location: string;
+  imageUrl: string;
+  about: string;
+  certifications: string[];
+}
+
+export default function DoctorProfilePage() {
+  const { id } = useParams();
+  const [doctor, setDoctor] = useState<DoctorProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDoctor = async () => {
+      try {
+        const response = await fetch(`/api/doctors/${id}`);
+        if (response.ok) {
+          const data = await response.json();
+          setDoctor(data);
+        } else {
+          console.error('Failed to fetch doctor details');
+        }
+      } catch (error) {
+        console.error('Error fetching doctor details:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchDoctor();
     }
+  }, [id]);
 
-    // Ensure the doctor object matches the expected props of DoctorProfileDetails
-    return (
-      <div className="min-h-screen flex flex-col items-center p-4 bg-gray-100">
-        <DoctorProfileDetails 
-          doctor={{
-            id: doctor.id,
-            name: doctor.id || 'Unknown', // Changed from doctor.name to doctor.id
-            specialty: doctor.specialization || 'Not specified',
-            imageUrl: doctor.images[0] || '/default-doctor-image.jpg',
-            about: doctor.aboutMe || 'No information available.',
-            specialties: doctor.specialties ? doctor.specialties.split(',').map(s => s.trim()) : [],
-            certifications: doctor.certifications ? doctor.certifications.split(',').map(c => c.trim()) : [],
-            experience: doctor.professionalExperience || 'No experience data',
-            languages: doctor.languages ? doctor.languages.split(',').map(l => l.trim()) : [],
-          }} 
-        />
-      </div>
-    );
-  } catch (error) {
-    console.error('Error fetching doctor data:', error);
-    return (
-      <div className="min-h-screen flex flex-col justify-center items-center p-4">
-        <p className="text-red-500 text-lg font-semibold">Error loading doctor profile.</p>
-      </div>
-    );
+  if (loading) {
+    return <p>Loading...</p>;
   }
+
+  if (!doctor) {
+    return <p>Doctor not found.</p>;
+  }
+
+  return (
+    <div>
+      <h1>{doctor.name}</h1>
+      <Image src={doctor.imageUrl} alt={doctor.name} width={200} height={200} />
+      <p>{doctor.specialty}</p>
+      <p>{doctor.about}</p>
+      <p>{doctor.location}</p>
+    </div>
+  );
 }

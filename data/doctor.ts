@@ -1,15 +1,18 @@
-import { db } from "@/lib/db";
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export const getDoctorById = async (id: string) => {
   try {
-    const doctor = await db.doctor.findUnique({
+    const doctor = await prisma.doctor.findUnique({
       where: {
         id,
       },
     });
 
     return doctor;
-  } catch {
+  } catch (error) {
+    console.error('Error fetching doctor by ID:', error);
     return null;
   }
 };

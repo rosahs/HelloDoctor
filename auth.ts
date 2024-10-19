@@ -27,7 +27,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
     },
     callbacks: {
       async signIn({ user, account, profile }) {
-        console.log(profile);
         // If the sign-in provider is OAuth
         if (account && account.provider !== "credentials") {
           const email = profile?.email;
@@ -39,6 +38,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth(
 
             // If email exists in the database but the provider is different
             if (existingUser) {
+              const isCloudinaryImage =
+                existingUser.image?.includes(
+                  "res.cloudinary.com"
+                );
+
+              // If the user already has a Cloudinary image, don't overwrite it with the OAuth image
+              if (isCloudinaryImage) {
+                user.image = existingUser.image;
+              } else {
+                // If the image was from a previous OAuth provider, allow the new provider to update the image
+                user.image = profile?.picture;
+              }
+
               // Check if the user is trying to sign in with a different OAuth provider
               const existingAccount =
                 await db.account.findFirst({

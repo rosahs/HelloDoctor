@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import MessageButton from "@/components/MessageButton";
 import Link from "next/link";
 import { getDoctors } from "@/actions/getDoctors";
-import { ExtendedUser } from "@/next-auth";
 import { User } from "next-auth";
 
 interface Doctor {
@@ -23,7 +22,7 @@ const DoctorList = () => {
       try {
         const fetchedDoctors = await getDoctors();
         setDoctors(fetchedDoctors);
-      } catch (err) {
+      } catch {
         setError("Failed to fetch doctors");
       } finally {
         setIsLoading(false);

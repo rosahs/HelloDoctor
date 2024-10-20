@@ -24,7 +24,6 @@ import {
   ToastProvider,
 } from "@/components/ui/toast";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
-import { signOut, useSession } from "next-auth/react";
 import { logout } from "@/actions/logout";
 
 export default function DeleteAccountButton() {

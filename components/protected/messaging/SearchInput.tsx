@@ -1,4 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import { Input } from "@/components/ui/input";
 import { Conversation } from "./MobileMessageList";
 import { User } from "next-auth";
@@ -16,13 +20,14 @@ const SearchInput = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const getOtherUser = (
-    conversation: Conversation
-  ): User | undefined => {
-    return conversation.users.find(
-      (user) => user.id !== currentUserId
-    );
-  };
+  const getOtherUser = useCallback(
+    (conversation: Conversation): User | undefined => {
+      return conversation.users.find(
+        (user) => user.id !== currentUserId
+      );
+    },
+    [currentUserId]
+  );
 
   useEffect(() => {
     const filteredConversations =
@@ -41,6 +46,7 @@ const SearchInput = ({
     conversations,
     currentUserId,
     setFilteredConversationsSearch,
+    getOtherUser,
   ]);
 
   return (

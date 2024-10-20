@@ -51,7 +51,6 @@ const MobileMessageList = ({
 }) => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
   const [conversations, setConversations] = useState<
     Conversation[]
   >([]);

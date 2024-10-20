@@ -21,7 +21,6 @@ export async function sendMessage({
       throw new Error("Unauthorized");
     }
 
-    // Create new message
     const newMessage = await db.message.create({
       include: {
         seen: true,
@@ -44,7 +43,6 @@ export async function sendMessage({
       },
     });
 
-    // Update conversation
     const updatedConversation =
       await db.conversation.update({
         where: {
@@ -63,38 +61,38 @@ export async function sendMessage({
           messages: {
             include: {
               seen: true,
+              sender: true,
             },
+            orderBy: {
+              createdAt: "desc",
+            },
+            take: 1,
           },
         },
       });
 
-    // Trigger Pusher events
+    // Notify conversation channel about new message
     await pusherServer.trigger(
       conversationId,
       "messages:new",
       newMessage
     );
 
-    const lastMessage =
-      updatedConversation.messages[
-        updatedConversation.messages.length - 1
-      ];
-
-    // Notify all users in the conversation
+    // Notify each user about the conversation update
     for (const user of updatedConversation.users) {
       await pusherServer.trigger(
         user.id,
         "conversation:update",
         {
           id: conversationId,
-          messages: [lastMessage],
-          lastMessageAt: new Date(),
+          messages: updatedConversation.messages,
+          lastMessageAt: updatedConversation.lastMessageAt,
+          users: updatedConversation.users,
         }
       );
     }
 
     const role = user.role.toLowerCase();
-
     revalidatePath(`/${role}/messages/${conversationId}`);
     revalidatePath(`/${role}/messages`);
 

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Input } from "@/components/ui/input";
 import {
   Tabs,
   TabsList,
@@ -75,38 +74,45 @@ const MobileMessageList = ({
     initConversations();
 
     // Subscribe to user-specific channel
-    const channel = pusherClient.subscribe(
-      `user-${currentUserId}`
-    );
+    const channel = pusherClient.subscribe(currentUserId);
 
     channel.bind(
       "conversation:new",
       (conversation: Conversation) => {
-        setConversations((current) => [
-          ...current,
-          conversation,
-        ]);
+        setConversations((current) => {
+          const exists = current.some(
+            (conv) => conv.id === conversation.id
+          );
+          if (exists) return current;
+          return [conversation, ...current];
+        });
       }
     );
-    // Handle conversation updates (including new messages)
+
     channel.bind(
       "conversation:update",
       (updatedConversation: Conversation) => {
-        setConversations((prevConversations) =>
-          prevConversations.map((conversation) =>
-            conversation.id === updatedConversation.id
-              ? {
+        setConversations((current) => {
+          return current
+            .map((conversation) => {
+              if (
+                conversation.id === updatedConversation.id
+              ) {
+                return {
                   ...conversation,
+                  messages: updatedConversation.messages,
                   lastMessageAt:
                     updatedConversation.lastMessageAt,
-                  messages: [
-                    updatedConversation.messages[0],
-                    ...conversation.messages,
-                  ],
-                }
-              : conversation
-          )
-        );
+                };
+              }
+              return conversation;
+            })
+            .sort(
+              (a, b) =>
+                new Date(b.lastMessageAt).getTime() -
+                new Date(a.lastMessageAt).getTime()
+            );
+        });
       }
     );
 
@@ -122,9 +128,15 @@ const MobileMessageList = ({
     );
 
     return () => {
-      pusherClient.unsubscribe(`user-${currentUserId}`);
+      channel.unbind_all();
+      pusherClient.unsubscribe(currentUserId);
     };
   }, [currentUserId]);
+
+  // Update filtered conversations when main conversations change
+  useEffect(() => {
+    setFilteredConversationsSearch(conversations);
+  }, [conversations]);
 
   const isConversationRead = (
     conversation: Conversation
@@ -245,25 +257,20 @@ const MobileMessageList = ({
     }
   };
 
-  const filteredConversations = conversations.filter(
-    (conversation) => {
-      const otherUser = getOtherUser(conversation);
-      const matchesSearch = otherUser?.name
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
-
+  // Filter conversations based on active tab from the search-filtered results
+  const filteredConversations =
+    filteredConversationsSearch.filter((conversation) => {
       const isRead = isConversationRead(conversation);
 
       switch (activeTab) {
         case "read":
-          return matchesSearch && isRead;
+          return isRead;
         case "unread":
-          return matchesSearch && !isRead;
+          return !isRead;
         default:
-          return matchesSearch;
+          return true;
       }
-    }
-  );
+    });
 
   return (
     <div className="flex flex-col h-screen bg-bgLight">
@@ -289,7 +296,7 @@ const MobileMessageList = ({
       </div>
       <ScrollArea className="flex-1">
         {/* Use filteredConversationsSearch for rendering */}
-        {filteredConversationsSearch.map((conversation) => {
+        {filteredConversations.map((conversation) => {
           const otherUser = getOtherUser(conversation);
           const lastMessage = conversation.messages[0];
           const isRead = isConversationRead(conversation);

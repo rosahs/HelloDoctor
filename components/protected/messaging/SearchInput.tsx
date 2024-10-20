@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Conversation } from "./MobileMessageList";
-
 import { User } from "next-auth";
 
 const SearchInput = ({
@@ -15,8 +14,7 @@ const SearchInput = ({
   >;
   currentUserId: string;
 }) => {
-  const [searchQuery, setSearchQuery] =
-    useState<string>("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const getOtherUser = (
     conversation: Conversation
@@ -26,25 +24,17 @@ const SearchInput = ({
     );
   };
 
-  const isConversationRead = (
-    conversation: Conversation
-  ): boolean => {
-    return conversation.messages.every((message) =>
-      message.seenIds.includes(currentUserId)
-    );
-  };
-
   useEffect(() => {
-    const filteredConversations = conversations.filter(
-      (conversation) => {
-        const otherUser = getOtherUser(conversation);
+    const filteredConversations =
+      searchQuery === ""
+        ? conversations
+        : conversations.filter((conversation) => {
+            const otherUser = getOtherUser(conversation);
+            return otherUser?.name
+              ?.toLowerCase()
+              .includes(searchQuery.toLowerCase());
+          });
 
-        if (otherUser?.name)
-          return otherUser?.name
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase());
-      }
-    );
     setFilteredConversationsSearch(filteredConversations);
   }, [
     searchQuery,
@@ -54,15 +44,13 @@ const SearchInput = ({
   ]);
 
   return (
-    <div className="p-4 border-b border-border">
-      <Input
-        type="text"
-        placeholder="Search conversation"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        className="mb-4 bg-inputBg border-inputBorder placeholder-placeholder text-textDark"
-      />
-    </div>
+    <Input
+      type="text"
+      placeholder="Search Conversation"
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+      className="mb-4 bg-inputBg border-inputBorder placeholder-placeholder text-textDark"
+    />
   );
 };
 

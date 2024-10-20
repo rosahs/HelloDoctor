@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
@@ -46,6 +46,16 @@ export default function DoctorReservePage() {
     }
   }, [doctorId]);
 
+  const handleDateChange = (value: Date | Date[]) => {
+    if (value instanceof Date) {
+      setDate(value);
+    } else if (Array.isArray(value) && value.length > 0 && value[0] instanceof Date) {
+      setDate(value[0]);
+    } else {
+      setDate(undefined);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!doctor?.id) {
@@ -53,17 +63,28 @@ export default function DoctorReservePage() {
       return;
     }
 
-    console.log('Booking appointment:', { doctorId: doctor.id, date: date?.toISOString(), time, reason });
-    router.push(`/doctors/${doctor.id}/reserve/success`);
-  };
+    try {
+      const response = await fetch(`/api/doctors/[id]/reserve`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          doctorId: doctor.id,
+          date: date?.toISOString(),
+          time,
+          reason,
+        }),
+      });
 
-  const handleDateChange = (value: unknown) => {
-    if (value instanceof Date) {
-      setDate(value);
-    } else if (Array.isArray(value) && value.length > 0 && value[0] instanceof Date) {
-      setDate(value[0]);
-    } else {
-      setDate(undefined);
+      if (!response.ok) {
+        throw new Error('Failed to book appointment');
+      }
+
+      console.log('Booking appointment:', { doctorId: doctor.id, date: date?.toISOString(), time, reason });
+      router.push(`/doctors/${doctor.id}/reserve/success`);
+    } catch (error) {
+      console.error('Error booking appointment:', error);
     }
   };
 
@@ -103,7 +124,7 @@ export default function DoctorReservePage() {
               <div className="bg-gray-200 rounded-md border p-3">
                 <Calendar
                   value={date}
-                  onChange={handleDateChange} // Adjusted handler
+                  onChange={handleDateChange}
                   className="mx-auto"
                 />
               </div>

@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { MapPin } from 'lucide-react'; 
 import DoctorSearchForm from '@/components/DoctorSearchForm/page';
-import './HomePage.css';
+// import './HomePage.css';
 
 interface Doctor {
   id: string;
@@ -13,6 +13,10 @@ interface Doctor {
   specialty: string;
   location: string;
   imageUrl: string;
+  about: string;
+  experience: string;
+  languages: string;
+  rating: string;
 }
 
 export default function HomePage() {
@@ -41,7 +45,7 @@ export default function HomePage() {
     <div className="relative min-h-screen">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
-        <Image
+        {/* <Image
           src="/images/mapimage9.png"
           alt="World Map"
           fill
@@ -49,7 +53,7 @@ export default function HomePage() {
           quality={100}
           className="opacity-80"
           priority
-        />
+        /> */}
       </div>
 
       {/* Dark Overlay */}
@@ -60,7 +64,7 @@ export default function HomePage() {
         {/* Heading with Flag Background Letters */}
         <h1 className="text-3xl sm:text-5xl md:text-7xl font-extrabold text-center mb-4 sm:mb-8 leading-tight tracking-wide">
           Find Your Doctor <br />
-          Anywhere in the W🌍rld
+          Anywhere None in the W🌍rld
         </h1>
         <p className="text-lg sm:text-2xl md:text-3xl text-gray-300 text-center mb-6 sm:mb-8 max-w-3xl">
           Connect with trusted doctors worldwide, access affordable medical care, and find the right specialist wherever you are.

@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Bookmark, MessageSquare, User, Image as ImageIcon, MapPin, Star } from 'lucide-react';
+import { Bookmark, MessageSquare, Image as Star } from 'lucide-react';
 import { Avatar } from "@/components/ui/avatar";
 import Footer from "@/components/footer/page";
 

@@ -57,7 +57,7 @@ export async function GET(
       },
     });
 
-    console.log("Found doctor:", doctor); // Add this line
+    console.log("Found doctor:", doctor); 
 
     if (!doctor) {
       return NextResponse.json({ error: "Doctor not found" }, { status: 404 });

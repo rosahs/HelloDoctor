@@ -12,6 +12,8 @@ export type Doctor = {
   languages?: string;
   createdAt: string;
   updatedAt: string;
+  userId?: string;
+  user?: [];
 };
 
 export type Patient = {
@@ -19,6 +21,8 @@ export type Patient = {
   country: string | null;
   city: string | null;
   savedDoctors: string[];
+  userId?: string;
+  user?: [];
 };
 
 export type ExtendedUser = DefaultSession["user"] & {

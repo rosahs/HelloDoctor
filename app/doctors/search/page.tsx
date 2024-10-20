@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import DoctorSearchForm from '@/components/DoctorSearchForm/page';
 import DoctorSearchResults from '@/components/DoctorSearchResults/page';
 
@@ -7,7 +6,7 @@ export default function DoctorSearchPage({ searchParams }: { searchParams: { [ke
     <div className="relative min-h-screen">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
-      <Image
+      {/* <Image
           src="/images/mapimage9.png"
           alt="World Map"
           fill
@@ -15,7 +14,7 @@ export default function DoctorSearchPage({ searchParams }: { searchParams: { [ke
           quality={100}
           className="opacity-80"
           priority
-        />
+        /> */}
       </div>
 
       {/* Dark Overlay */}

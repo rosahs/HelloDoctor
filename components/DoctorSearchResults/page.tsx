@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { getDoctors } from '@/lib/doctors';
+import { Doctor } from '@/next-auth';
 
 export default async function DoctorSearchResults({
   searchParams,
@@ -17,15 +18,13 @@ export default async function DoctorSearchResults({
 
   try {
     const fetchedDoctors = await getDoctors(searchCriteria);
-    const doctors = fetchedDoctors.map((doctor: any) => ({
-      id: doctor.id ?? 'Unknown ID',
-      name: doctor.name ?? 'Unknown Doctor',
-      specialty: doctor.specialty ?? 'General Practitioner',
-      imageUrl: doctor.imageUrl ?? '/images/placeholder-doctor-image.jpg',
-      about: doctor.about ?? 'No information available.',
+    const doctors = fetchedDoctors.map((doctor: Doctor) => ({
+      id: doctor.id,
+      specialty: doctor.specialization ?? 'General Practitioner',
+      imageUrl: user.image,
+      about: doctor.aboutMe ?? 'No information available.',
       experience: doctor.professionalExperience ?? 'No experience information available',
-      languages: Array.isArray(doctor.languages) ? doctor.languages : ['Unknown'],
-      rating: doctor.rating ?? 'N/A', // Default rating if not available
+      languages: doctor.languages ? doctor.languages.split(',').map(lang => lang.trim()) : ['Unknown'],
     }));
 
     if (doctors.length === 0) {

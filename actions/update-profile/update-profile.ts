@@ -61,3 +61,4 @@ export async function updateProfile(formData: FormData) {
     return { error: "Something went wrong!" };
   }
 }
+

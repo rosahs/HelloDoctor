@@ -98,7 +98,7 @@ export default function HomePage() {
                   <span className="text-sm sm:text-base">{doctor.location}</span>
                 </div>
 
-                <Link href={`/doctors/${doctor.id}/reserve`}>
+                <Link href={`/doctors/${doctor.id}`}>
                   <button className="block mt-4 sm:mt-6 w-full text-center bg-blue-600 hover:bg-green-600 text-white text-base sm:text-lg font-bold py-2 sm:py-3 rounded-lg">
                     Book Now
                   </button>

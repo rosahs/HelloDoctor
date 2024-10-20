@@ -40,44 +40,44 @@ export async function setUserRole(
         );
       }
 
-      // Create a new doctor profile and set userId
+      // Create a new doctor profile
       const doctor = await db.doctor.create({
         data: {
           specialization,
-          userId: user.id,
         },
       });
 
+      // Get the created doctor's ID
       doctorId = doctor.id;
     }
 
-    // Create a Patient record and set userId
+    // Create a Patient record
     if (role === UserRole.PATIENT) {
       const patient = await db.patient.create({
         data: {
           savedDoctors: [],
-          userId: user.id,
         },
       });
 
       patientId = patient.id;
     }
 
-    // Update user role, doctorId, and patientId
+    // Update user role and doctorId
     await db.user.update({
       where: { id: user.id },
       data: {
         role,
-        doctorId: doctorId, // Will be null if not a doctor
-        patientId: patientId, // Will be null if not a patient
+        doctorId:
+          role === UserRole.DOCTOR ? doctorId : null,
+        patientId:
+          role === UserRole.PATIENT ? patientId : null,
       },
     });
 
     return {
       success: `Role successfully set to '${role}'.`,
     };
-  } catch (err) {
-    console.log(err);
+  } catch {
     return {
       error: `An unexpected error occurred. Please try again.`,
     };

@@ -7,15 +7,20 @@ export async function getDoctors() {
     const doctors = await db.doctor.findMany({
       select: {
         id: true,
-        user: true,
-        location: true,
+        user: {
+          select: {
+            name: true,
+            email: true,
+          }
+        },
         specialization: true,
       },
     });
 
     return doctors.map((doctor) => ({
       id: doctor.id,
-      user: doctor.user,
+      name: doctor.user?.name ?? 'Unknown',
+      email: doctor.user?.email ?? 'No email provided',
       specialization: doctor.specialization,
     }));
   } catch (error) {

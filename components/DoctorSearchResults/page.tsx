@@ -1,7 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { getDoctors } from '@/lib/doctors';
-import { Doctor } from '@/next-auth';
+import Doctor from '@/lib/doctors'
+
 
 export default async function DoctorSearchResults({
   searchParams,
@@ -17,15 +18,7 @@ export default async function DoctorSearchResults({
   });
 
   try {
-    const fetchedDoctors = await getDoctors(searchCriteria);
-    const doctors = fetchedDoctors.map((doctor: Doctor) => ({
-      id: doctor.id,
-      specialty: doctor.specialization ?? 'General Practitioner',
-      imageUrl: user.image,
-      about: doctor.aboutMe ?? 'No information available.',
-      experience: doctor.professionalExperience ?? 'No experience information available',
-      languages: doctor.languages ? doctor.languages.split(',').map(lang => lang.trim()) : ['Unknown'],
-    }));
+    const doctors: Doctor[] = await getDoctors(searchCriteria);
 
     if (doctors.length === 0) {
       return <p className="text-center text-gray-500 mt-8">No doctors found matching your search criteria.</p>;
@@ -37,23 +30,17 @@ export default async function DoctorSearchResults({
           <Link key={doctor.id} href={`/doctors/${doctor.id}`} passHref>
             <div className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow duration-300">
               <Image
-                src={doctor.imageUrl}
-                alt={`Doctor specializing in ${doctor.specialty}`}
+                src={doctor.images[0]}
+                alt={`Doctor specializing in ${doctor.specialization}`}
                 width={300}
                 height={200}
                 className="w-full h-48 object-cover"
               />
               <div className="p-4">
-                <h2 className="text-xl font-semibold mb-2">{doctor.name}</h2>
-                <p className="text-gray-600 mb-2">{doctor.specialty}</p>
-                <p className="text-gray-500 text-sm mb-2 line-clamp-3">{doctor.about}</p>
-                <p className="text-gray-500 text-sm mb-2">Rating: {doctor.rating} / 5</p>
-                <p className="text-gray-500 text-sm mb-2">Experience: {doctor.experience}</p>
-                {doctor.languages.length > 0 && (
-                  <p className="text-gray-500 text-sm">
-                    Languages: {doctor.languages.join(', ')}
-                  </p>
-                )}
+                <h2 className="text-xl font-semibold mb-2">{doctor.specialization}</h2>
+                <p className="text-gray-500 text-sm mb-2 line-clamp-3">{doctor.aboutMe}</p>
+                <p className="text-gray-500 text-sm mb-2">Experience: {doctor.professionalExperience}</p>
+                <p className="text-gray-500 text-sm">Languages: {doctor.languages}</p>
               </div>
             </div>
           </Link>

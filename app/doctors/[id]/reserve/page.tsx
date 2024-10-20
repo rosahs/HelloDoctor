@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Calendar } from "@/components/ui/calendar";
+import 'react-calendar/dist/Calendar.css';
 
 interface Doctor {
   id: string;
@@ -13,17 +14,17 @@ interface Doctor {
   aboutMe: string;
 }
 
+type CalendarValue = Date | [Date | null, Date | null] | null;
+
 export default function DoctorReservePage() {
   const router = useRouter();
   const params = useParams();
-  const doctorId = Array.isArray(params?.id) ? params.id[0] : params?.id;
+  const doctorId = typeof params?.id === 'string' ? params.id : undefined;
   const [doctor, setDoctor] = useState<Doctor | null>(null);
-  const [date, setDate] = useState<Date | undefined>(undefined);
+  const [date, setDate] = useState<CalendarValue>(null);
   const [time, setTime] = useState('');
   const [reason, setReason] = useState('');
   const [loading, setLoading] = useState(true);
-
-  console.log('Doctor ID:', doctorId);
 
   useEffect(() => {
     if (doctorId) {
@@ -34,8 +35,7 @@ export default function DoctorReservePage() {
           }
           return res.json();
         })
-        .then((data) => {
-          console.log('Fetched Doctor:', data); // Debugging step
+        .then((data: Doctor) => {
           setDoctor(data);
           setLoading(false);
         })
@@ -46,32 +46,26 @@ export default function DoctorReservePage() {
     }
   }, [doctorId]);
 
-  const handleDateChange = (value: Date | Date[]) => {
-    if (value instanceof Date) {
-      setDate(value);
-    } else if (Array.isArray(value) && value.length > 0 && value[0] instanceof Date) {
-      setDate(value[0]);
-    } else {
-      setDate(undefined);
-    }
+  const handleDateChange = (value: CalendarValue) => {
+    setDate(value);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!doctor?.id) {
-      console.error("Doctor ID is missing!");
+    if (!doctor?.id || !date || !(date instanceof Date)) {
+      console.error("Doctor ID or valid date is missing!");
       return;
     }
 
     try {
-      const response = await fetch(`/api/doctors/[id]/reserve`, {
+      const response = await fetch(`/api/doctors/${doctor.id}/reserve`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           doctorId: doctor.id,
-          date: date?.toISOString(),
+          date: date.toISOString(),
           time,
           reason,
         }),
@@ -81,7 +75,6 @@ export default function DoctorReservePage() {
         throw new Error('Failed to book appointment');
       }
 
-      console.log('Booking appointment:', { doctorId: doctor.id, date: date?.toISOString(), time, reason });
       router.push(`/doctors/${doctor.id}/reserve/success`);
     } catch (error) {
       console.error('Error booking appointment:', error);
@@ -98,9 +91,6 @@ export default function DoctorReservePage() {
 
   return (
     <div className="min-h-screen flex justify-center items-center p-4 relative">
-      <div className="absolute inset-0 z-0">
-        {/* Background image if needed */}
-      </div>
       <div className="w-full max-w-2xl relative z-10 bg-black rounded-lg shadow-xl overflow-hidden">
         <div className="relative z-10">
           <h2 className="text-4xl font-bold mb-6 text-white text-center pt-6">Reserve an Appointment</h2>
@@ -123,8 +113,8 @@ export default function DoctorReservePage() {
               <label className="block text-white text-xl font-bold mb-2">Select Date</label>
               <div className="bg-gray-200 rounded-md border p-3">
                 <Calendar
-                  value={date}
                   onChange={handleDateChange}
+                  value={date}
                   className="mx-auto"
                 />
               </div>

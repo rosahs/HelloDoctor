@@ -29,8 +29,13 @@ import { UserRole } from "@prisma/client";
 
 const RoleSelectionSchema = z.object({
   role: z.enum([UserRole.PATIENT, UserRole.DOCTOR]),
-  specialization: z.string().optional(),
+  specialization: z.string().optional(), // Make specialization optional
 });
+
+type FormValues = {
+  role: "DOCTOR" | "PATIENT";
+  specialization?: string; // Allow specialization to be optional
+};
 
 const RoleSelection = () => {
   const router = useRouter();
@@ -46,24 +51,23 @@ const RoleSelection = () => {
     UserRole.PATIENT
   );
 
-  const form = useForm<z.infer<typeof RoleSelectionSchema>>(
-    {
-      resolver: zodResolver(RoleSelectionSchema),
-      defaultValues: {
-        role: UserRole.PATIENT,
-        specialization: "",
-      },
-    }
-  );
+  const form = useForm<FormValues>({
+    resolver: zodResolver(RoleSelectionSchema),
+    defaultValues: {
+      role: UserRole.PATIENT,
+      specialization: "",
+    },
+  });
 
   const handleRoleChange = (role: UserRole) => {
     setActiveRole(role);
     form.setValue("role", role);
+    if (role === UserRole.PATIENT) {
+      form.setValue("specialization", ""); // Reset when not needed
+    }
   };
 
-  const onSubmit = async (
-    values: z.infer<typeof RoleSelectionSchema>
-  ) => {
+  const onSubmit = async (values: FormValues) => {
     setError("");
     setSuccess("");
 
@@ -75,15 +79,9 @@ const RoleSelection = () => {
           : PATIENT_LOGIN_REDIRECT;
 
       try {
-        // If the role is PATIENT, set specialization to null
-        const specialization =
-          values.role === UserRole.DOCTOR
-            ? values.specialization
-            : null;
-
         const result = await setUserRole(
           values.role,
-          specialization ?? ""
+          values.role === UserRole.DOCTOR ? values.specialization ?? "" : ""
         );
 
         if (result.success) {

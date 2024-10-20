@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Doctor from '@/lib/doctors'
+import { Doctor } from '@prisma/client';
 
 const DoctorCard = ({ doctor }: { doctor: Doctor }) => {
   return (

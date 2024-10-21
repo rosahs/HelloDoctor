@@ -55,8 +55,7 @@ export default function DoctorReservePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
   
-    const userId = session?.user?.id; // Ensure this is correctly retrieved
-  
+    const userId = session?.user?.id; 
     if (!doctor?.id || !date || !(date instanceof Date) || !userId) {
       console.error("Doctor ID, valid date, or user ID is missing!");
       console.log("Doctor ID:", doctor?.id);
@@ -65,10 +64,10 @@ export default function DoctorReservePage() {
       return;
     }
   
-    // Log to check data being sent
+    
     console.log({
       doctorId: doctor.id,
-      userId, // Now this should be correctly set
+      userId, 
       date: date.toISOString(),
       time,
       reason,
@@ -82,7 +81,7 @@ export default function DoctorReservePage() {
         },
         body: JSON.stringify({
           doctorId: doctor.id,
-          userId, // Include the valid userId
+          userId, 
           date: date.toISOString(),
           time,
           reason,

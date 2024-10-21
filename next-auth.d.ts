@@ -25,6 +25,19 @@ export type Patient = {
   user?: [];
 };
 
+export type Appointment = {
+  id: string;
+  doctorId: string;
+  userId: string;
+  date: string;
+  time: string;
+  reason: string;
+  doctor?: Doctor;
+  patient?: Patient;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type ExtendedUser = DefaultSession["user"] & {
   role: UserRole;
   isTwoFactorEnabled: boolean;
@@ -35,6 +48,7 @@ export type ExtendedUser = DefaultSession["user"] & {
   patient?: Patient;
   conversationIds: string[];
   seenMessageIds: string[];
+  appointments?: Appointment[]; 
 };
 
 declare module "next-auth" {

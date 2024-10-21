@@ -28,11 +28,6 @@ import { DoctorSpecializationField } from "@/components/auth/DoctorSpecializatio
 import { UserRole } from "@prisma/client";
 import { RoleSelectionSchema } from "@/schemas";
 
-type FormValues = {
-  role: "DOCTOR" | "PATIENT";
-  specialization?: string;
-};
-
 const RoleSelection = () => {
   const router = useRouter();
   const { update } = useSession();
@@ -47,23 +42,24 @@ const RoleSelection = () => {
     UserRole.PATIENT
   );
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(RoleSelectionSchema),
-    defaultValues: {
-      role: UserRole.PATIENT,
-      specialization: "",
-    },
-  });
+  const form = useForm<z.infer<typeof RoleSelectionSchema>>(
+    {
+      resolver: zodResolver(RoleSelectionSchema),
+      defaultValues: {
+        role: UserRole.PATIENT,
+        specialization: "",
+      },
+    }
+  );
 
   const handleRoleChange = (role: UserRole) => {
     setActiveRole(role);
     form.setValue("role", role);
-    if (role === UserRole.PATIENT) {
-      form.setValue("specialization", ""); // Reset when not needed
-    }
   };
 
-  const onSubmit = async (values: FormValues) => {
+  const onSubmit = async (
+    values: z.infer<typeof RoleSelectionSchema>
+  ) => {
     setError("");
     setSuccess("");
 
@@ -75,11 +71,15 @@ const RoleSelection = () => {
           : PATIENT_LOGIN_REDIRECT;
 
       try {
+        // If the role is PATIENT, set specialization to null
+        const specialization =
+          values.role === UserRole.DOCTOR
+            ? values.specialization
+            : null;
+
         const result = await setUserRole(
           values.role,
-          values.role === UserRole.DOCTOR
-            ? values.specialization ?? ""
-            : ""
+          specialization ?? ""
         );
 
         if (result.success) {

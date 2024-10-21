@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 "use client";
 
 import * as z from "zod";
@@ -125,6 +127,7 @@ export const RegisterForm = () => {
 
             {/* DoctorSpecializationField  */}
             <DoctorSpecializationField
+            // @ts-ignore
               form={form}
               activeRole={activeRole}
             />

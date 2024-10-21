@@ -1,11 +1,9 @@
-'use client'
+'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
-import { MapPin } from 'lucide-react'; 
 import DoctorSearchForm from '@/components/DoctorSearchForm/page';
-// import './HomePage.css';
+import DoctorCard from '@/components/doctor-card/page';
 
 interface Doctor {
   id: string;
@@ -19,7 +17,7 @@ interface Doctor {
   rating: string;
 }
 
-export default function HomePage() {
+export default function DoctorProfilePage() {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
 
   useEffect(() => {
@@ -65,28 +63,7 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {doctors.map((doctor) => (
-              <div key={doctor.id} className="bg-white text-black rounded-lg shadow-lg p-4 sm:p-6 transform hover:scale-105 transition-transform duration-300">
-                <Image
-                  src={doctor.imageUrl} 
-                  alt={doctor.name}
-                  width={200}
-                  height={200}
-                  className="mx-auto object-cover"
-                />
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-800 text-center mt-3 sm:mt-4">{doctor.name}</h3>
-                <p className="text-center text-gray-600 text-sm sm:text-base">{doctor.specialty}</p>
-                
-                <div className="flex justify-center text-gray-600 items-center mt-3 sm:mt-4">
-                  <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 mr-2" />
-                  <span className="text-sm sm:text-base">{doctor.location}</span>
-                </div>
-
-                <Link href={`/doctors/profile/${doctor.id}`}>
-                  <button className="block mt-4 sm:mt-6 w-full text-center bg-blue-600 hover:bg-green-600 text-white text-base sm:text-lg font-bold py-2 sm:py-3 rounded-lg">
-                    View Profile
-                  </button>
-                </Link>
-              </div>
+              <DoctorCard key={doctor.id} doctor={doctor} />
             ))}
           </div>
         </div>

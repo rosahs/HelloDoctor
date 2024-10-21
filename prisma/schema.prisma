@@ -22,6 +22,7 @@ enum UserRole {
 
 
 
+
 model User {
   id                     String                  @id @default(auto()) @map("_id") @db.ObjectId
   name                   String
@@ -35,6 +36,7 @@ model User {
   doctorId               String?                 @db.ObjectId @map("doctor_id") 
   patientId              String?                 @db.ObjectId @map("patient_id")
   appointments           Appointment[]
+
 
   conversationIds String[] @db.ObjectId
   conversations Conversation[] @relation(fields: [conversationIds], references: [id])
@@ -52,7 +54,9 @@ model User {
   @@map("users")
   @@index([doctorId])
   @@index([patientId])
+  @@index([patientId])
 }
+
 
 
 model Account {
@@ -119,6 +123,7 @@ model Doctor {
   certifications         String?
   professionalExperience String?
   languages              String?
+  
   user               User? @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId             String?  @db.ObjectId @map("user_id")
 
@@ -129,6 +134,10 @@ model Patient {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   country      String?
   city         String?
+  savedDoctors String[] @db.ObjectId
+
+  user               User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId             String?  @db.ObjectId @map("user_id")
   savedDoctors String[] @db.ObjectId
 
   user               User? @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -144,6 +153,7 @@ model Appointment {
   date      DateTime
   time      String
   reason    String
+  
   doctor    Doctor   @relation(fields: [doctorId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
 

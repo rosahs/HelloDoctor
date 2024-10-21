@@ -26,15 +26,11 @@ import {
 import { setUserRole } from "@/actions/setUserRole";
 import { DoctorSpecializationField } from "@/components/auth/DoctorSpecializationField";
 import { UserRole } from "@prisma/client";
-
-const RoleSelectionSchema = z.object({
-  role: z.enum([UserRole.PATIENT, UserRole.DOCTOR]),
-  specialization: z.string().optional(), // Make specialization optional
-});
+import { RoleSelectionSchema } from "@/schemas";
 
 type FormValues = {
   role: "DOCTOR" | "PATIENT";
-  specialization?: string; // Allow specialization to be optional
+  specialization?: string;
 };
 
 const RoleSelection = () => {
@@ -81,7 +77,9 @@ const RoleSelection = () => {
       try {
         const result = await setUserRole(
           values.role,
-          values.role === UserRole.DOCTOR ? values.specialization ?? "" : ""
+          values.role === UserRole.DOCTOR
+            ? values.specialization ?? ""
+            : ""
         );
 
         if (result.success) {

@@ -47,7 +47,7 @@ model User {
 
   doctor    Doctor[]
   patient   Patient[]
-          
+  appointments Appointment[]
 
   @@map("users")
   @@index([doctorId])
@@ -122,6 +122,7 @@ model Doctor {
 
   user               User? @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId             String?  @db.ObjectId @map("user_id")
+  appointments       Appointment[]
 
   @@map("doctors")
 }
@@ -146,8 +147,8 @@ model Appointment {
   time      String
   reason    String
   
-  // doctor    Doctor   @relation(fields: [doctorId], references: [id])
-  // user      User     @relation(fields: [userId], references: [id])
+  doctor    Doctor   @relation(fields: [doctorId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 
   @@map("appointments")
 }

@@ -158,3 +158,21 @@ export const UpdateProfileSchema = z.object({
   country: z.string().optional(),
   city: z.string().optional(),
 });
+
+export const RoleSelectionSchema = z
+  .object({
+    role: z.enum([UserRole.PATIENT, UserRole.DOCTOR]),
+    specialization: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.role === UserRole.DOCTOR) {
+        return !!data.specialization;
+      }
+      return true;
+    },
+    {
+      message: "Specialization is required for doctors",
+      path: ["specialization"],
+    }
+  );

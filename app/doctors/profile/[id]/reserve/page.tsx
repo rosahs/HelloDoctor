@@ -94,7 +94,7 @@ export default function DoctorReservePage() {
         throw new Error('Failed to book appointment');
       }
   
-      router.push(`/doctors/${doctor.id}/reserve/success`);
+      router.push(`/doctors/profile/${doctor.id}/reserve/success`);
     } catch (error) {
       console.error('Error booking appointment:', error);
     }

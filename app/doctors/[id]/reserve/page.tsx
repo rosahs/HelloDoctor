@@ -51,19 +51,24 @@ export default function DoctorReservePage() {
   const handleDateChange = (value: CalendarValue) => {
     setDate(value);
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
   
-    const userId = session?.user?.id;
+    const userId = session?.user?.id; // Ensure this is correctly retrieved
+  
     if (!doctor?.id || !date || !(date instanceof Date) || !userId) {
       console.error("Doctor ID, valid date, or user ID is missing!");
+      console.log("Doctor ID:", doctor?.id);
+      console.log("User ID:", userId);
+      console.log("Date:", date);
       return;
     }
   
     // Log to check data being sent
     console.log({
       doctorId: doctor.id,
-      userId,
+      userId, // Now this should be correctly set
       date: date.toISOString(),
       time,
       reason,
@@ -77,7 +82,7 @@ export default function DoctorReservePage() {
         },
         body: JSON.stringify({
           doctorId: doctor.id,
-          userId,
+          userId, // Include the valid userId
           date: date.toISOString(),
           time,
           reason,

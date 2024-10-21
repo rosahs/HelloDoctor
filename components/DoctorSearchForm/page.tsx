@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -22,7 +22,8 @@ const DoctorSearchForm = () => {
   };
 
   // Show the specialty selection modal
-  const handleSpecialtyClick = () => {
+  const handleSpecialtyClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault(); // Prevent form submission
     setShowModal(true);
   };
 
@@ -44,15 +45,14 @@ const DoctorSearchForm = () => {
           className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
-        {/* Specialty Input (Read-Only) */}
-        <input
-          type="text"
-          value={specialty}
+        {/* Specialty Button (Replaces Input to Prevent Form Submission) */}
+        <button
+          type="button"
           onClick={handleSpecialtyClick}
-          readOnly
-          placeholder="Select Specialty"
-          className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
-        />
+          className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer text-left bg-white"
+        >
+          {specialty || "Select Specialty"}
+        </button>
 
         {/* Input for Location */}
         <input

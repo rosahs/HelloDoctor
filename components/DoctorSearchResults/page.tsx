@@ -27,7 +27,7 @@ export default async function DoctorSearchResults({
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {doctors.map((doctor) => (
-          <Link key={doctor.id} href={`/doctors/${doctor.id}`} passHref>
+          <Link key={doctor.id} href={`/doctors/profile/${doctor.id}`} passHref>
             <div className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow duration-300">
               <Image
                 src={doctor.images[0]}

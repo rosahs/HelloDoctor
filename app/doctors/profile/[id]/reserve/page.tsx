@@ -58,20 +58,8 @@ export default function DoctorReservePage() {
     const userId = session?.user?.id; 
     if (!doctor?.id || !date || !(date instanceof Date) || !userId) {
       console.error("Doctor ID, valid date, or user ID is missing!");
-      console.log("Doctor ID:", doctor?.id);
-      console.log("User ID:", userId);
-      console.log("Date:", date);
       return;
     }
-  
-    
-    console.log({
-      doctorId: doctor.id,
-      userId, 
-      date: date.toISOString(),
-      time,
-      reason,
-    });
   
     try {
       const response = await fetch(`/api/doctors/${doctor.id}/reserve`, {
@@ -94,7 +82,8 @@ export default function DoctorReservePage() {
         throw new Error('Failed to book appointment');
       }
   
-      router.push(`/doctors/profile/${doctor.id}/reserve/success`);
+      // Redirect to success page with appointment date and time in the query parameters
+      router.push(`/doctors/profile/${doctor.id}/reserve/success?date=${encodeURIComponent(date.toISOString())}&time=${encodeURIComponent(time)}`);
     } catch (error) {
       console.error('Error booking appointment:', error);
     }

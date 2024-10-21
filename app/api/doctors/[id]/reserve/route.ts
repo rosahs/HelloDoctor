@@ -1,54 +1,56 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { ObjectId } from 'mongodb';
+import prisma from '@/lib/prisma';
 
-const prisma = new PrismaClient();
+interface AppointmentRequest {
+  doctorId: string;
+  userId: string;
+  date: string;
+  time: string;
+  reason: string;
+}
 
-export async function POST(request: Request) {
-    try {
-        const { doctorId, date, time, reason } = await request.json();
-        
-        // Log received data for debugging
-        console.log('Received appointment data:', { doctorId, date, time, reason });
+export async function POST(req: Request, { params }: { params: { id: string } }) {
+  const { id } = params;
+  const { userId, date, time, reason } = await req.json() as AppointmentRequest;
 
-        if (!doctorId || !date || !time) {
-            console.error('Missing required fields:', { doctorId, date, time });
-            return NextResponse.json(
-                { error: 'Missing required fields: doctorId, date, and time are required.' },
-                { status: 400 }
-            );
-        }
+  // Validate input
+  if (!userId || !ObjectId.isValid(userId) || !date || !time || !reason) {
+    return NextResponse.json({ message: 'Invalid or missing fields' }, { status: 400 });
+  }
 
-        // Attempt to create the appointment in the database
-        const appointment = await prisma.appointment.create({
-            data: {
-                doctorId,
-                date: new Date(date), // Ensure the date format is correct
-                time,
-                reason,
-            },
-        });
+  try {
+    // Create the appointment with relational fields using `connect`
+    const appointment = await prisma.appointment.create({
+      data: {
+        date: new Date(date).toISOString(),
+        time,
+        reason,
+        doctor: {
+          connect: { id: String(id) }, // Connect the existing doctor by ID
+        },
+        user: {
+          connect: { id: String(userId) }, // Connect the existing user by ID
+        },
+      },
+    });
 
-        console.log('Appointment created:', appointment);
-        return NextResponse.json(
-            { message: 'Appointment successfully booked!', appointment },
-            { status: 201 }
-        );
-    } catch (error: unknown) {
-        // Handle the error by narrowing down its type
-        if (error instanceof Error) {
-            console.error('Failed to create appointment:', error.message);
-            return NextResponse.json(
-                { error: 'Failed to create appointment', details: error.message },
-                { status: 500 }
-            );
-        } else {
-            console.error('Unknown error occurred:', error);
-            return NextResponse.json(
-                { error: 'An unknown error occurred while creating the appointment' },
-                { status: 500 }
-            );
-        }
+    return NextResponse.json(appointment, { status: 201 });
+
+  } catch (error) {
+    console.error('Failed to create appointment:', error);
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { error: 'Failed to create appointment', details: error.message },
+        { status: 500 }
+      );
+    } else {
+      return NextResponse.json(
+        { error: 'Failed to create appointment', details: 'An unknown error occurred' },
+        { status: 500 }
+      );
     }
+  }
 }
 
 // 'use client';

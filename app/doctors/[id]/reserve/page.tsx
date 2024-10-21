@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Calendar } from "@/components/ui/calendar";
 import 'react-calendar/dist/Calendar.css';
+import { useSession } from "next-auth/react";
 
 interface Doctor {
   id: string;
@@ -19,6 +20,7 @@ type CalendarValue = Date | [Date | null, Date | null] | null;
 export default function DoctorReservePage() {
   const router = useRouter();
   const params = useParams();
+  const { data: session } = useSession();
   const doctorId = typeof params?.id === 'string' ? params.id : undefined;
   const [doctor, setDoctor] = useState<Doctor | null>(null);
   const [date, setDate] = useState<CalendarValue>(null);
@@ -49,14 +51,24 @@ export default function DoctorReservePage() {
   const handleDateChange = (value: CalendarValue) => {
     setDate(value);
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!doctor?.id || !date || !(date instanceof Date)) {
-      console.error("Doctor ID or valid date is missing!");
+  
+    const userId = session?.user?.id;
+    if (!doctor?.id || !date || !(date instanceof Date) || !userId) {
+      console.error("Doctor ID, valid date, or user ID is missing!");
       return;
     }
-
+  
+    // Log to check data being sent
+    console.log({
+      doctorId: doctor.id,
+      userId,
+      date: date.toISOString(),
+      time,
+      reason,
+    });
+  
     try {
       const response = await fetch(`/api/doctors/${doctor.id}/reserve`, {
         method: 'POST',
@@ -65,22 +77,24 @@ export default function DoctorReservePage() {
         },
         body: JSON.stringify({
           doctorId: doctor.id,
+          userId,
           date: date.toISOString(),
           time,
           reason,
         }),
       });
-
+  
       if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Failed to book appointment:', errorData);
         throw new Error('Failed to book appointment');
       }
-
+  
       router.push(`/doctors/${doctor.id}/reserve/success`);
     } catch (error) {
       console.error('Error booking appointment:', error);
     }
   };
-
   if (loading) {
     return <p className="text-center text-white">Loading...</p>;
   }

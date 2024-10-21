@@ -1,156 +1,161 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Image from 'next/image';
-import { Calendar } from "@/components/ui/calendar";
-import 'react-calendar/dist/Calendar.css';
+import Link from 'next/link';
+import { Bookmark, MessageSquare, User, Image as ImageIcon, MapPin, Star } from 'lucide-react';
+import { Avatar } from "@/components/ui/avatar";
+import Footer from '@/components/footer/page';
 
-interface Doctor {
+interface DoctorProfile {
   id: string;
   name: string;
-  specialization: string;
+  specialty: string;
+  location: string;
   imageUrl: string;
-  aboutMe: string;
+  about: string;
+  certifications: string[];
+  specialties?: string[];
+  experience?: string[];
+  languages?: string[];
 }
 
-type CalendarValue = Date | [Date | null, Date | null] | null;
-
-export default function DoctorReservePage() {
-  const router = useRouter();
-  const params = useParams();
-  const doctorId = typeof params?.id === 'string' ? params.id : undefined;
-  const [doctor, setDoctor] = useState<Doctor | null>(null);
-  const [date, setDate] = useState<CalendarValue>(null);
-  const [time, setTime] = useState('');
-  const [reason, setReason] = useState('');
+export default function DoctorProfilePage() {
+  const { id } = useParams();
+  const [doctor, setDoctor] = useState<DoctorProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (doctorId) {
-      fetch(`/api/doctors/${doctorId}`)
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error('Failed to fetch');
-          }
-          return res.json();
-        })
-        .then((data: Doctor) => {
+    const fetchDoctor = async () => {
+      try {
+        const response = await fetch(`/api/doctors/${id}`);
+        if (response.ok) {
+          const data = await response.json();
           setDoctor(data);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error('Failed to fetch doctor:', error);
-          setLoading(false);
-        });
-    }
-  }, [doctorId]);
-
-  const handleDateChange = (value: CalendarValue) => {
-    setDate(value);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!doctor?.id || !date || !(date instanceof Date)) {
-      console.error("Doctor ID or valid date is missing!");
-      return;
-    }
-
-    try {
-      const response = await fetch(`/api/doctors/${doctor.id}/reserve`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          doctorId: doctor.id,
-          date: date.toISOString(),
-          time,
-          reason,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to book appointment');
+        } else {
+          console.error('Failed to fetch doctor details');
+        }
+      } catch (error) {
+        console.error('Error fetching doctor details:', error);
+      } finally {
+        setLoading(false);
       }
+    };
 
-      router.push(`/doctors/${doctor.id}/reserve/success`);
-    } catch (error) {
-      console.error('Error booking appointment:', error);
+    if (id) {
+      fetchDoctor();
     }
-  };
+  }, [id]);
 
   if (loading) {
-    return <p className="text-center text-white">Loading...</p>;
+    return <p>Loading...</p>;
   }
 
   if (!doctor) {
-    return <p className="text-center text-red-500">Doctor not found!</p>;
+    return <p>Doctor not found.</p>;
   }
 
   return (
-    <div className="min-h-screen flex justify-center items-center p-4 relative">
-      <div className="w-full max-w-2xl relative z-10 bg-black rounded-lg shadow-xl overflow-hidden">
-        <div className="relative z-10">
-          <h2 className="text-4xl font-bold mb-6 text-white text-center pt-6">Reserve an Appointment</h2>
-          <form onSubmit={handleSubmit} className="rounded-lg px-8 pt-6 pb-8 mb-4">
-            <div className="text-center mb-6">
+    <div className="min-h-screen bg-white flex flex-col w-full px-8 py-12">
+      <div className="w-full flex-grow space-y-12">
+        
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row items-start justify-between mb-8 w-full">
+          <div className="flex items-start mb-6 md:mb-0">
+            <Avatar className="w-32 h-32 mr-6">
               <Image
-                src={doctor.imageUrl || "/images/placeholder-doctor-image.jpg"}
-                alt={doctor.name}
+                src={doctor.imageUrl || '/images/placeholder-doctor-image.jpg'}
+                alt={`${doctor.name}'s profile picture`}
                 width={150}
                 height={150}
-                className="mx-auto mb-2"
-                unoptimized
-                priority
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.onerror = null;
+                  target.src = '/images/placeholder-doctor-image.jpg';
+                }}
               />
-              <h3 className="text-2xl text-green-600 font-bold">{doctor.name}</h3>
-              <p className="text-xl text-white">{doctor.specialization}</p>
-              <p className="mt-2 text-md text-gray-500">{doctor.aboutMe}</p>
+            </Avatar>
+            <div className="ml-4 text-left">
+              <h2 className="text-3xl md:text-4xl font-bold">{doctor.name}</h2>
+              <p className="text-xl md:text-2xl font-semibold text-gray-600">{doctor.specialty}</p>
             </div>
-            <div className="mb-4">
-              <label className="block text-white text-xl font-bold mb-2">Select Date</label>
-              <div className="bg-gray-200 rounded-md border p-3">
-                <Calendar
-                  onChange={handleDateChange}
-                  value={date}
-                  className="mx-auto"
-                />
-              </div>
+          </div>
+          <Bookmark className="text-gray-800 cursor-pointer" size={40} />
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex flex-col md:flex-row justify-between gap-6 mb-8 w-full">
+          <Link href={`/doctors/${doctor.id}/message`} className="w-full md:w-full">
+            <button className="w-full h-16 bg-black text-white text-lg md:text-2xl font-semibold rounded-md flex items-center justify-center transition-colors duration-300 hover:bg-green-600 cursor-pointer">
+              <MessageSquare className="mr-3" size={32} /> Message
+            </button>
+          </Link>
+          <Link href={`/doctors/${doctor.id}/reserve`} className="w-full md:w-full">
+            <button className="w-full h-16 bg-black text-white text-lg md:text-2xl font-semibold rounded-md flex items-center justify-center transition-colors duration-300 hover:bg-green-600 cursor-pointer">
+              <Star className="mr-3" size={32} /> Reserve
+            </button>
+        </Link>
+        </div>
+
+        {/* Icons Row */}
+        <div className="flex justify-between mb-8 p-6 rounded-md bg-gray-100 w-full">
+          <User className="text-gray-800 cursor-pointer" size={32} />
+          <ImageIcon className="text-gray-800 cursor-pointer" size={32} />
+          <MapPin className="text-gray-800 cursor-pointer" size={32} />
+          <Star className="text-gray-800 cursor-pointer" size={32} />
+        </div>
+
+        {/* Categories Container */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* About Section */}
+          <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
+            <h3 className="font-bold text-2xl mb-4">About me</h3>
+            <p className="text-lg text-gray-600">{doctor.about || 'No information available.'}</p>
+          </div>
+
+          {/* Specialties */}
+          {doctor.specialties && doctor.specialties.length > 0 && (
+            <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
+              <h3 className="font-bold text-2xl mb-4">Specialties</h3>
+              <ul className="list-disc pl-5 text-lg text-gray-600">
+                {doctor.specialties.map((specialty, index) => <li key={index}>{specialty}</li>)}
+              </ul>
             </div>
-            <div className="mb-4">
-              <label className="block text-white text-xl font-bold mb-2">Time</label>
-              <input
-                type="time"
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
-                className="shadow appearance-none cursor-pointer border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                required
-              />
+          )}
+
+          {/* Certifications */}
+          {doctor.certifications && doctor.certifications.length > 0 && (
+            <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
+              <h3 className="font-bold text-2xl mb-4">Certifications</h3>
+              <ul className="list-disc pl-5 text-lg text-gray-600">
+                {doctor.certifications.map((certification, index) => <li key={index}>{certification}</li>)}
+              </ul>
             </div>
-            <div className="mb-6">
-              <label className="block text-white text-xl font-bold mb-2">Reason for Visit</label>
-              <textarea
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                placeholder="Enter the reason for your visit"
-                rows={3}
-                required
-              />
+          )}
+
+          {/* Professional Experience */}
+          {doctor.experience && doctor.experience.length > 0 && (
+            <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
+              <h3 className="font-bold text-2xl mb-4">Professional Experience</h3>
+              <ul className="list-disc pl-5 text-lg text-gray-600">
+                {doctor.experience.map((exp, index) => <li key={index}>{exp}</li>)}
+              </ul>
             </div>
-            <div className="flex items-center justify-center">
-              <button
-                type="submit"
-                className="bg-green-600 hover:bg-blue-800 text-white text-xl font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              >
-                Book Appointment
-              </button>
+          )}
+
+          {/* Languages */}
+          {doctor.languages && doctor.languages.length > 0 && (
+            <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
+              <h3 className="font-bold text-2xl mb-4">Languages</h3>
+              <ul className="list-disc pl-5 text-lg text-gray-600">
+                {doctor.languages.map((language, index) => <li key={index}>{language}</li>)}
+              </ul>
             </div>
-          </form>
+          )}
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

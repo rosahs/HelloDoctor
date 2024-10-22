@@ -1,40 +1,35 @@
-// Example: Adjusting Featured Doctors Component
+import { NextResponse } from 'next/server';
+import { PrismaClient } from '@prisma/client';
 
-import { useEffect, useState } from 'react';
+const prisma = new PrismaClient();
 
-export default function FeaturedDoctors() {
-  const [doctors, setDoctors] = useState([]);
+export async function GET() {
+  try {
+    const featuredDoctors = await prisma.doctor.findMany({
+      take: 5,
+      include: {
+        user: {
+          select: {
+            name: true,
+            image: true, // Include the image field from the associated User model
+          },
+        },
+      },
+    });
 
-  useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        const response = await fetch('/api/doctors/featured');
-        if (response.ok) {
-          const data = await response.json();
-          setDoctors(data);
-        } else {
-          console.error('Failed to fetch featured doctors');
-        }
-      } catch (error) {
-        console.error('Error fetching featured doctors:', error);
-      }
-    };
+    const formattedDoctors = featuredDoctors.map(doctor => ({
+      id: doctor.id,
+      name: doctor.user?.name || 'Unknown',
+      specialization: doctor.specialization,
+      imageUrl: doctor.user?.image || '/images/placeholder-doctor-image.jpg', // Use image field
+      profileUrl: `/doctors/profile/${doctor.id}`,
+    }));
 
-    fetchDoctors();
-  }, []);
-
-  return (
-    <div>
-      {doctors.length > 0 ? (
-        doctors.map((doctor: { name: string; specialty: string }, index: number) => (
-          <div key={index}>
-            <p>{doctor.name}</p>
-            <p>{doctor.specialty}</p>
-          </div>
-        ))
-      ) : (
-        <p>No featured doctors available at this time.</p>
-      )}
-    </div>
-  );
+    return NextResponse.json(formattedDoctors);
+  } catch (error) {
+    console.error('Error fetching featured doctors:', error);
+    return NextResponse.json({ error: 'Failed to fetch doctors' }, { status: 500 });
+  } finally {
+    await prisma.$disconnect();
+  }
 }

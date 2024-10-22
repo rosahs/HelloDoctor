@@ -4,12 +4,13 @@ import { MdOutlineClose } from "react-icons/md";
 import Link from "next/link";
 import styles from "./MobileDrawer.module.css";
 import LogoLink from "./LogoLink";
-import Image from "next/image";
+
 import NavLink from "./NavLink";
 import LogoutButtonItem from "./LogoutButtonItem";
 import { doctorLinks, patientLinks } from "./NavLinks";
 import { ExtendedUser } from "@/next-auth";
 import { useDrawerStore } from "@/store/drawerStore";
+import Avatar from "../Avatar";
 
 function MobileDrawer({
   user,
@@ -45,14 +46,13 @@ function MobileDrawer({
       {user ? (
         <div className={styles.navUser}>
           <Link href="/" className={styles.navUserLink}>
-            <Image
-              src={user.image || "/profile.jpg"}
-              alt="User Picture"
+            <Avatar
+              user={user}
               width={55}
               height={55}
-              priority
-              className={styles.userImage}
+              className="mr-3"
             />
+
             <div className={styles.userInfo}>
               <span className="text-lg text">
                 {user.name}

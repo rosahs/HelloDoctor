@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { v2 as cloudinary } from "cloudinary";
 
 if (!process.env.CLOUDINARY_CLOUD_NAME) {
@@ -18,7 +20,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export async function uploadImage(image) {
+export async function uploadImage(image: File) {
   const imageData = await image.arrayBuffer();
   const mime = image.type;
   const encoding = "base64";

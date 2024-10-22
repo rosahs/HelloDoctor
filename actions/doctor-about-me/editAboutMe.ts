@@ -42,8 +42,7 @@ export const editAboutMe = async (
     }
 
     return { success: "Saved Successfully" };
-  } catch (error) {
-    console.log(error);
+  } catch {
     return { error: "Something went wrong" };
   }
 };

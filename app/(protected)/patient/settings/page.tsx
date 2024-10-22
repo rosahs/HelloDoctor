@@ -1,5 +1,6 @@
 import Settings from "@/components/protected/settings/settings";
 import { currentUser } from "@/lib/auth";
+import DeleteAccountButton from "@/components/protected/settings/DeleteAccount"; // Import the button
 
 const PatientSettings = async () => {
   const user = await currentUser();
@@ -13,10 +14,6 @@ const PatientSettings = async () => {
       href: "/patient/settings/change-location",
       label: "Change Location",
     },
-    {
-      href: "/patient/settings/delete-account",
-      label: "Delete Account",
-    },
   ];
 
   // Conditionally insert "Account Security" before "Delete Account"
@@ -27,7 +24,12 @@ const PatientSettings = async () => {
     });
   }
 
-  return <Settings links={patientLinks} />;
+  return (
+    <div>
+      <Settings links={patientLinks} />
+      <DeleteAccountButton />
+    </div>
+  );
 };
 
 export default PatientSettings;

@@ -1,5 +1,4 @@
 import { type DefaultSession } from "next-auth";
-import { UserRole } from "./lib/userRole";
 
 export type Doctor = {
   id: string;
@@ -12,6 +11,10 @@ export type Doctor = {
   languages?: string;
   createdAt: string;
   updatedAt: string;
+  userId?: string;
+  user?: [];
+  userId?: string;
+  user?: [];
 };
 
 export type Patient = {
@@ -19,6 +22,23 @@ export type Patient = {
   country: string | null;
   city: string | null;
   savedDoctors: string[];
+  userId?: string;
+  user?: [];
+};
+
+export type Appointment = {
+  id: string;
+  doctorId: string;
+  userId: string;
+  date: string;
+  time: string;
+  reason: string;
+  doctor?: Doctor;
+  patient?: Patient;
+  createdAt: string;
+  updatedAt: string;
+  userId?: string;
+  user?: [];
 };
 
 export type ExtendedUser = DefaultSession["user"] & {
@@ -27,8 +47,11 @@ export type ExtendedUser = DefaultSession["user"] & {
   isOAuth: boolean;
   doctorId?: string;
   patientId?: string;
-  doctor: Doctor;
-  patient: Patient;
+  doctor?: Doctor;
+  patient?: Patient;
+  conversationIds: string[];
+  seenMessageIds: string[];
+  appointments?: Appointment[];
 };
 
 declare module "next-auth" {

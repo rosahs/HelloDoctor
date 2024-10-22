@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { ObjectId } from 'mongodb';
-import prisma from '@/lib/prisma';
+import { db } from '@/lib/db';
 
 interface AppointmentRequest {
   doctorId: string;
@@ -24,7 +24,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     }
   
     try {
-      const appointment = await prisma.appointment.create({
+      const appointment = await db.appointment.create({
         data: {
           date: new Date(date).toISOString(),
           time,

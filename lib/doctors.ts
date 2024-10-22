@@ -1,6 +1,5 @@
-import { PrismaClient, Prisma } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { db } from '@/lib/db';
+import { Prisma } from '@prisma/client';
 
 interface Doctor {
   id: string;
@@ -37,7 +36,7 @@ export async function getDoctors(searchParams: { [key: string]: string | string[
     where.languages = { contains: languages, mode: 'insensitive' };
   }
 
-  const doctors = await prisma.doctor.findMany({
+  const doctors = await db.doctor.findMany({
     where,
     select: {
       id: true,
@@ -76,4 +75,4 @@ export async function getDoctors(searchParams: { [key: string]: string | string[
   }));
 }
 
-export default Doctor
+export type { Doctor };

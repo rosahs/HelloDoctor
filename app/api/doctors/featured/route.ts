@@ -1,13 +1,11 @@
 // app/api/doctors/featured/route.ts
 
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { db } from '@/lib/db';
 
 export async function GET() {
   try {
-    const featuredDoctors = await prisma.doctor.findMany({
+    const featuredDoctors = await db.doctor.findMany({
       take: 5, // Limit to 5 featured doctors
     });
 

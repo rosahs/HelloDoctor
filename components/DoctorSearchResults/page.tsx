@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { getDoctors } from '@/lib/doctors';
-import Doctor from '@/lib/doctors'
+import { Doctor } from '@/lib/doctors'
 
 
 export default async function DoctorSearchResults({

@@ -1,11 +1,9 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { db } from '@/lib/db';
 
 export async function GET() {
   try {
-    const featuredDoctors = await prisma.doctor.findMany({
+    const featuredDoctors = await db.doctor.findMany({
       take: 5,
       select: {
         id: true,
@@ -30,6 +28,6 @@ export async function GET() {
     console.error('Error fetching featured doctors:', error);
     return NextResponse.json({ error: 'Failed to fetch doctors' }, { status: 500 });
   } finally {
-    await prisma.$disconnect();
+    await db.$disconnect();
   }
 }

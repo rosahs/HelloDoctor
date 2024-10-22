@@ -1,4 +1,3 @@
-// app/api/pusher/auth/route.ts
 import { NextResponse } from "next/server";
 import { currentUser } from "@/lib/auth";
 import { pusherServer } from "@/lib/pusher";
@@ -13,7 +12,6 @@ export async function POST(request: Request) {
       });
     }
 
-    // Parse the request body
     const body = await request.formData();
     const socketId = body.get("socket_id") as string;
     const channel = body.get("channel_name") as string;

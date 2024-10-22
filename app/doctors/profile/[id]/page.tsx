@@ -63,13 +63,13 @@ export default function DoctorProfilePage({ params }: { params: { id: string } }
 
         <div className="flex space-x-4 mb-8">
           <button
-            className="flex-1 bg-black text-white py-3 rounded-md font-semibold text-lg"
+            className="flex-1 bg-black text-white py-4 rounded-md font-semibold text-lg hover:bg-green-600 transition-colors duration-300"
             onClick={() => router.push(`/doctors/profile/${doctor.id}/message`)}
           >
             Message
           </button>
           <button
-            className="flex-1 bg-black text-white py-3 rounded-md font-semibold text-lg"
+            className="flex-1 bg-black text-white py-4 rounded-md font-semibold text-lg hover:bg-green-600 transition-colors duration-300"
             onClick={() => router.push(`/doctors/profile/${doctor.id}/reserve`)}
           >
             Reserve

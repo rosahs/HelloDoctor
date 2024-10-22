@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { MapPin } from 'lucide-react'; 
 import DoctorSearchForm from '@/components/DoctorSearchForm/page';
+import Footer from '@/components/footer/page'
 // import './HomePage.css';
 
 interface Doctor {
@@ -82,14 +83,18 @@ export default function HomePage() {
                 </div>
 
                 <Link href={`/doctors/profile/${doctor.id}`}>
-                  <button className="block mt-4 sm:mt-6 w-full text-center bg-blue-600 hover:bg-green-600 text-white text-base sm:text-lg font-bold py-2 sm:py-3 rounded-lg">
+                  <button className="block mt-4 sm:mt-6 w-full text-center bg-green-600 hover:bg-green-800 text-white text-base sm:text-lg font-bold py-2 sm:py-3 rounded-lg">
                     View Profile
                   </button>
                 </Link>
               </div>
             ))}
           </div>
+         
         </div>
+      </div>
+      <div className="mt-16">
+        <Footer />
       </div>
     </div>
   );

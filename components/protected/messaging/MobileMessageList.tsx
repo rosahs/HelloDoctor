@@ -140,6 +140,15 @@ const MobileMessageList = ({
   const isConversationRead = (
     conversation: Conversation
   ) => {
+    // If there are no messages the conversation is considered "unread"
+    if (
+      !conversation.messages ||
+      conversation.messages.length === 0
+    ) {
+      return false;
+    }
+
+    // Check if messages have been seen by the current user
     return conversation.messages.every((message) =>
       message.seenIds.includes(currentUserId)
     );
@@ -294,10 +303,12 @@ const MobileMessageList = ({
         </Tabs>
       </div>
       <ScrollArea className="flex-1">
-        {/* Use filteredConversationsSearch for rendering */}
-        {filteredConversations.map((conversation) => {
+        {filteredConversations?.map((conversation) => {
           const otherUser = getOtherUser(conversation);
-          const lastMessage = conversation.messages[0];
+          const lastMessage =
+            conversation.messages?.length > 0
+              ? conversation.messages[0]
+              : null;
           const isRead = isConversationRead(conversation);
 
           return (

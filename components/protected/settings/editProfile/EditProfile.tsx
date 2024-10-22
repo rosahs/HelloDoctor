@@ -34,15 +34,12 @@ import { UpdateProfileSchema } from "@/schemas";
 import { ExtendedUser } from "@/next-auth";
 import Avatar from "@/components/Avatar";
 
+type FormData = z.infer<typeof UpdateProfileSchema>;
 
 type Country = {
   code: string;
   name: string;
 };
-
-type FormData = z.infer<typeof UpdateProfileSchema>;
-
-
 
 export const UserProfileEditForm = ({
   isPatient,

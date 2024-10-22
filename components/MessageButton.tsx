@@ -18,7 +18,7 @@ const MessageButton = ({
   const [isLoading, setIsLoading] = useState(false);
   const userRole = useCurrentRole();
 
-  const role = userRole.toLowerCase();
+  const role = userRole?.toLowerCase();
 
   if (!doctorId) {
     return null;

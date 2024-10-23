@@ -1,25 +1,30 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { getDoctors } from '@/lib/doctors';
-import { Doctor } from '@/lib/doctors'
-
+import { Doctor } from '@/lib/doctors';
 
 export default async function DoctorSearchResults({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const searchCriteria: { [key: string]: string | undefined } = {};
+  const searchCriteria: { name?: string; specialization?: string; location?: string } = {};
 
-  Object.entries(searchParams).forEach(([key, value]) => {
-    if (typeof value === 'string' && value.trim() !== '') {
-      searchCriteria[key] = value;
-    }
-  });
+  // Check for correct parsing of search parameters
+  if (searchParams.name) {
+    searchCriteria.name = String(searchParams.name);
+  }
+  if (searchParams.specialty) { // Ensure this matches the form input key
+    searchCriteria.specialization = String(searchParams.specialty);
+  }
+  if (searchParams.location) {
+    searchCriteria.location = String(searchParams.location);
+  }
 
   try {
     const doctors: Doctor[] = await getDoctors(searchCriteria);
 
+    // Ensure doctors are being fetched based on the criteria
     if (doctors.length === 0) {
       return <p className="text-center text-gray-500 mt-8">No doctors found matching your search criteria.</p>;
     }

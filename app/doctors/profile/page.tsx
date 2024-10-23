@@ -1,73 +1,125 @@
-'use client';
+// 'use client'
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import DoctorSearchForm from '@/components/DoctorSearchForm/page';
-import DoctorCard from '@/components/doctor-card/page';
+// import Image from 'next/image';
+// import { useRouter } from 'next/navigation';
+// import { useEffect, useState } from 'react';
+// import Footer from '@/components/footer/page'
 
-interface Doctor {
-  id: string;
-  name: string;
-  specialty: string;
-  location: string;
-  imageUrl: string;
-  about: string;
-  experience: string;
-  languages: string;
-  rating: string;
-}
+// interface Doctor {
+//   id: string;
+//   name: string;
+//   specialty: string;
+//   imageUrl: string;
+//   about: string;
+//   specialties: string[];
+//   certifications: string[];
+//   experience: string[];
+//   languages: string[];
+// }
 
-export default function DoctorProfilePage() {
-  const [doctors, setDoctors] = useState<Doctor[]>([]);
+// export default function DoctorProfilePage({ params }: { params: { id: string } }) {
+//   const [doctor, setDoctor] = useState<Doctor | null>(null);
+//   const router = useRouter();
 
-  useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        const response = await fetch('/api/doctors/featured');
-        if (response.ok) {
-          const data = await response.json();
-          setDoctors(data);
-        } else {
-          console.error('Failed to fetch featured doctors');
-        }
-      } catch (error) {
-        console.error('Error fetching featured doctors:', error);
-      }
-    };
+//   useEffect(() => {
+//     // Fetch the doctor's details based on the ID from the URL
+//     const fetchDoctor = async () => {
+//       try {
+//         const response = await fetch(`/api/doctors/${params.id}`);
+//         if (response.ok) {
+//           const data = await response.json();
+//           setDoctor(data);
+//         } else {
+//           console.error('Failed to fetch doctor details');
+//         }
+//       } catch (error) {
+//         console.error('Error fetching doctor details:', error);
+//       }
+//     };
 
-    fetchDoctors();
-  }, []);
+//     fetchDoctor();
+//   }, [params.id]);
 
-  return (
-    <div className="relative min-h-screen">
-      <div className="absolute inset-0 bg-black bg-opacity-70 z-1"></div>
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 text-white">
-        <h1 className="text-3xl sm:text-5xl md:text-7xl font-extrabold text-center mb-4 sm:mb-8 leading-tight tracking-wide">
-          Find Your Doctor <br />
-          Anywhere in the W🌍rld
-        </h1>
-        <p className="text-lg sm:text-2xl md:text-3xl text-gray-300 text-center mb-6 sm:mb-8 max-w-3xl">
-          Connect with trusted doctors worldwide, access affordable medical care, and find the right specialist wherever you are.
-        </p>
+//   if (!doctor) {
+//     return <p className="text-center text-red-500">Loading doctor details...</p>;
+//   }
 
-        <div className="w-full max-w-4xl mb-8 sm:mb-12">
-          <Link href="/doctors/search">
-            <DoctorSearchForm />
-          </Link>
-        </div>
+//   return (
+//     <div className="min-h-screen bg-white text-black">
+//       <div className="max-w-4xl mx-auto px-4 py-8">
+//         <div className="flex flex-col md:flex-row items-center mb-8">
+//           <Image
+//             src={doctor.imageUrl || "/images/placeholder-doctor-image.jpg"}
+//             alt={doctor.name}
+//             width={200}
+//             height={200}
+//             className="mb-4 md:mb-0 md:mr-8"
+//           />
+//           <div className="text-center md:text-left">
+//             <h1 className="text-3xl font-bold">{doctor.name}</h1>
+//             <p className="text-xl text-gray-600">{doctor.specialty}</p>
+//           </div>
+//         </div>
 
-        <div className="w-full max-w-6xl mt-8 sm:mt-16">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-8 sm:mb-12">
-            Featured Doctors
-          </h2>
+//         <div className="flex space-x-4 mb-8">
+//           <button
+//             className="flex-1 bg-black text-white py-3 rounded-md font-semibold text-lg"
+//             onClick={() => router.push(`/doctors/profile/${doctor.id}/message`)}
+//           >
+//             Message
+//           </button>
+//           <button
+//             className="flex-1 bg-black text-white py-3 rounded-md font-semibold text-lg"
+//             onClick={() => router.push(`/doctors/profile/${doctor.id}/reserve`)}
+//           >
+//             Reserve
+//           </button>
+//         </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {doctors.map((doctor) => (
-              <DoctorCard key={doctor.id} doctor={doctor} />
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+//         <div className="mb-8 p-6 border rounded-lg bg-gray-50">
+//           <h2 className="text-2xl font-bold mb-4">About me</h2>
+//           <p className="text-gray-700">{doctor.about || 'No information available'}</p>
+//         </div>
+
+//         <div className="mb-8 p-6 border rounded-lg bg-gray-50">
+//           <h2 className="text-2xl font-bold mb-4">Specialties</h2>
+//           <ul className="list-disc list-inside text-gray-700">
+//             {doctor.specialties.length > 0 ? (
+//               doctor.specialties.map((specialty, index) => <li key={index}>{specialty}</li>)
+//             ) : (
+//               <p>No specialties available</p>
+//             )}
+//           </ul>
+//         </div>
+
+//         <div className="mb-8 p-6 border rounded-lg bg-gray-50">
+//           <h2 className="text-2xl font-bold mb-4">Certifications</h2>
+//           <ul className="list-disc list-inside text-gray-700">
+//             {doctor.certifications.length > 0 ? (
+//               doctor.certifications.map((cert, index) => <li key={index}>{cert}</li>)
+//             ) : (
+//               <p>No certifications available</p>
+//             )}
+//           </ul>
+//         </div>
+
+//         <div className="mb-8 p-6 border rounded-lg bg-gray-50">
+//           <h2 className="text-2xl font-bold mb-4">Professional Experience</h2>
+//           <ul className="list-disc list-inside text-gray-700">
+//             {doctor.experience.length > 0 ? (
+//               doctor.experience.map((exp, index) => <li key={index}>{exp}</li>)
+//             ) : (
+//               <p>No experience available</p>
+//             )}
+//           </ul>
+//         </div>
+
+//         <div className="mb-8 p-6 border rounded-lg bg-gray-50">
+//           <h2 className="text-2xl font-bold mb-4">Languages</h2>
+//           <p className="text-gray-700">{doctor.languages.length > 0 ? doctor.languages.join(', ') : 'No languages available'}</p>
+//         </div>
+//       </div>
+//       <Footer />
+//     </div>
+//   );
+// }

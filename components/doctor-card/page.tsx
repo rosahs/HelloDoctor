@@ -18,7 +18,7 @@ const DoctorCard: React.FC<DoctorCardProps> = ({ doctor }) => {
     <div className="bg-white text-black rounded-lg shadow-lg p-4 sm:p-6 transform hover:scale-105 transition-transform duration-300">
       <Image
         src={doctor.imageUrl || '/images/placeholder-doctor-image.jpg'} 
-        alt={doctor.name || 'Doctor Image'} // Added alt property to resolve the warning
+        alt={doctor.name || 'Doctor Image'}
         width={200}
         height={200}
         className="mx-auto object-cover"

@@ -31,9 +31,11 @@ export default function DoctorProfilePage({ params }: { params: { id: string } }
           setDoctor(data);
         } else {
           console.error('Failed to fetch doctor details');
+          setDoctor(null); // Set doctor to null on error
         }
       } catch (error) {
         console.error('Error fetching doctor details:', error);
+        setDoctor(null); // Set doctor to null on error
       }
     };
 
@@ -47,29 +49,29 @@ export default function DoctorProfilePage({ params }: { params: { id: string } }
   return (
     <div className="min-h-screen bg-white text-black">
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="flex flex-col md:flex-row items-center mb-8">
+        <div className="flex flex-col md:flex-row items-center mb-8 p-8 rounded-lg bg-cover bg-center h-80" style={{backgroundImage: "url('/images/2.jpg')"}}>
           <Image
             src={doctor.imageUrl || "/images/placeholder-doctor-image.jpg"}
             alt={doctor.name}
             width={200}
             height={200}
-            className="mb-4 md:mb-0 md:mr-8"
+            className="mb-4 md:mb-0 md:mr-8" 
           />
           <div className="text-center md:text-left">
-            <h1 className="text-3xl font-bold">{doctor.name}</h1>
-            <p className="text-xl text-gray-600">{doctor.specialty}</p>
+            <h1 className="text-3xl font-bold text-white">{doctor.name}</h1>
+            <p className="text-xl text-gray-200">{doctor.specialty}</p>
           </div>
         </div>
 
         <div className="flex space-x-4 mb-8">
           <button
-            className="flex-1 bg-black text-white py-4 rounded-md font-semibold text-lg hover:bg-green-600 transition-colors duration-300"
+            className="flex-1 bg-black text-white py-3 rounded-md font-semibold h-20 text-xl hover:bg-green-700 transition duration-300"
             onClick={() => router.push(`/doctors/profile/${doctor.id}/message`)}
           >
             Message
           </button>
           <button
-            className="flex-1 bg-black text-white py-4 rounded-md font-semibold text-lg hover:bg-green-600 transition-colors duration-300"
+            className="flex-1 bg-black text-white py-3 rounded-md font-semibold h-20 text-xl hover:bg-green-700 transition duration-300"
             onClick={() => router.push(`/doctors/profile/${doctor.id}/reserve`)}
           >
             Reserve

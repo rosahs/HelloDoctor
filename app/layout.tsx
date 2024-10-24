@@ -4,6 +4,7 @@ import "./globals.css";
 import { auth } from "@/auth";
 import { SessionProvider } from "next-auth/react";
 import NavComponent from "@/components/nav/NavComponent";
+import RoleSelection from "@/components/auth/RoleSelection";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,6 +23,20 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
+
+  if (session?.user?.isOAuth && !session?.user?.role) {
+    return (
+      <html lang="en">
+        <body
+          className={`${interFont.variable} bg-bgLight flex items-center justify-center  min-h-full sm:h-[calc(100svh-59.2px)] sm:min-h-0`}
+        >
+          <SessionProvider session={session}>
+            <RoleSelection />
+          </SessionProvider>
+        </body>
+      </html>
+    );
+  }
 
   return (
     <html lang="en">

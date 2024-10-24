@@ -101,7 +101,7 @@ export default function DoctorReservePage() {
       {/* Background Image */}
       <div className="fixed inset-0 z-0">
         <Image
-          src="/images/mapimage9.png"
+          src="/images/whiteglobe3.jpg"
           alt="Medical Background"
           layout="fill"
           objectFit="cover"

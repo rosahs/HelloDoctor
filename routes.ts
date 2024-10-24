@@ -49,6 +49,8 @@ export const DOCTOR_LOGIN_REDIRECT: string = "/";
 
 export const PATIENT_LOGIN_REDIRECT: string = "/";
 
+export const DEFAULT_LOGIN_REDIRECT: string = "/";
+
 /**
  * Redirect path for OAuth users to select their role
  * @type {string}

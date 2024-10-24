@@ -1,8 +1,5 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { getDoctorById } from "@/data/doctor";
-import { getPatientById } from "@/data/patient";
-import { getAccountByUserId } from "@/data/account";
 import { v2 as cloudinary } from "cloudinary";
 import { revalidatePath } from "next/cache";
 import { currentUser } from "@/lib/auth";
@@ -19,7 +16,6 @@ export async function DELETE(request: Request) {
 
     // Check if the user is authenticated
     const user = await currentUser();
-
     if (!user || user.id !== userId) {
       return NextResponse.json(
         { error: "User not authenticated or wrong userId" },
@@ -29,6 +25,10 @@ export async function DELETE(request: Request) {
 
     const userRecord = await db.user.findUnique({
       where: { id: userId },
+      include: {
+        doctor: true,
+        patient: true,
+      },
     });
 
     if (!userRecord) {
@@ -38,72 +38,86 @@ export async function DELETE(request: Request) {
       );
     }
 
-    // Delete user image from Cloudinary if exists
-    if (userRecord.image) {
-      const publicId = userRecord.image
-        .split("/")
-        .pop()
-        ?.split(".")[0];
-      console.log("Deleting user image:", publicId);
-      if (publicId) {
-        const result = await cloudinary.uploader.destroy(
-          `hello-doctor/${publicId}`
-        );
-        console.log("Cloudinary delete result:", result);
+    // Start a transaction to ensure all deletions happen atomically
+    await db.$transaction(async (prisma) => {
+      // Delete all appointments associated with the user first
+      if (userRecord.doctor?.length > 0) {
+        await prisma.appointment.deleteMany({
+          where: { doctorId: userRecord.doctor[0].id },
+        });
       }
-    }
 
-    // Delete doctor or patient data as applicable
-    if (userRecord.doctorId) {
-      const doctor = await getDoctorById(
-        userRecord.doctorId
-      );
-      if (doctor && doctor.images) {
-        for (const image of doctor.images) {
+      await prisma.appointment.deleteMany({
+        where: { userId: userId },
+      });
+
+      // Delete messages and conversation relationships
+      await prisma.message.deleteMany({
+        where: { senderId: userId },
+      });
+
+      await prisma.conversation.updateMany({
+        where: { userIds: { has: userId } },
+        data: { userIds: { set: [] } },
+      });
+
+      // Delete two factor confirmation
+      await prisma.twoFactorConfirmation.deleteMany({
+        where: { userId: userId },
+      });
+
+      // Delete any associated accounts
+      await prisma.account.deleteMany({
+        where: { userId: userId },
+      });
+
+      // Delete doctor profile if exists
+      if (userRecord.doctor?.length > 0) {
+        const doctorImages =
+          userRecord.doctor[0].images || [];
+        for (const image of doctorImages) {
           const publicId = image
             .split("/")
             .pop()
             ?.split(".")[0];
-          console.log("Deleting doctor image:", publicId);
           if (publicId) {
-            const result =
-              await cloudinary.uploader.destroy(
-                `hello-doctor/${publicId}`
-              );
-            console.log(
-              "Cloudinary delete result:",
-              result
+            await cloudinary.uploader.destroy(
+              `hello-doctor/${publicId}`
             );
           }
         }
-        await db.doctor.delete({
-          where: { id: userRecord.doctorId },
+        await prisma.doctor.deleteMany({
+          where: { userId: userId },
         });
       }
-    } else if (userRecord.patientId) {
-      const patient = await getPatientById(
-        userRecord.patientId
-      );
-      if (patient) {
-        await db.patient.delete({
-          where: { id: userRecord.patientId },
-        });
-      }
-    }
 
-    // Delete associated account and the user record
-    const account = await getAccountByUserId(userId);
-    if (account) {
-      await db.account.delete({
-        where: { id: account.id },
+      // Delete patient profile if exists
+      if (userRecord.patient?.length > 0) {
+        await prisma.patient.deleteMany({
+          where: { userId: userId },
+        });
+      }
+
+      // Delete user's profile image from Cloudinary
+      if (userRecord.image) {
+        const publicId = userRecord.image
+          .split("/")
+          .pop()
+          ?.split(".")[0];
+        if (publicId) {
+          await cloudinary.uploader.destroy(
+            `hello-doctor/${publicId}`
+          );
+        }
+      }
+
+      // Delete the user
+      await prisma.user.delete({
+        where: { id: userId },
       });
-    }
-
-    // Delete user
-    await db.user.delete({ where: { id: userId } });
+    });
 
     revalidatePath("/");
-
     return NextResponse.json({
       success: "Account deleted successfully",
     });

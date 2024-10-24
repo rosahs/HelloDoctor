@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createConversation } from "@/actions/messaging/conversation";
 import { useCurrentRole } from "@/hooks/useCurrentRole";
@@ -42,12 +41,11 @@ const MessageButton = ({
   return (
     <Button
       onClick={handleClick}
-      className="flex items-center gap-2"
+      className="flex-1 bg-black text-white h-14 rounded-md font-semibold text-lg hover:bg-green-600 transition-colors duration-300"
       variant="default"
       disabled={isLoading}
     >
-      <MessageCircle className="h-4 w-4" />
-      {isLoading ? "Loading..." : "Send Message"}
+      {isLoading ? "Loading..." : "Message"}
     </Button>
   );
 };

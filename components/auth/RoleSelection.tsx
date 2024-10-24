@@ -1,7 +1,7 @@
 "use client";
 
 import * as z from "zod";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -30,7 +30,7 @@ import { RoleSelectionSchema } from "@/schemas";
 
 const RoleSelection = () => {
   const router = useRouter();
-  const { update } = useSession();
+  const { update, data: session } = useSession();
   const [error, setError] = useState<string | undefined>(
     ""
   );
@@ -41,6 +41,16 @@ const RoleSelection = () => {
   const [activeRole, setActiveRole] = useState<UserRole>(
     UserRole.PATIENT
   );
+
+  useEffect(() => {
+    if (session?.user?.role) {
+      const redirectTo =
+        session.user.role === UserRole.DOCTOR
+          ? DOCTOR_LOGIN_REDIRECT
+          : PATIENT_LOGIN_REDIRECT;
+      router.replace(redirectTo);
+    }
+  }, [session, router]);
 
   const form = useForm<z.infer<typeof RoleSelectionSchema>>(
     {
@@ -87,7 +97,8 @@ const RoleSelection = () => {
 
           await update();
 
-          router.replace(redirectTo);
+          // Force a hard navigation
+          window.location.href = redirectTo;
         } else {
           setError(result.error);
         }

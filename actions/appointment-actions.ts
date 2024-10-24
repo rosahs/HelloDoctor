@@ -11,6 +11,7 @@ export async function getDoctors() {
             id: true,
             email: true,
             name: true,
+            image: true,
           },
         },
       },

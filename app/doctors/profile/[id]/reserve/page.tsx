@@ -98,8 +98,20 @@ export default function DoctorReservePage() {
 
   return (
     <div className="min-h-screen flex justify-center items-center p-4 relative">
-      <div className="w-full max-w-2xl relative z-10 bg-black rounded-lg shadow-xl overflow-hidden">
-        <div className="relative z-10">
+      {/* Background Image */}
+      <div className="fixed inset-0 z-0">
+        <Image
+          src="/images/whiteglobe3.jpg"
+          alt="Medical Background"
+          layout="fill"
+          objectFit="cover"
+          quality={100}
+        />
+      </div>
+      {/* Overlay */}
+      <div className="fixed inset-0 bg-black opacity-20 z-10"></div>
+      <div className="w-full max-w-2xl relative z-20 bg-black bg-opacity-80 rounded-lg shadow-xl overflow-hidden">
+        <div className="relative z-30">
           <h2 className="text-4xl font-bold mb-6 text-white text-center pt-6">Reserve an Appointment</h2>
           <form onSubmit={handleSubmit} className="rounded-lg px-8 pt-6 pb-8 mb-4">
             <div className="text-center mb-6">
@@ -114,7 +126,7 @@ export default function DoctorReservePage() {
               />
               <h3 className="text-2xl text-green-600 font-bold">{doctor.name}</h3>
               <p className="text-xl text-white">{doctor.specialization}</p>
-              <p className="mt-2 text-md text-gray-500">{doctor.aboutMe}</p>
+              <p className="mt-2 text-md text-gray-300">{doctor.aboutMe}</p>
             </div>
             <div className="mb-4">
               <label className="block text-white text-xl font-bold mb-2">Select Date</label>

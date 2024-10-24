@@ -40,12 +40,14 @@ export default function DoctorProfilePage({
           setDoctor(data);
         } else {
           console.error("Failed to fetch doctor details");
+          setDoctor(null); // Set doctor to null on error
         }
       } catch (error) {
         console.error(
           "Error fetching doctor details:",
           error
         );
+        setDoctor(null); // Set doctor to null on error
       }
     };
 
@@ -63,7 +65,12 @@ export default function DoctorProfilePage({
   return (
     <div className="min-h-screen bg-white text-black">
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="flex flex-col md:flex-row items-center mb-8">
+        <div
+          className="flex flex-col md:flex-row items-center mb-8 p-8 rounded-lg bg-cover bg-center h-80"
+          style={{
+            backgroundImage: "url('/images/2.jpg')",
+          }}
+        >
           <Image
             src={
               doctor.user?.image ||
@@ -75,10 +82,10 @@ export default function DoctorProfilePage({
             className="mb-4 md:mb-0 md:mr-8"
           />
           <div className="text-center md:text-left">
-            <h1 className="text-3xl font-bold">
+            <h1 className="text-3xl font-bold text-white">
               {doctor.name}
             </h1>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-gray-200">
               {doctor.specialty}
             </p>
           </div>

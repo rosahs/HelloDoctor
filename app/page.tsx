@@ -43,23 +43,29 @@ export default function HomePage() {
 
   return (
     <div className="relative min-h-screen">
-      <div className="absolute inset-0 bg-black bg-opacity-70 z-1"></div>
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 text-white">
-        <h1 className="text-3xl sm:text-5xl md:text-7xl font-extrabold text-center mb-4 sm:mb-8 leading-tight tracking-wide">
-          Find Your Doctor <br />
-          Anywhere in the W🌍rld
-        </h1>
-        <p className="text-lg sm:text-2xl md:text-3xl text-gray-300 text-center mb-6 sm:mb-8 max-w-3xl">
-          Connect with trusted doctors worldwide, access affordable medical care, and find the right specialist wherever you are.
-        </p>
+      <div 
+        className="fixed inset-0 bg-cover bg-center z-0"
+        style={{
+          backgroundImage: "url('/images/9globe.jpg')",
+        }}
+      ></div>
+      <div className="fixed inset-0 bg-black bg-opacity-40 z-1"></div>
+      <div className="relative z-10 flex flex-col items-center justify-start min-h-screen px-4 sm:px-6 text-white overflow-y-auto">
+        <div className="w-full max-w-6xl mt-16 sm:mt-24">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-extrabold text-center mb-4 sm:mb-8 leading-tight tracking-wide">
+            Find Your Doctor <br />
+            Anywhere in the W🌍rld
+          </h1>
+          <p className="text-lg sm:text-2xl md:text-3xl text-gray-300 text-center mb-6 sm:mb-8 max-w-3xl mx-auto">
+            Connect with trusted doctors worldwide, access affordable medical care, and find the right specialist wherever you are.
+          </p>
 
-        <div className="w-full max-w-4xl mb-8 sm:mb-12">
-          <Link href="/doctors/search">
-            <DoctorSearchForm />
-          </Link>
-        </div>
+          <div className="w-full max-w-4xl mb-8 sm:mb-12 mx-auto">
+            <Link href="/doctors/search">
+              <DoctorSearchForm />
+            </Link>
+          </div>
 
-        <div className="w-full max-w-6xl mt-8 sm:mt-16">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-8 sm:mb-12">
             Featured Doctors
           </h2>
@@ -68,12 +74,12 @@ export default function HomePage() {
             {doctors.map((doctor) => (
               <div key={doctor.id} className="bg-white text-black rounded-lg shadow-lg p-4 sm:p-6 transform hover:scale-105 transition-transform duration-300">
                 <Image
-                  src={doctor.imageUrl} 
-                  alt={doctor.name}
-                  width={200}
-                  height={200}
-                  className="mx-auto object-cover"
-                />
+                    src={doctor.imageUrl ? doctor.imageUrl : '/images/placeholder-doctor-image.jpg'}
+                    alt={doctor.name ? doctor.name : 'Doctor'}
+                    width={200}
+                    height={200}
+                    className="mx-auto object-cover"
+                  />
                 <h3 className="text-xl sm:text-2xl font-bold text-gray-800 text-center mt-3 sm:mt-4">{doctor.name}</h3>
                 <p className="text-center text-gray-600 text-sm sm:text-base">{doctor.specialty}</p>
                 
@@ -83,18 +89,17 @@ export default function HomePage() {
                 </div>
 
                 <Link href={`/doctors/profile/${doctor.id}`}>
-                  <button className="block mt-4 sm:mt-6 w-full text-center bg-green-600 hover:bg-green-800 text-white text-base sm:text-lg font-bold py-2 sm:py-3 rounded-lg">
+                  <button className="block mt-4 sm:mt-6 w-full text-center bg-blue-900 hover:bg-green-700 text-white text-base sm:text-lg font-bold py-2 sm:py-3 rounded-lg">
                     View Profile
                   </button>
                 </Link>
               </div>
             ))}
           </div>
-         
         </div>
-      </div>
-      <div className="mt-16">
-        <Footer />
+        <div className="mt-16 w-full">
+          <Footer />
+        </div>
       </div>
     </div>
   );

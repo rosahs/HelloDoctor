@@ -23,12 +23,12 @@ const Footer = () => {
       
       <div className="mb-4">
         <h3 className="font-semibold mb-2">Contact Us</h3>
-        <p>Email: support@docfinder.com</p>
+        <p>Email: support@HelloDoctor.com</p>
         <p>Phone: 3498134803134809</p>
       </div>
       
       <div className="text-xs text-gray-400">
-        © 2024 FindMyDoc. All rights reserved.
+        © 2024 HelloDoctor. All rights reserved.
       </div>
     </footer>
   );

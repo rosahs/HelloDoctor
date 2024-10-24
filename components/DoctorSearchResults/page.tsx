@@ -35,7 +35,7 @@ export default async function DoctorSearchResults({
           <Link key={doctor.id} href={`/doctors/profile/${doctor.id}`} passHref>
             <div className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow duration-300">
               <Image
-                src={doctor.images[0]}
+                src={doctor.images && doctor.images[0] ? doctor.images[0] : '/images/placeholder-doctor-image.jpg'}
                 alt={`Doctor specializing in ${doctor.specialization}`}
                 width={300}
                 height={200}

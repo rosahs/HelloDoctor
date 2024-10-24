@@ -43,12 +43,7 @@ export default function HomePage() {
 
   return (
     <div className="relative min-h-screen">
-      <div 
-        className="fixed inset-0 bg-cover bg-center z-0"
-        style={{
-          backgroundImage: "url('/images/9globe.jpg')",
-        }}
-      ></div>
+      <div className="fixed inset-0 bg-cover bg-center z-0" style={{ backgroundImage: "url('/images/9globe.jpg')" }}></div>
       <div className="fixed inset-0 bg-black bg-opacity-40 z-1"></div>
       <div className="relative z-10 flex flex-col items-center justify-start min-h-screen px-4 sm:px-6 text-white overflow-y-auto">
         <div className="w-full max-w-6xl mt-16 sm:mt-24">
@@ -61,9 +56,7 @@ export default function HomePage() {
           </p>
 
           <div className="w-full max-w-4xl mb-8 sm:mb-12 mx-auto">
-            <Link href="/doctors/search">
-              <DoctorSearchForm />
-            </Link>
+            <DoctorSearchForm />
           </div>
 
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-8 sm:mb-12">
@@ -79,10 +72,10 @@ export default function HomePage() {
                     width={200}
                     height={200}
                     className="mx-auto object-cover"
-                  />
+                />
                 <h3 className="text-xl sm:text-2xl font-bold text-gray-800 text-center mt-3 sm:mt-4">{doctor.name}</h3>
                 <p className="text-center text-gray-600 text-sm sm:text-base">{doctor.specialty}</p>
-                
+
                 <div className="flex justify-center text-gray-600 items-center mt-3 sm:mt-4">
                   <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 mr-2" />
                   <span className="text-sm sm:text-base">{doctor.location}</span>

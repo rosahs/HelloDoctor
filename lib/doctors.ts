@@ -1,5 +1,5 @@
 import { db } from '@/lib/db';
-import { Prisma, Doctor as PrismaDoctor } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 interface Doctor {
   id: string;

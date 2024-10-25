@@ -48,7 +48,7 @@ export default function HomePage() {
       <div className="relative z-10 flex flex-col items-center justify-start min-h-screen px-4 sm:px-6 text-white overflow-y-auto">
         <div className="w-full max-w-6xl mt-16 sm:mt-24">
         <h1 className="text-3xl sm:text-5xl md:text-7xl font-extrabold text-center mb-4 sm:mb-8 leading-tight tracking-wide">
-  Find Your Doctor <br />
+  Find Your <span className="text-blue-900 weight-bold text-4xl sm:text-6xl md:text-7xl">Doctor</span> <br />
   Anywhere in the <span style={{ display: 'inline-flex', alignItems: 'center' }}>
     W<span style={{ display: 'inline-block', width: 0 }} />
     <Image 
@@ -94,7 +94,7 @@ export default function HomePage() {
                 </div>
 
                 <Link href={`/doctors/profile/${doctor.id}`}>
-                  <button className="block mt-4 sm:mt-6 w-full text-center bg-gray-900 hover:bg-blue-700 text-white text-base sm:text-lg font-bold py-2 sm:py-3 rounded-lg">
+                  <button className="block mt-4 sm:mt-6 w-full text-center bg-gray-900 hover:bg-blue-800 text-white text-base sm:text-lg font-bold py-2 sm:py-3 rounded-lg">
                     View Profile
                   </button>
                 </Link>

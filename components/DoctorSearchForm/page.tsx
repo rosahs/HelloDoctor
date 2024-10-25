@@ -66,7 +66,7 @@ const DoctorSearchForm = () => {
       {/* Search Button */}
       <button
         type="submit"
-        className="mt-4 px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 shadow-lg shadow-black"
+        className="mt-4 px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-blue-800 focus:outline-none focus:ring-2 shadow-lg shadow-black"
       >
         Search
       </button>

@@ -42,10 +42,8 @@ export default async function DoctorSearchResults({
                 className="w-full h-48 object-cover"
               />
               <div className="p-4">
-                <h2 className="text-xl font-semibold mb-2">{doctor.specialization}</h2>
-                <p className="text-gray-500 text-sm mb-2 line-clamp-3">{doctor.aboutMe}</p>
-                <p className="text-gray-500 text-sm mb-2">Experience: {doctor.professionalExperience}</p>
-                <p className="text-gray-500 text-sm">Languages: {doctor.languages}</p>
+                <h2 className="text-xl font-semibold mb-2">{doctor.user?.name}</h2>
+                <p className="text-gray-500 text-sm mb-2">Specialization: {doctor.specialization}</p>
               </div>
             </div>
           </Link>

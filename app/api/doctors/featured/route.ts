@@ -6,7 +6,21 @@ import { db } from '@/lib/db';
 export async function GET() {
   try {
     const featuredDoctors = await db.doctor.findMany({
-      take: 5, // Limit to 5 featured doctors
+      take: 5,
+      select : {
+        id:true,
+        specialization:true,
+        images:true,
+        aboutMe:true,
+        professionalExperience:true,
+        languages:true,
+        user: {
+          select: {
+            name:true,
+            email:true,
+          }
+        }
+      }
     });
 
     return NextResponse.json(featuredDoctors);

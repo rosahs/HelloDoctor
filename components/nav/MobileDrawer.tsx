@@ -4,7 +4,6 @@ import { MdOutlineClose } from "react-icons/md";
 import Link from "next/link";
 import styles from "./MobileDrawer.module.css";
 import LogoLink from "./LogoLink";
-
 import NavLink from "./NavLink";
 import LogoutButtonItem from "./LogoutButtonItem";
 import { doctorLinks, patientLinks } from "./NavLinks";
@@ -12,27 +11,24 @@ import { ExtendedUser } from "@/next-auth";
 import { useDrawerStore } from "@/store/drawerStore";
 import Avatar from "../Avatar";
 
-function MobileDrawer({
-  user,
-}: {
-  user: ExtendedUser | undefined;
-}) {
+function MobileDrawer({ user }: { user: ExtendedUser | undefined }) {
   const { isDrawerOpen, closeDrawer } = useDrawerStore();
 
-  const loggedInLinks =
-    user?.role === "DOCTOR" ? doctorLinks : patientLinks;
+  const loggedInLinks = user?.role === "DOCTOR" ? doctorLinks : patientLinks;
 
   return (
     <div
       className={`bg-bgLight ${styles.drawer} ${
-        isDrawerOpen
-          ? styles.drawerOpen
-          : styles.drawerClosed
+        isDrawerOpen ? styles.drawerOpen : styles.drawerClosed
       }`}
+      style={{
+        backgroundColor: "white",
+        backgroundImage: "url(/images/earthglobe.jpg)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
-      <div
-        className={`${styles.drawerHeader} py-mobileY px-mobileX`}
-      >
+      <div className={`${styles.drawerHeader} py-mobileY px-mobileX`}>
         <LogoLink />
         <button
           className={`${styles.closeButton} text-dark-hover`}
@@ -46,19 +42,11 @@ function MobileDrawer({
       {user ? (
         <div className={styles.navUser}>
           <Link href="/" className={styles.navUserLink}>
-            <Avatar
-              user={user}
-              width={55}
-              height={55}
-              className="mr-3"
-            />
-
+            <Avatar user={user} width={150} height={150} className="mr-3" />
             <div className={styles.userInfo}>
-              <span className="text-lg text">
-                {user.name}
-              </span>
+              <span className="text-2xl text">{user?.name || "Guest"}</span>
               <span className="text-sm text-textLight">
-                {user.doctor?.specialization || user.role}
+                {user?.doctor?.specialization || user?.role}
               </span>
             </div>
           </Link>
@@ -102,7 +90,7 @@ function MobileDrawer({
           </ul>
         )}
 
-        <hr className={styles.separator} />
+        {/* <hr className={styles.separator} /> */}
 
         {/* APP nav */}
         <ul className={styles.navList}>
@@ -113,20 +101,20 @@ function MobileDrawer({
             onClick={closeDrawer}
           />
           <NavLink
-            link="/search"
+            link="/doctors/search"
             label="Find a Doctor"
             className={styles.navItem}
             onClick={closeDrawer}
           />
           <NavLink
-            link="/search"
+            link="/doctors/search"
             label="Find a Dentist"
             className={styles.navItem}
             onClick={closeDrawer}
           />
         </ul>
 
-        <hr className={styles.separator} />
+        {/* <hr className={styles.separator} /> */}
 
         <ul className={styles.navList}>
           <NavLink

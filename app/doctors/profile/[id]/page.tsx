@@ -95,7 +95,7 @@ export default function DoctorProfilePage({
           <MessageButton doctorId={doctor.user?.id} />
 
           <button
-            className="flex-1 bg-black px-3 text-white h-14 rounded-md font-semibold text-lg hover:bg-green-600 transition-colors duration-300"
+            className="flex-1 bg-black px-3 text-white h-14 rounded-md font-semibold text-lg hover:bg-blue-800 transition-colors duration-300"
             onClick={() =>
               router.push(
                 `/doctors/profile/${doctor.id}/reserve`

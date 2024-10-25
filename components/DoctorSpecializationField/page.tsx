@@ -48,12 +48,15 @@ export function DoctorSpecializationField({ form, activeRole, onFilterChange }: 
     <FormField
       control={form.control}
       name="specialization"
-      render={() => (
+      render={({ field }) => (
         <FormItem>
           <FormLabel>Specialization</FormLabel>
           <Select
-            onValueChange={handleSpecializationChange}
-            value={form.getValues("specialization") || ''}
+            onValueChange={(value) => {
+              field.onChange(value);
+              handleSpecializationChange(value);
+            }}
+            value={field.value || ''}
           >
             <FormControl>
               <SelectTrigger>

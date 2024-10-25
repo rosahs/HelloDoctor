@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { Calendar } from "@/components/ui/calendar";
 import 'react-calendar/dist/Calendar.css';
 import { useSession } from "next-auth/react";
+import Footer from '@/components/footer/page'
 
 interface Doctor {
   id: string;
@@ -101,7 +102,7 @@ export default function DoctorReservePage() {
       {/* Background Image */}
       <div className="fixed inset-0 z-0">
         <Image
-          src="/images/whiteglobe3.jpg"
+          src="/images/8.png"
           alt="Medical Background"
           layout="fill"
           objectFit="cover"
@@ -169,6 +170,7 @@ export default function DoctorReservePage() {
             </div>
           </form>
         </div>
+        <Footer />
       </div>
     </div>
   );

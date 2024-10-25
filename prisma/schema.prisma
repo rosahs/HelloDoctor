@@ -119,7 +119,7 @@ model Doctor {
   certifications         String?
   professionalExperience String?
   languages              String?
-
+  isFeatured             Boolean   @default(false)
   user               User? @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId             String?  @db.ObjectId @map("user_id")
   appointments       Appointment[]

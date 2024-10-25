@@ -101,7 +101,7 @@ export default function DoctorReservePage() {
       {/* Background Image */}
       <div className="fixed inset-0 z-0">
         <Image
-          src="/images/whiteglobe3.jpg"
+          src="/images/grad.jpg"
           alt="Medical Background"
           layout="fill"
           objectFit="cover"
@@ -124,7 +124,7 @@ export default function DoctorReservePage() {
                 unoptimized
                 priority
               />
-              <h3 className="text-2xl text-green-600 font-bold">{doctor.name}</h3>
+              <h3 className="text-2xl text-gray-500 font-bold mt-8">{doctor.name}</h3>
               <p className="text-xl text-white">{doctor.specialization}</p>
               <p className="mt-2 text-md text-gray-300">{doctor.aboutMe}</p>
             </div>
@@ -162,7 +162,7 @@ export default function DoctorReservePage() {
             <div className="flex items-center justify-center">
               <button
                 type="submit"
-                className="bg-green-600 hover:bg-blue-800 text-white text-xl font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="bg-blue-700 hover:bg-blue-800 text-white text-xl font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               >
                 Book Appointment
               </button>

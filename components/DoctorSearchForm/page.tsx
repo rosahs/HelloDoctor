@@ -22,8 +22,7 @@ const DoctorSearchForm = () => {
   };
 
   // Show the specialty selection modal
-  const handleSpecialtyClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault(); // Prevent form submission
+  const handleSpecialtyClick = () => {
     setShowModal(true);
   };
 
@@ -42,17 +41,18 @@ const DoctorSearchForm = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Doctor's name"
-          className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black shadow-sm"
         />
 
-        {/* Specialty Button (Replaces Input to Prevent Form Submission) */}
-        <button
-          type="button"
-          onClick={handleSpecialtyClick}
-          className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer text-left bg-white"
-        >
-          {specialty || "Select Specialty"}
-        </button>
+        {/* Specialty Input */}
+        <input
+          type="text"
+          value={specialty}
+          onFocus={handleSpecialtyClick}
+          readOnly
+          placeholder="Select Specialty"
+          className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer text-black shadow-sm"
+        />
 
         {/* Input for Location */}
         <input
@@ -60,14 +60,13 @@ const DoctorSearchForm = () => {
           value={location}
           onChange={(e) => setLocation(e.target.value)}
           placeholder="Location"
-          className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none"
+          className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black shadow-sm"
         />
       </div>
-
       {/* Search Button */}
       <button
         type="submit"
-        className="mt-4 px-6 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2"
+        className="mt-4 px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-blue-800 focus:outline-none focus:ring-2 shadow-lg shadow-black"
       >
         Search
       </button>

@@ -66,9 +66,9 @@ export default function DoctorProfilePage({
     <div className="min-h-screen bg-white text-black">
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div
-          className="flex flex-col md:flex-row items-center mb-8 p-8 rounded-lg bg-cover bg-center h-80"
+          className="flex flex-col md:flex-row items-center mb-8 p-8 rounded-lg bg-cover bg-center h-80 shadow-lg"
           style={{
-            backgroundImage: "url('/images/2.jpg')",
+            backgroundImage: "url('/images/h1.png')",
           }}
         >
           <Image
@@ -82,7 +82,7 @@ export default function DoctorProfilePage({
             className="mb-4 md:mb-0 md:mr-8"
           />
           <div className="text-center md:text-left">
-            <h1 className="text-3xl font-bold text-white">
+            <h1 className="text-3xl font-bold text-gray-800">
               {doctor.name}
             </h1>
             <p className="text-xl text-gray-200">
@@ -91,11 +91,13 @@ export default function DoctorProfilePage({
           </div>
         </div>
 
-        <div className="flex space-x-4 mb-8">
-          <MessageButton doctorId={doctor.user?.id} />
+        <div className="flex space-x-4 mb-8 shadow-md">
+          <MessageButton 
+            doctorId={doctor.user?.id}
+          />
 
           <button
-            className="flex-1 bg-black px-3 text-white h-14 rounded-md font-semibold text-lg hover:bg-blue-800 transition-colors duration-300"
+            className="flex-1 bg-black px-3 text-white h-14 rounded-md font-semibold text-lg hover:bg-custom-green transition-colors duration-300 active:translate-y-0.5 active:shadow-inner"
             onClick={() =>
               router.push(
                 `/doctors/profile/${doctor.id}/reserve`
@@ -106,7 +108,7 @@ export default function DoctorProfilePage({
           </button>
         </div>
 
-        <div className="mb-8 p-6 border rounded-lg bg-gray-50">
+        <div className="mb-8 p-6 border rounded-lg bg-gray-50 shadow-md">
           <h2 className="text-2xl font-bold mb-4">
             About me
           </h2>
@@ -115,7 +117,7 @@ export default function DoctorProfilePage({
           </p>
         </div>
 
-        <div className="mb-8 p-6 border rounded-lg bg-gray-50">
+        <div className="mb-8 p-6 border rounded-lg bg-gray-50 shadow-md">
           <h2 className="text-2xl font-bold mb-4">
             Specialties
           </h2>
@@ -130,7 +132,7 @@ export default function DoctorProfilePage({
           </ul>
         </div>
 
-        <div className="mb-8 p-6 border rounded-lg bg-gray-50">
+        <div className="mb-8 p-6 border rounded-lg bg-gray-50 shadow-md">
           <h2 className="text-2xl font-bold mb-4">
             Certifications
           </h2>
@@ -145,7 +147,7 @@ export default function DoctorProfilePage({
           </ul>
         </div>
 
-        <div className="mb-8 p-6 border rounded-lg bg-gray-50">
+        <div className="mb-8 p-6 border rounded-lg bg-gray-50 shadow-md">
           <h2 className="text-2xl font-bold mb-4">
             Professional Experience
           </h2>
@@ -160,7 +162,7 @@ export default function DoctorProfilePage({
           </ul>
         </div>
 
-        <div className="mb-8 p-6 border rounded-lg bg-gray-50">
+        <div className="mb-8 p-6 border rounded-lg bg-gray-50 shadow-md">
           <h2 className="text-2xl font-bold mb-4">
             Languages
           </h2>

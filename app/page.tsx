@@ -9,7 +9,7 @@ import DoctorCard from '@/components/doctor-card/page'
 export default function HomePage() {
   return (
     <div className="relative min-h-screen">
-      <div className="fixed inset-0 bg-cover bg-center z-0" style={{ backgroundImage: "url('/images/hosp.png')" }}></div>
+      <div className="fixed inset-0 bg-cover bg-center z-0" style={{ backgroundImage: "url('/images/surg.png')" }}></div>
       <div className="fixed inset-0 bg-black bg-opacity-70 z-1"></div>
       <div className="relative z-10 flex flex-col items-center justify-start min-h-screen px-4 sm:px-6 text-white overflow-y-auto">
         <div className="w-full max-w-6xl mt-16 sm:mt-24">

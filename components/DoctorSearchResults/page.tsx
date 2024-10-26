@@ -18,6 +18,7 @@ interface DoctorCardProps {
   profileUrl: string;
 }
 
+// DoctorSearchResults component
 export default function DoctorSearchResults({ searchParams }: DoctorSearchResultsProps) {
   const [doctors, setDoctors] = useState<DoctorCardProps[]>([]);
   const [loading, setLoading] = useState(true);
@@ -35,7 +36,7 @@ export default function DoctorSearchResults({ searchParams }: DoctorSearchResult
             name: doctor.user?.name ?? "Unknown",
             specialty: doctor.specialization ?? "Not specified",
             imageUrl: doctor.images?.[0] || '/images/placeholder-doctor-image.jpg',
-            profileUrl: `/doctors/profile/${doctor.id}`,
+            profileUrl: `/doctors/${doctor.specialization.toLowerCase().replace(/ /g, '-')}/${doctor.id}`,
           }));
           setDoctors(doctorCards);
         } else {
@@ -60,7 +61,7 @@ export default function DoctorSearchResults({ searchParams }: DoctorSearchResult
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {doctors.map((doctor) => (
         <DoctorCard
           key={doctor.id}
@@ -74,4 +75,5 @@ export default function DoctorSearchResults({ searchParams }: DoctorSearchResult
         />
       ))}
     </div>
-  )};
+  );
+}

@@ -8,7 +8,9 @@ export const publicRoutes: string[] = [
   "/doctor/public-profile",
   "/doctors/search",
   "/doctors/profile",
-  "/api/doctors/featured"
+  "/api/doctors/featured",
+
+  "/doctors/search/specialities/cardiology"
 ];
 
 /**  An array of routes that are used for authentication

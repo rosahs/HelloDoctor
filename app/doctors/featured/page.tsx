@@ -1,14 +1,9 @@
-// app/components/DoctorSearchResults/page.tsx
-
+// app/doctors/featured/page.tsx
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import DoctorCard from '@/components/doctor-card/page';
 import { Doctor } from '@/lib/doctors';
-
-interface DoctorSearchResultsProps {
-  searchParams: { [key: string]: string | string[] | undefined };
-}
 
 interface DoctorCardProps {
   id: string;
@@ -18,19 +13,17 @@ interface DoctorCardProps {
   profileUrl: string;
 }
 
-export default function DoctorSearchResults({ searchParams }: DoctorSearchResultsProps) {
+export default function FeaturedDoctors() {
   const [doctors, setDoctors] = useState<DoctorCardProps[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const queryParams = new URLSearchParams(searchParams as Record<string, string>);
-        const response = await fetch(`/api/doctors/search?${queryParams.toString()}`);
-
+        const response = await fetch('/api/doctors/featured');
         if (response.ok) {
-          const data = await response.json();
-          const doctorCards: DoctorCardProps[] = data.map((doctor: Doctor) => ({
+          const data: Doctor[] = await response.json();
+          const doctorCards: DoctorCardProps[] = data.map((doctor) => ({
             id: doctor.id,
             name: doctor.user?.name ?? "Unknown",
             specialty: doctor.specialization ?? "Not specified",
@@ -39,24 +32,24 @@ export default function DoctorSearchResults({ searchParams }: DoctorSearchResult
           }));
           setDoctors(doctorCards);
         } else {
-          console.error("Failed to fetch doctors");
+          console.error("Failed to fetch featured doctors");
         }
       } catch (error) {
-        console.error("Error fetching doctors:", error);
+        console.error("Error fetching featured doctors:", error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchDoctors();
-  }, [searchParams]);
+  }, []);
 
   if (loading) {
-    return <p className="text-center text-gray-500 mt-8">Loading doctors...</p>;
+    return <p className="text-center text-gray-500 mt-8">Loading featured doctors...</p>;
   }
 
   if (doctors.length === 0) {
-    return <p className="text-center text-gray-500 mt-8">No doctors found matching your search criteria.</p>;
+    return <p className="text-center text-gray-500 mt-8">No featured doctors available at this time.</p>;
   }
 
   return (

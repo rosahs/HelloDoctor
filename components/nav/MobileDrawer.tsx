@@ -23,7 +23,7 @@ function MobileDrawer({ user }: { user: ExtendedUser | undefined }) {
       }`}
       style={{
         backgroundColor: "white",
-        backgroundImage: "url(/images/earthglobe.jpg)",
+        backgroundImage: "url(/images/steth2.png)",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
@@ -44,8 +44,8 @@ function MobileDrawer({ user }: { user: ExtendedUser | undefined }) {
           <Link href="/" className={styles.navUserLink}>
             <Avatar user={user} width={150} height={150} className="mr-3" />
             <div className={styles.userInfo}>
-              <span className="text-2xl text">{user?.name || "Guest"}</span>
-              <span className="text-sm text-textLight">
+              <span className="text-3xl text-custom-green text">{user?.name || "Guest"}</span>
+              <span className="text-sm text-gray-300">
                 {user?.doctor?.specialization || user?.role}
               </span>
             </div>
@@ -67,11 +67,11 @@ function MobileDrawer({ user }: { user: ExtendedUser | undefined }) {
               onClick={closeDrawer}
             />
           </ul>
-          <hr className={styles.separator} />
+          {/* <hr className={styles.separator} /> */}
         </>
       )}
 
-      <div className="text-textGray">
+      <div className="text-white">
         {user && (
           <ul className={styles.navList}>
             {loggedInLinks.map((link) => (

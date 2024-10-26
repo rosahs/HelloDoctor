@@ -99,21 +99,28 @@ export default function DoctorReservePage() {
   return (
     <div className="min-h-screen flex justify-center items-center p-4 relative">
       {/* Background Image */}
-      <div className="fixed inset-0 z-0">
+      {/* <div className="fixed inset-0 z-0">
         <Image
-          src="/images/grad.jpg"
+          src="/images/grad2.jpg"
           alt="Medical Background"
           layout="fill"
           objectFit="cover"
           quality={100}
         />
-      </div>
+      </div> */}
       {/* Overlay */}
       <div className="fixed inset-0 bg-black opacity-20 z-10"></div>
-      <div className="w-full max-w-2xl relative z-20 bg-black bg-opacity-80 rounded-lg shadow-xl overflow-hidden">
-        <div className="relative z-30">
-          <h2 className="text-4xl font-bold mb-6 text-white text-center pt-6">Reserve an Appointment</h2>
-          <form onSubmit={handleSubmit} className="rounded-lg px-8 pt-6 pb-8 mb-4">
+      <div className="w-full max-w-2xl relative z-20 rounded-lg shadow-xl overflow-hidden">
+        {/* <Image
+          src="/images/9globe.jpg"
+          alt="Medical Background"
+          layout="fill"
+          objectFit="cover"
+          quality={100}
+        /> */}
+        <div className="relative z-30 bg-black bg-opacity-70 p-8">
+          <h2 className="text-4xl font-bold mb-6 text-white text-center">Reserve an Appointment</h2>
+          <form onSubmit={handleSubmit} className="rounded-lg">
             <div className="text-center mb-6">
               <Image
                 src={doctor.imageUrl || "/images/placeholder-doctor-image.jpg"}
@@ -124,13 +131,13 @@ export default function DoctorReservePage() {
                 unoptimized
                 priority
               />
-              <h3 className="text-2xl text-gray-500 font-bold mt-8">{doctor.name}</h3>
+              <h3 className="text-2xl text-custom-green font-bold mt-8">{doctor.name}</h3>
               <p className="text-xl text-white">{doctor.specialization}</p>
               <p className="mt-2 text-md text-gray-300">{doctor.aboutMe}</p>
             </div>
             <div className="mb-4">
               <label className="block text-white text-xl font-bold mb-2">Select Date</label>
-              <div className="bg-gray-200 rounded-md border p-3">
+              <div className="bg-gray-200 rounded-md border p-3" style={{backgroundImage: "url('/images/calendar-bg.jpg')", backgroundSize: 'cover', backgroundPosition: 'center'}}>
                 <Calendar
                   onChange={handleDateChange}
                   value={date}
@@ -162,7 +169,7 @@ export default function DoctorReservePage() {
             <div className="flex items-center justify-center">
               <button
                 type="submit"
-                className="bg-blue-700 hover:bg-blue-800 text-white text-xl font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="bg-custom-green hover:bg-green-800 text-white text-xl font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               >
                 Book Appointment
               </button>

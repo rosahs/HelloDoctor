@@ -34,7 +34,7 @@ export default function AppointmentSuccessPage() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white p-4 pt-0"> {/* Reduced pt-8 to pt-0 */}
       <div className="max-w-md w-full text-center">
         <div className="mb-6">
-          <CheckCircle2 className="mx-auto h-16 w-16 text-green-500" />
+          <CheckCircle2 className="mx-auto h-16 w-16 text-custom-green" />
         </div>
         <h1 className="text-3xl font-bold mb-2">
           Your appointment request has been successfully submitted!

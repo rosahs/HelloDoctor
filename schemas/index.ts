@@ -172,7 +172,7 @@ export const DoctorAboutMeSchema = z
     }
   );
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10mb
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
   "image/png",
@@ -191,7 +191,7 @@ export const UpdateProfileSchema = z.object({
     )
     .refine(
       (file) => !file || file.size <= MAX_FILE_SIZE,
-      "Max file size is 5MB."
+      "Max file size is  10MB."
     )
     .refine(
       (file) =>

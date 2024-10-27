@@ -34,6 +34,8 @@ import { UpdateProfileSchema } from "@/schemas";
 import { ExtendedUser } from "@/next-auth";
 import Avatar from "@/components/Avatar";
 
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10mb
+
 type FormData = z.infer<typeof UpdateProfileSchema>;
 
 type Country = {
@@ -125,6 +127,13 @@ export const UserProfileEditForm = ({
   ) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > MAX_FILE_SIZE) {
+        setError(
+          "Image too large. Please select an image smaller than 10MB."
+        );
+        return;
+      }
+      // Display preview and set form data
       const reader = new FileReader();
       reader.onloadend = () => {
         if (typeof reader.result === "string") {
@@ -133,6 +142,7 @@ export const UserProfileEditForm = ({
       };
       reader.readAsDataURL(file);
       form.setValue("avatar", file);
+      setError("");
     }
   };
 

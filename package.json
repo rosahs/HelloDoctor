@@ -4,10 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "build": "next build",
     "start": "next start",
-    "prisma:generate": "prisma generate",
-    "build": "npx prisma generate && npm run build",
-    "postinstall": "prisma generate",
     "lint": "next lint"
   },
   "dependencies": {

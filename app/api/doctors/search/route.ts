@@ -3,12 +3,11 @@ import { db } from '@/lib/db';
 import { NextRequest } from 'next/server';
 
 export async function GET(request: NextRequest) {
-  console.log("callled this route");
   
   const searchParams = new URL(request.url).searchParams;
   const name = searchParams.get('name') || undefined;
   const specialization = searchParams.get('specialization') || undefined;
-  const location = searchParams.get('location') || undefined;
+  // const location = searchParams.get('location') || undefined;
 
   try {
     const doctors = await db.doctor.findMany({

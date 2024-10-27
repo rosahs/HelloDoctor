@@ -97,11 +97,11 @@ export default function DoctorReservePage() {
   }
 
   return (
-    <div className="min-h-screen flex justify-center items-center p-4 relative">
+    <div className="min-h-screen flex justify-center items-center p-4 relative pt-16">
       {/* Background Image */}
       <div className="fixed inset-0 z-0">
         <Image
-          src="/images/hosp2.png"
+          src="/images/outside.jpg"
           alt="Medical Background"
           layout="fill"
           objectFit="cover"
@@ -109,17 +109,10 @@ export default function DoctorReservePage() {
         />
       </div>
       {/* Overlay */}
-      <div className="fixed inset-0 bg-black opacity-20 z-10"></div>
-      <div className="w-full max-w-2xl relative z-20 rounded-lg shadow-xl overflow-hidden">
-        {/* <Image
-          src="/images/9globe.jpg"
-          alt="Medical Background"
-          layout="fill"
-          objectFit="cover"
-          quality={100}
-        /> */}
-        <div className="relative z-30 bg-white bg-opacity-70 p-8">
-          <h2 className="text-4xl font-bold mb-6 text-black text-center">Reserve an Appointment</h2>
+      <div className="fixed inset-0 bg-black opacity-50 z-10"></div>
+      <div className="w-full max-w-2xl relative z-20 overflow-hidden">
+        <div className="relative z-30 bg-white bg-opacity-0 p-8">
+          <h2 className="text-4xl font-bold mb-6 text-white text-center">Reserve an Appointment</h2>
           <form onSubmit={handleSubmit} className="rounded-lg">
             <div className="text-center mb-6">
               <div className="inline-block border-2 border-black overflow-hidden">
@@ -133,12 +126,12 @@ export default function DoctorReservePage() {
                   priority
                 />
               </div>
-              <h3 className="text-2xl text-black font-bold mt-8">{doctor.name}</h3>
-              <p className="text-xl text-black">{doctor.specialization}</p>
+              <h3 className="text-2xl text-white font-bold mt-8">{doctor.name}</h3>
+              <p className="text-xl text-white">{doctor.specialization}</p>
               <p className="mt-2 text-md text-gray-300">{doctor.aboutMe}</p>
             </div>
             <div className="mb-4">
-              <label className="block text-black text-xl font-bold mb-2">Select Date</label>
+              <label className="block text-white text-xl font-bold mb-2">Select Date</label>
               <div className="bg-gray-800 rounded-md border p-3" style={{backgroundImage: "url('/images/calendar-bg.jpg')", backgroundSize: 'cover', backgroundPosition: 'center'}}>
                 <Calendar
                   onChange={handleDateChange}
@@ -148,7 +141,7 @@ export default function DoctorReservePage() {
               </div>
             </div>
             <div className="mb-4">
-              <label className="block text-black text-xl font-bold mb-2">Time</label>
+              <label className="block text-white text-xl font-bold mb-2">Time</label>
               <input
                 type="time"
                 value={time}
@@ -158,7 +151,7 @@ export default function DoctorReservePage() {
               />
             </div>
             <div className="mb-6">
-              <label className="block text-blacktext-xl font-bold mb-2">Reason for Visit</label>
+              <label className="block text-white text-xl font-bold mb-2">Reason for Visit</label>
               <textarea
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}

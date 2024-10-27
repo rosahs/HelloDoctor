@@ -4,14 +4,13 @@ import Image from 'next/image';
 import DoctorSearchForm from '@/components/DoctorSearchForm/page';
 import Footer from '@/components/footer/page';
 import FeaturedDoctors from '@/app/doctors/featured/page';
-import DoctorCard from '@/components/doctor-card/page'
 
 export default function HomePage() {
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen flex flex-col">
       <div className="fixed inset-0 bg-cover bg-center z-0" style={{ backgroundImage: "url('/images/surg.png')" }}></div>
       <div className="fixed inset-0 bg-black bg-opacity-70 z-1"></div>
-      <div className="relative z-10 flex flex-col items-center justify-start min-h-screen px-4 sm:px-6 text-white overflow-y-auto">
+      <div className="relative z-10 flex-grow flex flex-col items-center justify-start px-4 sm:px-6 text-white overflow-y-auto">
         <div className="w-full max-w-6xl mt-16 sm:mt-24">
           <h1 className="text-3xl sm:text-5xl md:text-7xl font-extrabold text-center mb-4 sm:mb-8 leading-tight tracking-wide">
             Find Your <span className="text-white weight-bold text-4xl sm:text-6xl md:text-7xl">Doctor</span> <br />
@@ -43,9 +42,9 @@ export default function HomePage() {
           {/* Render FeaturedDoctors component */}
           <FeaturedDoctors />
         </div>
-        <div className="mt-16 w-full">
-          <Footer />
-        </div>
+      </div>
+      <div className="relative z-20 w-full opacity-70 mt-16">
+        <Footer />
       </div>
     </div>
   );

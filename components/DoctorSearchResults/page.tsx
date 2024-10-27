@@ -1,6 +1,4 @@
-// app/components/DoctorSearchResults/page.tsx
-
-"use client";
+'use client'
 
 import { useEffect, useState } from 'react';
 import DoctorCard from '@/components/doctor-card/page';
@@ -18,7 +16,6 @@ interface DoctorCardProps {
   profileUrl: string;
 }
 
-// DoctorSearchResults component
 export default function DoctorSearchResults({ searchParams }: DoctorSearchResultsProps) {
   const [doctors, setDoctors] = useState<DoctorCardProps[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,12 +28,14 @@ export default function DoctorSearchResults({ searchParams }: DoctorSearchResult
 
         if (response.ok) {
           const data = await response.json();
+          console.log("Fetched data:", data); // Log the fetched data structure
+
           const doctorCards: DoctorCardProps[] = data.map((doctor: Doctor) => ({
             id: doctor.id,
-            name: doctor.user?.name ?? "Unknown",
-            specialty: doctor.specialization ?? "Not specified",
+            name: doctor.user?.name || "No name available", // Ensure correct mapping here
+            specialty: doctor.specialization || "Not specified",
             imageUrl: doctor.images?.[0] || '/images/placeholder-doctor-image.jpg',
-            profileUrl: `/doctors/${doctor.specialization.toLowerCase().replace(/ /g, '-')}/${doctor.id}`,
+            profileUrl: `/doctors/profile/${doctor.id}`,
           }));
           setDoctors(doctorCards);
         } else {
@@ -61,7 +60,7 @@ export default function DoctorSearchResults({ searchParams }: DoctorSearchResult
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {doctors.map((doctor) => (
         <DoctorCard
           key={doctor.id}
@@ -70,7 +69,6 @@ export default function DoctorSearchResults({ searchParams }: DoctorSearchResult
             name: doctor.name,
             specialty: doctor.specialty,
             imageUrl: doctor.imageUrl,
-            profileUrl: doctor.profileUrl,
           }}
         />
       ))}

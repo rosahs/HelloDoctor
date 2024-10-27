@@ -1,31 +1,46 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { NextRequest } from 'next/server';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  console.log("callled this route");
+  
+  const searchParams = new URL(request.url).searchParams;
+  const name = searchParams.get('name') || undefined;
+  const specialization = searchParams.get('specialization') || undefined;
+  const location = searchParams.get('location') || undefined;
+
   try {
-    const featuredDoctors = await db.doctor.findMany({
-      take: 5,
+    const doctors = await db.doctor.findMany({
+      where: {
+        user: name ? { name: { contains: name, mode: 'insensitive' } } : undefined,
+        specialization: specialization || undefined,
+      },
       select: {
         id: true,
+        specialization: true,
+        images: true, 
         user: {
           select: {
             name: true,
-          },
-        },
-        specialization: true,
-      },
+          }
+        }
+      }
     });
 
-    const formattedDoctors = featuredDoctors.map(doctor => ({
+    const formattedDoctors = doctors.map((doctor) => ({
       id: doctor.id,
-      name: doctor.user?.name || 'Unknown',
-      specialization: doctor.specialization,
-      profileUrl: `/api/doctors/${doctor.id}`,
+      name: doctor.user?.name ?? 'No name available',
+      specialization: doctor.specialization ?? 'General Practitioner',
+      imageUrl: doctor.images?.[0] ?? '/images/placeholder-doctor-image.jpg',
+      profileUrl: `/doctors/${doctor.specialization?.toLowerCase().replace(/ /g, '-')}/${doctor.id}`,
     }));
+
+    console.log("Formatted Doctors:", formattedDoctors); 
 
     return NextResponse.json(formattedDoctors);
   } catch (error) {
-    console.error('Error fetching featured doctors:', error);
+    console.error('Failed to fetch doctors:', error);
     return NextResponse.json({ error: 'Failed to fetch doctors' }, { status: 500 });
   } finally {
     await db.$disconnect();

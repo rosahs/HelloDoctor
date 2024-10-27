@@ -96,6 +96,18 @@ export const UserProfileEditForm = ({
   const onSubmit = async (
     values: z.infer<typeof UpdateProfileSchema>
   ) => {
+    setError("");
+    setSuccess("");
+
+    if (
+      values.avatar &&
+      values.avatar.size > MAX_FILE_SIZE
+    ) {
+      setError(
+        "Image too large. Please upload an image smaller than 10MB."
+      );
+    }
+
     startTransition(async () => {
       const formData = new FormData();
 

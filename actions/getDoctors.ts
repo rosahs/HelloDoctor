@@ -7,12 +7,7 @@ export async function getDoctors() {
     const doctors = await db.doctor.findMany({
       select: {
         id: true,
-        user: {
-          select: {
-            name: true,
-            email: true,
-          }
-        },
+        user: true,
         specialization: true,
       },
     });
@@ -21,6 +16,7 @@ export async function getDoctors() {
       id: doctor.id,
       name: doctor.user?.name ?? 'Unknown',
       email: doctor.user?.email ?? 'No email provided',
+      user: doctor.user,
       specialization: doctor.specialization,
     }));
   } catch (error) {
@@ -28,3 +24,4 @@ export async function getDoctors() {
     throw new Error("Failed to fetch doctors");
   }
 }
+

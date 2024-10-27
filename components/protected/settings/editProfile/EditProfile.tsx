@@ -9,10 +9,6 @@ import React, {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import {
-  Avatar,
-  AvatarImage,
-} from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -36,6 +32,7 @@ import { FormError } from "@/components/auth/FormError";
 import { FormSuccess } from "@/components/auth/FormSuccess";
 import { UpdateProfileSchema } from "@/schemas";
 import { ExtendedUser } from "@/next-auth";
+import Avatar from "@/components/Avatar";
 
 type FormData = z.infer<typeof UpdateProfileSchema>;
 
@@ -163,14 +160,13 @@ export const UserProfileEditForm = ({
                 <FormLabel>Profile Picture</FormLabel>
                 <FormControl>
                   <div className="flex items-center space-x-4">
-                    <Avatar className="w-20 h-20">
-                      <AvatarImage
-                        src={
-                          avatarPreview || "/profile.jpg"
-                        }
-                        alt="Profile picture"
-                      />
-                    </Avatar>
+                    <Avatar
+                      previewAvatar={avatarPreview}
+                      width={55}
+                      height={55}
+                      className="mr-3"
+                    />
+
                     <div>
                       <Input
                         type="file"
@@ -239,7 +235,7 @@ export const UserProfileEditForm = ({
                     </FormLabel>
                     <Select
                       onValueChange={field.onChange}
-                      value={field.value || ""} // Ensure the select uses the correct value
+                      value={field.value || ""}
                     >
                       <FormControl>
                         <SelectTrigger className="bg-inputBg border-inputBorder text-textDark placeholder:text-placeholder">

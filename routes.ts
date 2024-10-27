@@ -6,6 +6,11 @@ export const publicRoutes: string[] = [
   "/",
   "/auth/new-verification",
   "/doctor/public-profile",
+  "/doctors/search",
+  "/doctors/profile",
+  "/api/doctors/featured",
+
+  "/doctors/search/specialities/cardiology"
 ];
 
 /**  An array of routes that are used for authentication
@@ -48,6 +53,8 @@ export const doctorProtectedRoute: string[] = [
 export const DOCTOR_LOGIN_REDIRECT: string = "/";
 
 export const PATIENT_LOGIN_REDIRECT: string = "/";
+
+export const DEFAULT_LOGIN_REDIRECT: string = "/";
 
 /**
  * Redirect path for OAuth users to select their role

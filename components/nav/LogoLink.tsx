@@ -1,9 +1,14 @@
 import Link from "next/link";
+import { FaBriefcaseMedical } from "react-icons/fa";
 
 function LogoLink() {
   return (
-    <div className="text-[1.4rem] text-white font-semibold text-dark-hover">
-      <Link href="/">HelloDoctor</Link>
+    <div className="text-[1.4rem] text-white
+     font-semibold text-3xl text-dark-hover ml-8">
+      <Link href="/" className="flex items-center">
+        HelloDoctor 
+        <FaBriefcaseMedical className="ml-2" />
+      </Link>
     </div>
   );
 }

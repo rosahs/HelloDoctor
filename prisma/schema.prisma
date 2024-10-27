@@ -34,7 +34,7 @@ model User {
   twoFactorConfirmation  TwoFactorConfirmation?
   doctorId               String?                 @db.ObjectId @map("doctor_id") 
   patientId              String?                 @db.ObjectId @map("patient_id")
-  appointments           Appointment[]
+
 
   conversationIds String[] @db.ObjectId
   conversations Conversation[] @relation(fields: [conversationIds], references: [id])
@@ -47,7 +47,7 @@ model User {
 
   doctor    Doctor[]
   patient   Patient[]
-          
+  appointments Appointment[]
 
   @@map("users")
   @@index([doctorId])
@@ -119,8 +119,10 @@ model Doctor {
   certifications         String?
   professionalExperience String?
   languages              String?
+  isFeatured             Boolean   @default(false)
   user               User? @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId             String?  @db.ObjectId @map("user_id")
+  appointments       Appointment[]
 
   @@map("doctors")
 }
@@ -144,11 +146,13 @@ model Appointment {
   date      DateTime
   time      String
   reason    String
+  
   doctor    Doctor   @relation(fields: [doctorId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
 
   @@map("appointments")
 }
+
 
 model Conversation {
   id String @id @default(auto()) @map("_id") @db.ObjectId

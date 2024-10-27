@@ -1,136 +1,84 @@
-"use server";
+"user server";
 
-import { revalidatePath } from "next/cache";
-import mongoose, { Schema, Document, model } from "mongoose";
-import { formatDateTime, parseStringify } from "@/lib/utils";
+import { db } from "@/lib/db";
 
-// Define the schema for appointments
-export const appointmentSchema = new Schema({
-  userId: { type: String, required: true },
-  status: { type: String, enum: ["scheduled", "pending", "cancelled"], required: true },
-  schedule: { type: Date },
-  primaryPhysician: { type: String, required: false },
-  cancellationReason: { type: String, required: false },
-}, { timestamps: true });
-
-// Function to get an appointment by ID
-export async function getAppointmentById(appointmentId: string) {
+export async function getDoctors() {
   try {
-    const appointment = await AppointmentModel.findById(appointmentId);
-    return parseStringify(appointment);
+    const doctors = await db.doctor.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            image: true,
+          },
+        },
+      },
+    });
+
+    return doctors.map((doctor) => ({
+      id: doctor.id,
+      name: doctor.user?.name ?? "Unknown",
+      email: doctor.user?.email ?? "No email provided",
+      specialization: doctor.specialization,
+      images: doctor.images,
+      aboutMe: doctor.aboutMe,
+      specialties: doctor.specialties,
+      certifications: doctor.certifications,
+      professionalExperience: doctor.professionalExperience,
+      languages: doctor.languages,
+    }));
   } catch (error) {
-    console.error("An error occurred while fetching the appointment:", error);
-    return null;
+    console.error("Failed to fetch doctors:", error);
+    throw new Error("Failed to fetch doctors");
   }
-}
+} // import { NextResponse } from "next/server";
+// import { db } from "@/lib/db";
 
-// Create the model for appointments
-const AppointmentModel = mongoose.models.Appointment || model("Appointment", appointmentSchema);
+// // Handler for GET /api/doctors/[id]
+// export async function GET(request: Request, { params }: { params: { id: string } }) {
+//   try {
+//     const { id } = params;
 
-// CREATE APPOINTMENT
-export const createAppointment = async (appointmentData: Partial<Document & { userId: string; status: string; schedule: Date; primaryPhysician: string; cancellationReason?: string }>) => {
-  try {
-    const newAppointment = await AppointmentModel.create(appointmentData);
+//     const doctor = await db.doctor.findUnique({
+//       where: { id },
+//       include: {
+//         user: {
+//           select: {
+//             name: true,
+//             email: true,
+//           },
+//         },
+//       },
+//     });
 
-    revalidatePath("/admin");
-    return parseStringify(newAppointment);
-  } catch (error) {
-    console.error("An error occurred while creating a new appointment:", error);
-  }
-};
+//     if (!doctor) {
+//       return NextResponse.json({ message: "Doctor not found" }, { status: 404 });
+//     }
 
-// GET RECENT APPOINTMENTS
-export const getRecentAppointmentList = async () => {
-  try {
-    const appointments = await AppointmentModel.find().sort({ createdAt: -1 });
+//     return NextResponse.json(doctor);
+//   } catch (error) {
+//     console.error("Error fetching doctor details:", error);
+//     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+//   }
+// }
 
-    const initialCounts = {
-      scheduledCount: 0,
-      pendingCount: 0,
-      cancelledCount: 0,
-    };
+// // Handler for DELETE /api/doctors/[id]
+// export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+//   try {
+//     const { id } = params;
 
-    const counts = appointments.reduce((acc, appointment) => {
-      switch (appointment.status) {
-        case "scheduled":
-          acc.scheduledCount++;
-          break;
-        case "pending":
-          acc.pendingCount++;
-          break;
-        case "cancelled":
-          acc.cancelledCount++;
-          break;
-      }
-      return acc;
-    }, initialCounts);
+//     const deletedDoctor = await db.doctor.delete({
+//       where: { id },
+//     });
 
-    const data = {
-      totalCount: appointments.length,
-      ...counts,
-      documents: appointments,
-    };
-
-    return parseStringify(data);
-  } catch (error) {
-    console.error("An error occurred while retrieving the recent appointments:", error);
-  }
-};
-
-// UPDATE APPOINTMENT
-export const updateAppointment = async ({
-  appointmentId,
-  userId,
-  timeZone,
-  appointment,
-  type,
-}: {
-  appointmentId: string;
-  userId: string;
-  timeZone: string;
-  appointment: Partial<Document & { schedule?: Date; primaryPhysician?: string; cancellationReason?: string }>;
-  type: "schedule" | "cancel";
-}) => {
-  try {
-    const updatedAppointment = await AppointmentModel.findByIdAndUpdate(
-      appointmentId,
-      appointment,
-      { new: true }
-    );
-
-    if (!updatedAppointment) throw new Error("Appointment not found");
-
-    const smsMessage = `Greetings from CarePulse. ${
-      type === "schedule"
-        ? `Your appointment is confirmed for ${formatDateTime(
-            appointment.schedule!,
-            timeZone
-          ).dateTime} with Dr. ${appointment.primaryPhysician}`
-        : `We regret to inform that your appointment for ${formatDateTime(
-            appointment.schedule!,
-            timeZone
-          ).dateTime} is cancelled. Reason: ${appointment.cancellationReason}`
-    }.`;
-
-    // await sendSMSNotification(userId, smsMessage);
-
-    revalidatePath("/admin");
-    return parseStringify(updatedAppointment);
-  } catch (error) {
-    console.error("An error occurred while scheduling an appointment:", error);
-  }
-};
-
-// GET APPOINTMENT
-export const getAppointment = async (appointmentId: string) => {
-  try {
-    const appointment = await AppointmentModel.findById(appointmentId);
-    return parseStringify(appointment);
-  } catch (error) {
-    console.error("An error occurred while retrieving the existing patient:", error);
-  }
-};
-
+//     return NextResponse.json({ message: "Doctor deleted successfully", deletedDoctor });
+//   } catch (error) {
+//     console.error("Error deleting doctor:", error);
+//     return NextResponse.json({ error: "Failed to delete doctor" }, { status: 500 });
+//   }
+// }
 // SEND SMS NOTIFICATION
 // This part would depend on which SMS service you're using with Node.js. For example, Twilio:
 // import twilio from 'twilio';

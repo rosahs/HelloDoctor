@@ -1,3 +1,4 @@
+import DeleteAccountButton from "@/components/protected/settings/DeleteAccount";
 import Settings from "@/components/protected/settings/settings";
 import { currentUser } from "@/lib/auth";
 
@@ -16,10 +17,6 @@ const DoctorSettings = async () => {
       href: "/doctor/settings/change-location",
       label: "Change Location",
     },
-    {
-      href: "/doctor/settings/delete-account",
-      label: "Delete Account",
-    },
   ];
 
   // Conditionally insert "Account Security" before "Delete Account"
@@ -30,7 +27,12 @@ const DoctorSettings = async () => {
     });
   }
 
-  return <Settings links={doctorLinks} />;
+  return (
+    <>
+      <Settings links={doctorLinks} />
+      <DeleteAccountButton />
+    </>
+  );
 };
 
 export default DoctorSettings;

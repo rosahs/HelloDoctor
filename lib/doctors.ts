@@ -1,6 +1,5 @@
-import { PrismaClient, Prisma } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { db } from '@/lib/db';
+import { Prisma } from '@prisma/client';
 
 interface Doctor {
   id: string;
@@ -37,7 +36,7 @@ export async function getDoctors(searchParams: { [key: string]: string | string[
     where.languages = { contains: languages, mode: 'insensitive' };
   }
 
-  const doctors = await prisma.doctor.findMany({
+  const doctors = await db.doctor.findMany({
     where,
     select: {
       id: true,
@@ -76,4 +75,44 @@ export async function getDoctors(searchParams: { [key: string]: string | string[
   }));
 }
 
-export default Doctor
+export async function getFeaturedDoctors() {
+  try {
+    const featuredDoctors = await db.doctor.findMany({
+      take: 5,
+      select: {
+        id: true,
+        specialization: true,
+        images: true,
+        user: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    // Ensure consistency and fallback logic
+    return featuredDoctors.map((doctor): Doctor => ({
+      id: doctor.id,
+      specialization: doctor.specialization ?? 'Not specified',
+      images: doctor.images && doctor.images.length > 0 ? doctor.images : ['/images/placeholder-doctor-image.jpg'],
+      user: doctor.user ? {
+        name: doctor.user.name ?? 'Name not available',
+        email: doctor.user.email ?? 'No email available',
+      } : undefined,
+      aboutMe: 'No information available.',
+      specialties: 'General Practitioner',
+      certifications: 'No certifications listed.',
+      professionalExperience: 'No experience information available',
+      languages: 'Not specified',
+      userId: doctor.id, // Using doctor.id as a fallback for userId
+    }));
+
+  } catch (error) {
+    console.error('Failed to fetch featured doctors:', error);
+    return [];
+  }
+}
+
+export type { Doctor };

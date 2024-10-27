@@ -40,7 +40,7 @@ export const patientLinks = [
   },
   {
     href: "/doctors/search",
-    label: "search",
+    label: "Search",
   },
   {
     href: "/doctors/search",

@@ -8,7 +8,7 @@ export const publicRoutes: string[] = [
   "/doctor/public-profile",
   "/doctors/search",
   "/doctors/profile",
-  "/api/doctors/featured",
+  "/doctors/featured",
 
   "/doctors/search/specialities/cardiology"
 ];

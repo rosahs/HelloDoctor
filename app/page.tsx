@@ -1,5 +1,3 @@
-// app/page.tsx
-
 import Image from 'next/image';
 import DoctorSearchForm from '@/components/DoctorSearchForm/page';
 import Footer from '@/components/footer/page';
@@ -15,13 +13,14 @@ export default function HomePage() {
           <h1 className="text-3xl sm:text-5xl md:text-7xl font-extrabold text-center mb-4 sm:mb-8 leading-tight tracking-wide">
             Find Your <span className="text-white weight-bold text-4xl sm:text-6xl md:text-7xl">Doctor</span> <br />
             Anywhere in the <span style={{ display: 'inline-flex', alignItems: 'center' }}>
-              W<span style={{ display: 'inline-block', width: 0 }} />
+              W
+              <span style={{ display: 'inline-block', width: 0 }} />
               <Image 
                 src="/images/globenobg2.png" 
                 alt="World" 
                 width={150} 
                 height={150} 
-                className="inline-block align-middle" 
+                className="inline-block align-middle w-12 sm:w-16 md:w-20 lg:w-24 xl:w-28" // Responsive widths
                 style={{ margin: '0 -10px' }} // Reducing the space between W and the globe
               />
               <span style={{ display: 'inline-block', width: 0 }} />

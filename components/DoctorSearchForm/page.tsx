@@ -1,5 +1,3 @@
-// app/components/DoctorSearchForm/page.tsx
-
 "use client";
 
 import { useState, useRef } from "react";
@@ -26,13 +24,23 @@ const DoctorSearchForm = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const searchParams = new URLSearchParams();
+
+    // Only add parameters that have values
     if (name) searchParams.append("name", name);
     if (location) searchParams.append("location", location);
-
     if (specialty) {
       const formattedSpecialty = specialty.toLowerCase().replace(/ /g, "-");
-      router.push(`/doctors/${formattedSpecialty}`);
+      searchParams.append("specialty", formattedSpecialty);
+    }
+
+    // If only the name is provided, use just that in the search
+    if (searchParams.has("name") && !searchParams.has("specialty") && !searchParams.has("location")) {
+      router.push(`/doctors/search?${searchParams.toString()}`);
+    } else if (specialty) {
+      // If specialty is provided, navigate to the specialty page with additional params
+      router.push(`/doctors/${specialty.toLowerCase().replace(/ /g, "-")}?${searchParams.toString()}`);
     } else {
+      // Default to the general search page with all available params
       router.push(`/doctors/search?${searchParams.toString()}`);
     }
   };

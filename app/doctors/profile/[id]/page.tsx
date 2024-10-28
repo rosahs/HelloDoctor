@@ -58,7 +58,7 @@ export default function DoctorProfilePage({
   }
 
   return (
-    <div className="min-h-screen bg-white text-black">
+    <div className="min-h-screen bg-gray-300 text-black">
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div
           className="flex flex-col md:flex-row items-center mb-8 p-8 rounded-lg bg-cover bg-center h-80 shadow-lg"
@@ -79,16 +79,24 @@ export default function DoctorProfilePage({
         </div>
 
         <div className="flex space-x-4 mb-8 shadow-md">
-          <MessageButton doctorId={doctor.user?.id} />
+  <button
+    className="flex-1 bg-black px-3 text-white h-16 rounded-md font-semibold text-2xl hover:bg-custom-green transition-colors duration-300 active:translate-y-0.5 active:shadow-inner"
+    onClick={() => {
+      // Handle message functionality
+      console.log(`Messaging doctor with ID: ${doctor.id}`);
+            // add your message functionality or route navigation here
+          }}
+        >
+          Message
+        </button>
 
-          <button
-            className="flex-1 bg-black px-3 text-white h-16 rounded-md font-semibold text-2xl hover:bg-custom-green transition-colors duration-300 active:translate-y-0.5 active:shadow-inner"
-            onClick={() =>
-              router.push(`/doctors/profile/${doctor.id}/reserve`)
-            }>
-            Reserve
-          </button>
-        </div>
+        <button
+          className="flex-1 bg-black px-3 text-white h-16 rounded-md font-semibold text-2xl hover:bg-custom-green transition-colors duration-300 active:translate-y-0.5 active:shadow-inner"
+          onClick={() => router.push(`/doctors/profile/${doctor.id}/reserve`)}
+        >
+          Reserve
+        </button>
+      </div>
 
         <div className="mb-8 p-6 border rounded-lg bg-gray-50 shadow-md">
           <h2 className="text-2xl font-bold mb-4">About me</h2>

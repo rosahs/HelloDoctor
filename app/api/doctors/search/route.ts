@@ -3,17 +3,17 @@ import { db } from '@/lib/db';
 import { NextRequest } from 'next/server';
 
 export async function GET(request: NextRequest) {
-  
   const searchParams = new URL(request.url).searchParams;
   const name = searchParams.get('name') || undefined;
   const specialization = searchParams.get('specialization') || undefined;
-  // const location = searchParams.get('location') || undefined;
 
   try {
     const doctors = await db.doctor.findMany({
       where: {
         user: name ? { name: { contains: name, mode: 'insensitive' } } : undefined,
-        specialization: specialization || undefined,
+        specialization: specialization
+          ? { contains: specialization, mode: 'insensitive' }
+          : undefined,
       },
       select: {
         id: true,
@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
       profileUrl: `/doctors/${doctor.specialization?.toLowerCase().replace(/ /g, '-')}/${doctor.id}`,
     }));
 
-    console.log("Formatted Doctors:", formattedDoctors); 
+    console.log("Formatted Doctors:", formattedDoctors);
 
     return NextResponse.json(formattedDoctors);
   } catch (error) {

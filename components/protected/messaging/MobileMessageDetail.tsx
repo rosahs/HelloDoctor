@@ -118,6 +118,7 @@ const MobileMessageDetail = ({
 
   return (
     <div className="flex flex-col h-screen bg-background">
+      {/* Header */}
       <div className="pl-3 p-2 border-b border-border bg-bgLight z-10 flex items-center">
         <Link href={`/${userType}/messages`}>
           <Button
@@ -139,9 +140,11 @@ const MobileMessageDetail = ({
         </h2>
       </div>
 
+      {/* Messages Container */}
       <div
         ref={scrollAreaRef}
-        className="flex-1 overflow-y-auto p-4 pb-20 flex flex-col-reverse"
+        className="flex-1 overflow-y-auto p-4 flex flex-col-reverse"
+        style={{ paddingBottom: "calc(4rem + 100px)" }}
       >
         {messages
           .slice()
@@ -176,8 +179,9 @@ const MobileMessageDetail = ({
           ))}
       </div>
 
-      <div className="p-4 border-t border-border bg-bgLight sticky bottom-0 left-0 right-0 z-10">
-        <div className="flex items-center">
+      {/* Input Container */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 border-t border-border bg-bgLight">
+        <div className="flex items-center max-w-screen-xl mx-auto">
           <Input
             type="text"
             placeholder="Type a message..."

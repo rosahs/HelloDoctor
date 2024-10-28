@@ -16,11 +16,21 @@ interface DoctorSearchResultsProps {
 
 export default function DoctorSearchResults({ searchParams }: DoctorSearchResultsProps) {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [searched, setSearched] = useState(false);
 
   useEffect(() => {
+    // Check if any search parameters are provided
+    const hasSearchParams = Object.values(searchParams).some(param => param && param.length > 0);
+
+    if (!hasSearchParams) {
+      // If no search parameters, skip the search
+      return;
+    }
+
     const fetchDoctors = async () => {
       setLoading(true);
+      setSearched(true);
       try {
         // Convert searchParams to a URL-friendly format for the API request
         const params = new URLSearchParams(
@@ -68,9 +78,13 @@ export default function DoctorSearchResults({ searchParams }: DoctorSearchResult
             />
           ))}
         </div>
-      ) : (
+      ) : searched ? (
         <div className="text-center text-gray-500 mt-8">
           No doctors found matching your search criteria.
+        </div>
+      ) : (
+        <div className="text-center text-gray-500 mt-8">
+          Please use the search form to find a doctor.
         </div>
       )}
     </div>

@@ -8,8 +8,8 @@ interface ModalProps {
 
 const Modal: React.FC<ModalProps> = ({ show, onClose, onSelectSpecialty }) => {
   const doctorTypes = [
-    'Immunology', 'Cardiology', 'Cosmetic Surgery', 'Dentist', 'Dermatology',
-    'Gastroenterology', 'Hematology', 'Nephrology', 'Neurology', 'Obstetrics-Gynecology',
+    'Immunology', 'Cardiology', 'Dentist', 'Dermatology',
+    'Gastroenterology', 'Hematology', 'Nephrology', 'Neurology',
     'Oncology', 'Orthopedics', 'Pathology', 'Pediatrics', 'Preventative Medicine',
     'Psychiatry', 'Pulmonology', 'Surgery', 'Urology'
   ];

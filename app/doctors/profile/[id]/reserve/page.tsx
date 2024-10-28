@@ -97,9 +97,9 @@ export default function DoctorReservePage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Top half with background image */}
-      <div className="h-[50vh] relative">
+    <div className="min-h-screen flex flex-col relative">
+      {/* Full height background image */}
+      <div className="h-screen fixed inset-0">
         <Image
           src="/images/view4.avif"
           alt="Medical Background"
@@ -108,29 +108,31 @@ export default function DoctorReservePage() {
           quality={100}
         />
         <div className="absolute inset-0 bg-black bg-opacity-20" />
-        <div className="relative z-10 h-full flex items-center justify-center">
-          <div className="text-center">
-            <div className="inline-block border-2 border-white overflow-hidden">
-              <Image
-                src={doctor.imageUrl || "/images/placeholder-doctor-image.jpg"}
-                alt={doctor.name}
-                width={150}
-                height={150}
-                className="mx-auto"
-                unoptimized
-                priority
-              />
-            </div>
-            <h3 className="text-3xl text-white font-bold mt-4">{doctor.name}</h3>
-            <p className="text-2xl text-white">{doctor.specialization}</p>
-            <p className="mt-2 text-md text-gray-900">{doctor.aboutMe}</p>
+      </div>
+
+      {/* Doctor info overlay */}
+      <div className="relative z-10 h-[40vh] flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block border-2 border-white overflow-hidden">
+            <Image
+              src={doctor.imageUrl || "/images/placeholder-doctor-image.jpg"}
+              alt={doctor.name}
+              width={150}
+              height={150}
+              className="mx-auto"
+              unoptimized
+              priority
+            />
           </div>
+          <h3 className="text-3xl text-white font-bold mt-4">{doctor.name}</h3>
+          <p className="text-2xl text-white">{doctor.specialization}</p>
+          <p className="mt-2 text-md text-gray-100">{doctor.aboutMe}</p>
         </div>
       </div>
 
-      {/* Bottom half with black background */}
-      <div className="flex-1 bg-gray-100 p-8">
-        <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+      {/* Reservation form overlay */}
+      <div className="relative z-20 -mt-20 px-8 pb-8">
+        <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-xl">
           <h2 className="text-4xl font-bold mb-6 text-black text-center">Reserve an Appointment</h2>
           <form onSubmit={handleSubmit} className="rounded-lg">
             <div className="mb-4">

@@ -5,6 +5,7 @@ import { auth } from "@/auth";
 import { SessionProvider } from "next-auth/react";
 import NavComponent from "@/components/nav/NavComponent";
 import RoleSelection from "@/components/auth/RoleSelection";
+import Head from "next/head";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -40,6 +41,13 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
+      <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
+      </Head>
+
       <body className={`${interFont.variable} bg-bgLight `}>
         <SessionProvider session={session}>
           <NavComponent />

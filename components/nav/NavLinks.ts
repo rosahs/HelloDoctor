@@ -22,10 +22,10 @@ export const doctorLinks = [
 ];
 
 export const patientLinks = [
-  {
-    href: "/patient/profile",
-    label: "Account",
-  },
+  // {
+  //   href: "/patient/profile",
+  //   label: "Account",
+  // },
   {
     href: "/patient/settings",
     label: "Settings",
@@ -34,20 +34,20 @@ export const patientLinks = [
     href: "/patient/messages",
     label: "Messages",
   },
+  // {
+  //   href: "/",
+  //   label: "Notifications",
+  // },
+  // {
+  //   href: "/doctors/search",
+  //   label: "Search",
+  // },
+  // {
+  //   href: "/doctors/search",
+  //   label: "Book Appointment",
+  // },
   {
-    href: "/",
-    label: "Notifications",
-  },
-  {
-    href: "/doctors/search",
-    label: "Search",
-  },
-  {
-    href: "/doctors/search",
-    label: "Book Appointment",
-  },
-  {
-    href: "/patient/dashboard",
+    href: "/appointments",
     label: "My Appointments",
   },
   {

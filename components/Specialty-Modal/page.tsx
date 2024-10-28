@@ -8,22 +8,16 @@ interface ModalProps {
 
 const Modal: React.FC<ModalProps> = ({ show, onClose, onSelectSpecialty }) => {
   const doctorTypes = [
-    'Allergy and Immunology',
-    'Cardiology',
+    'Immunology',
+    'Cardiology', 
     'Cosmetic Surgery',
     'Dentist',
     'Dermatology',
-    'Diagnostic Radiology',
-    'Emergency Medicine',
-    'Endocrinology',
-    'Family Medicine',
     'Gastroenterology',
-    'Genetics',
-    'Geriatrics',
     'Hematology',
     'Nephrology',
     'Neurology',
-    'Obstetrics and Gynaecology',
+    'Obstetrics-Gynecology',
     'Oncology',
     'Opthamology',
     'Orthopedics',
@@ -39,8 +33,8 @@ const Modal: React.FC<ModalProps> = ({ show, onClose, onSelectSpecialty }) => {
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg p-8 w-full max-w-md">
+    <div className="fixed inset-0 z-[100]" style={{top: '20%', transform: 'translateY(-50%)'}}>
+      <div className="absolute left-1/2 transform -translate-x-1/2 bg-white rounded-lg p-8 w-full max-w-md shadow-xl">
         <h2 className="text-2xl font-bold mb-4">Select a Specialty</h2>
         <div className="max-h-60 overflow-y-auto">
           <ul className="space-y-4">

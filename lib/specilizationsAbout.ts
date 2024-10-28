@@ -1,36 +1,370 @@
 export const aboutSpecializations = [
   {
-    specialization: "cardiology",
-    image: "/images/cardiology.png",
+    specialization: "Cardiology",
+    image: "/images/cardiology.png", 
     treatments: [
       "Heart disease",
-      "Hypertension (high blood pressure)",
-      " Heart failure",
-      " Arrhythmias",
-      "Heart attacks",
+      "Hypertension (high blood pressure)", 
+      "Heart failure",
+      "Arrhythmias",
+      "Heart attacks", 
       "Preventive cardiology",
     ],
-    description:
-      "Cardiology specialists, also known as cardiologists, are medical doctors who diagnose and treat heart and blood vessel diseases. They are trained to provide expert care for patients dealing with various cardiovascular conditions.",
+    description: "Cardiology specialists, also known as cardiologists, are medical doctors who diagnose and treat heart and blood vessel diseases. They are trained to provide expert care for patients dealing with various cardiovascular conditions.",
     otherInfo: [
       "If you're experiencing symptoms related to your heart or cardiovascular system, consulting with a cardiologist can help you get the appropriate diagnosis and treatment.",
     ],
   },
   {
-    specialization: "dentist",
+    specialization: "Dentist",
     image: "/images/teeth.jpg",
     treatments: [
       "Regular check-ups and cleanings",
       "Cavity fillings",
       "Teeth whitening",
-      "Orthodontic consultations",
+      "Orthodontic consultations", 
       "Gum care",
       "Pediatric dentistry",
     ],
-    description:
-      "Dentists are healthcare professionals who specialize in oral health. They diagnose, treat, and prevent problems related to teeth, gums, and other parts of the mouth.",
+    description: "Dentists are healthcare professionals who specialize in oral health. They diagnose, treat, and prevent problems related to teeth, gums, and other parts of the mouth.",
     otherInfo: [
       "Regular dental check-ups are essential for maintaining a healthy smile. Our friendly dentists are here to ensure your teeth stay strong and your smile stays bright. Book an appointment today!",
+    ],
+  },
+  {
+    specialization: "Dermatology",
+    image: "/images/derma.jpg",
+    treatments: [
+      "Skin cancer screening",
+      "Acne treatment", 
+      "Eczema management",
+      "Psoriasis care",
+      "Cosmetic procedures",
+      "Laser therapy",
+    ],
+    description: "Dermatologists are medical doctors who specialize in conditions affecting the skin, hair, and nails. They provide both medical and cosmetic treatments to help patients maintain healthy skin.",
+    otherInfo: [
+      "Regular skin check-ups are important for early detection of skin conditions. Our dermatologists use advanced techniques to provide comprehensive skin care.",
+    ],
+  },
+  {
+    specialization: "Pediatrics",
+    image: "/images/pediat.png",
+    treatments: [
+      "Well-child visits",
+      "Vaccinations",
+      "Growth monitoring",
+      "Developmental assessments",
+      "Childhood illness treatment",
+      "Behavioral health",
+    ],
+    description: "Pediatricians are doctors who focus on the physical, behavioral, and mental health of children from birth through adolescence. They are trained to diagnose and treat childhood illnesses.",
+    otherInfo: [
+      "Regular pediatric check-ups are crucial for monitoring your child's growth and development. Our pediatricians provide compassionate care in a child-friendly environment.",
+    ],
+  },
+  {
+    specialization: "Orthopedics",
+    image: "/images/ortho2.png", 
+    treatments: [
+      "Joint replacement",
+      "Sports injuries",
+      "Fracture care",
+      "Spine disorders",
+      "Arthritis treatment",
+      "Physical therapy",
+    ],
+    description: "Orthopedic surgeons specialize in the diagnosis and treatment of conditions affecting bones, joints, ligaments, tendons, and muscles. They help patients recover from injuries and manage chronic conditions.",
+    otherInfo: [
+      "Whether you're dealing with a sports injury or chronic joint pain, our orthopedic specialists can help you regain mobility and improve your quality of life.",
+    ],
+  },
+  {
+    specialization: "Neurology",
+    image: "/images/brain.jpg",
+    treatments: [
+      "Headache treatment",
+      "Stroke care",
+      "Epilepsy management", 
+      "Multiple sclerosis",
+      "Parkinson's disease",
+      "Memory disorders",
+    ],
+    description: "Neurologists are specialists who diagnose and treat disorders of the brain, spinal cord, and nervous system. They work with patients experiencing both acute and chronic neurological conditions.",
+    otherInfo: [
+      "Our neurology team uses state-of-the-art diagnostic tools and treatments to help patients with neurological conditions improve their daily functioning.",
+    ],
+  },
+  {
+    specialization: "Psychiatry",
+    image: "/images/psychiatry.png",
+    treatments: [
+      "Depression treatment",
+      "Anxiety management",
+      "Bipolar disorder care",
+      "ADHD treatment",
+      "Addiction therapy",
+      "Stress management",
+    ],
+    description: "Psychiatrists are medical doctors who specialize in mental health, including substance use disorders. They are qualified to assess both the mental and physical aspects of psychological problems.",
+    otherInfo: [
+      "Mental health is just as important as physical health. Our psychiatrists provide confidential, comprehensive care in a supportive environment.",
+    ],
+  },
+  {
+    specialization: "Surgery",
+    image: "/images/surg2.png",
+    treatments: [
+      "General surgery",
+      "Emergency surgery",
+      "Minimally invasive procedures",
+      "Tumor removal",
+      "Hernia repair",
+      "Appendectomy",
+    ],
+    description: "Surgeons are medical doctors who perform operations to treat injuries, diseases, and deformities. They are highly trained in surgical procedures and pre/post-operative care.",
+    otherInfo: [
+      "Our surgical team uses advanced techniques and technology to provide the safest and most effective surgical treatments possible.",
+    ],
+  },
+  {
+    specialization: "Cosmetic-Surgery",
+    image: "/images/cosmetic-surgery.png",
+    treatments: [
+      "Facial rejuvenation",
+      "Body contouring",
+      "Breast surgery",
+      "Rhinoplasty",
+      "Liposuction",
+      "Non-surgical procedures",
+    ],
+    description: "Cosmetic surgeons specialize in enhancing appearance through surgical and medical techniques. They focus on improving aesthetic appeal, symmetry, and proportion.",
+    otherInfo: [
+      "Our cosmetic surgeons combine artistic vision with surgical expertise to help you achieve your aesthetic goals safely and effectively.",
+    ],
+  },
+  {
+    specialization: "Hematology",
+    image: "/images/hemo.webp",
+    treatments: [
+      "Blood disorders",
+      "Anemia treatment",
+      "Blood cancers",
+      "Clotting disorders",
+      "Blood transfusions",
+      "Bone marrow disorders",
+    ],
+    description: "Hematologists specialize in the diagnosis and treatment of blood disorders and diseases. They work with conditions affecting blood cells, bone marrow, blood vessels, and the lymphatic system.",
+    otherInfo: [
+      "Our hematology team provides comprehensive care for both common and rare blood disorders using the latest treatment approaches.",
+    ],
+  },
+  {
+    specialization: "Pathology",
+    image: "/images/pathology.png",
+    treatments: [
+      "Disease diagnosis",
+      "Laboratory testing",
+      "Tissue analysis",
+      "Cancer staging",
+      "Autopsy services",
+      "Molecular testing",
+    ],
+    description: "Pathologists are doctors who study the causes and effects of diseases. They examine tissues, cells, and body fluids to help diagnose conditions and guide treatment decisions.",
+    otherInfo: [
+      "Our pathologists work behind the scenes but play a crucial role in accurate diagnosis and treatment planning.",
+    ],
+  },
+  {
+    specialization: "Family Medicine",
+    image: "/images/familydoc.webp",
+    treatments: [
+      "Preventive care",
+      "Chronic disease management",
+      "Health screenings",
+      "Immunizations",
+      "Acute care",
+      "Women's health",
+    ],
+    description: "Family medicine physicians provide comprehensive healthcare for individuals and families across all ages. They focus on continuous, personalized care for the whole family.",
+    otherInfo: [
+      "Our family medicine practitioners build long-term relationships with patients to provide comprehensive, coordinated healthcare for the entire family.",
+    ],
+  },
+  {
+    specialization: "Pulmonology",
+    image: "/images/pulmonology.png",
+    treatments: [
+      "Asthma management",
+      "COPD treatment",
+      "Sleep disorders",
+      "Lung cancer",
+      "Bronchitis",
+      "Pneumonia",
+    ],
+    description: "Pulmonologists are specialists in diseases affecting the respiratory system. They diagnose and treat conditions of the lungs, bronchial tubes, and chest.",
+    otherInfo: [
+      "Our pulmonology team provides expert care for both acute and chronic respiratory conditions using advanced diagnostic and treatment methods.",
+    ],
+  },
+  {
+    specialization: "Urology",
+    image: "/images/urology.png",
+    treatments: [
+      "Kidney stones",
+      "Prostate problems",
+      "Bladder issues",
+      "Urinary tract infections",
+      "Male infertility",
+      "Cancer treatment",
+    ],
+    description: "Urologists specialize in conditions affecting the urinary tract and male reproductive system. They provide both medical and surgical treatments for these conditions.",
+    otherInfo: [
+      "Our urology team offers comprehensive care for urological conditions, using the latest techniques and technologies.",
+    ],
+  },
+  {
+    specialization: "Gastroenterology",
+    image: "/images/gastro.jpg",
+    treatments: [
+      "Digestive disorders",
+      "Liver disease",
+      "Colon cancer screening",
+      "IBS treatment",
+      "GERD management",
+      "Endoscopy procedures",
+    ],
+    description: "Gastroenterologists specialize in diseases of the digestive system and gastrointestinal tract. They diagnose and treat conditions affecting the stomach, intestines, liver, and related organs.",
+    otherInfo: [
+      "Our gastroenterology team provides comprehensive care for digestive health issues, from routine screenings to complex conditions.",
+    ],
+  },
+  {
+    specialization: "Nephrology",
+    image: "/images/urlology2.png",
+    treatments: [
+      "Kidney disease",
+      "Hypertension",
+      "Dialysis care",
+      "Electrolyte disorders",
+      "Kidney stones",
+      "Transplant care",
+    ],
+    description: "Nephrologists are specialists in kidney diseases and disorders. They manage conditions that affect kidney function and overall renal health.",
+    otherInfo: [
+      "Our nephrology team provides expert care for all types of kidney conditions, from early-stage disease to advanced treatment needs.",
+    ],
+  },
+  {
+    specialization: "Preventative medicine",
+    image: "/images/prev2.png",
+    treatments: [
+      "Health screenings",
+      "Lifestyle counseling",
+      "Vaccination programs",
+      "Risk assessment",
+      "Wellness planning",
+      "Disease prevention",
+    ],
+    description: "Preventative medicine specialists focus on preventing disease and promoting health. They work to identify and reduce health risks before serious problems develop.",
+    otherInfo: [
+      "Our preventative medicine team helps you stay healthy through proactive healthcare strategies and early intervention.",
+    ],
+  },
+  {
+    specialization: "Oncology",
+    image: "/images/cancerdr2.jpg",
+    treatments: [
+      "Cancer diagnosis",
+      "Chemotherapy",
+      "Radiation therapy",
+      "Immunotherapy",
+      "Clinical trials",
+      "Survivorship care",
+    ],
+    description: "Oncologists specialize in the diagnosis and treatment of cancer. They develop and manage comprehensive treatment plans for cancer patients.",
+    otherInfo: [
+      "Our oncology team provides compassionate, state-of-the-art cancer care, supporting patients throughout their treatment journey.",
+    ],
+  },
+  {
+    specialization: "Preventative-Medicine",
+    image: "/images/preventative.png",
+    treatments: [
+      "Health screenings",
+      "Lifestyle counseling", 
+      "Vaccination programs",
+      "Risk assessment",
+      "Wellness planning",
+      "Disease prevention",
+    ],
+    description: "Preventative medicine specialists focus on preventing disease and promoting health. They work to identify and reduce health risks before serious problems develop.",
+    otherInfo: [
+      "Our preventative medicine team helps you stay healthy through proactive healthcare strategies and early intervention.",
+    ],
+  },
+  {
+    specialization: "Obstetrics-Gynecology",
+    image: "/images/obgyn.jpg",
+    treatments: [
+      "Prenatal care",
+      "Labor and delivery",
+      "Fertility treatments", 
+      "Women's health screenings",
+      "Menopause management",
+      "Gynecologic surgery",
+    ],
+    description: "Obstetrician-gynecologists (OB-GYNs) are specialists in women's reproductive health, pregnancy, and childbirth. They provide comprehensive care throughout all stages of a woman's life.",
+    otherInfo: [
+      "Our OB-GYN team offers compassionate, specialized care for women of all ages, from adolescence through post-menopause, including pregnancy and childbirth services.",
+    ],
+  },
+  {
+    specialization: "Opthamology",
+    image: "/images/opthamology.png", 
+    treatments: [
+      "Eye examinations",
+      "Vision correction",
+      "Cataract surgery",
+      "Glaucoma treatment", 
+      "Retinal disorders",
+      "Eye disease management"
+    ],
+    description: "Ophthamologists are medical doctors who specialize in eye and vision care. They diagnose and treat all eye diseases, perform surgery and prescribe corrective lenses.",
+    otherInfo: [
+      "Our ophthalmology team provides comprehensive eye care services using advanced diagnostic and treatment technologies to preserve and improve your vision.",
+    ],
+  },
+  {
+    specialization: "Emergency medicine",
+    image: "/images/prev2.png",
+    treatments: [
+      "Health screenings",
+      "Lifestyle counseling",
+      "Vaccination programs",
+      "Risk assessment", 
+      "Wellness planning",
+      "Disease prevention",
+    ],
+    description: "Preventative medicine specialists focus on preventing disease and promoting health. They work to identify and reduce health risks before serious problems develop.",
+    otherInfo: [
+      "Our preventative medicine team helps you stay healthy through proactive healthcare strategies and early intervention.",
+    ],
+  },
+  {
+    specialization: "Immunology",
+    image: "/images/sneeze2.jpg",
+    treatments: [
+      "Allergy testing and treatment",
+      "Autoimmune disease management",
+      "Immunodeficiency disorders",
+      "Immunotherapy",
+      "Vaccine reactions",
+      "Immune system evaluations"
+    ],
+    description: "Immunologists are specialists who diagnose and treat disorders of the immune system. They work with conditions ranging from allergies to complex autoimmune diseases.",
+    otherInfo: [
+      "Our immunology team provides comprehensive care for immune system disorders using the latest diagnostic tools and treatment approaches to help patients manage their conditions effectively.",
     ],
   },
 ];

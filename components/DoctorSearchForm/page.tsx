@@ -47,7 +47,7 @@ const DoctorSearchForm = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Doctor's name"
-          className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black text-black shadow-md shadow-gray-700"
+          className="w-full text-2xl px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black text-black shadow-md shadow-gray-700"
         />
 
         <input
@@ -56,7 +56,7 @@ const DoctorSearchForm = () => {
           onFocus={handleSpecialtyClick}
           readOnly
           placeholder="Select Specialty"
-          className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black cursor-pointer text-black shadow-md shadow-gray-700"
+          className="w-full text-2xl px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black cursor-pointer text-black shadow-md shadow-gray-700"
         />
 
         <input
@@ -64,13 +64,13 @@ const DoctorSearchForm = () => {
           value={location}
           onChange={(e) => setLocation(e.target.value)}
           placeholder="Location"
-          className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black text-black shadow-md shadow-gray-700"
+          className="w-full text-2xl px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black text-black shadow-md shadow-gray-700"
         />
       </div>
 
       <button
         type="submit"
-        className="mt-4 px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-custom-green focus:outline-none focus:ring-2 focus:ring-black shadow-lg shadow-black active:translate-y-0.5 active:shadow-md transition-all duration-150">
+        className="mt-4 px-6 py-2 bg-gray-500 text-2xl text-white rounded-md hover:bg-custom-green focus:outline-none focus:ring-2 focus:ring-black shadow-lg shadow-black active:translate-y-0.5 active:shadow-md transition-all duration-150">
         Search
       </button>
 

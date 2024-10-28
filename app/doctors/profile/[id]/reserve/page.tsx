@@ -82,12 +82,12 @@ export default function DoctorReservePage() {
         throw new Error('Failed to book appointment');
       }
   
-      // Redirect to success page with appointment date and time in the query parameters
       router.push(`/doctors/profile/${doctor.id}/reserve/success?date=${encodeURIComponent(date.toISOString())}&time=${encodeURIComponent(time)}`);
     } catch (error) {
       console.error('Error booking appointment:', error);
     }
   };
+
   if (loading) {
     return <p className="text-center text-white">Loading...</p>;
   }
@@ -97,42 +97,45 @@ export default function DoctorReservePage() {
   }
 
   return (
-    <div className="min-h-screen flex justify-center items-center p-4 relative pt-16">
-      {/* Background Image */}
-      <div className="fixed inset-0 z-0">
+    <div className="min-h-screen flex flex-col">
+      {/* Top half with background image */}
+      <div className="h-[50vh] relative">
         <Image
-          src="/images/outside.jpg"
+          src="/images/view4.avif"
           alt="Medical Background"
           layout="fill"
           objectFit="cover"
           quality={100}
         />
-      </div>
-      {/* Overlay */}
-      <div className="fixed inset-0 bg-black opacity-50 z-10"></div>
-      <div className="w-full max-w-2xl relative z-20 overflow-hidden">
-        <div className="relative z-30 bg-white bg-opacity-0 p-8">
-          <h2 className="text-4xl font-bold mb-6 text-white text-center">Reserve an Appointment</h2>
-          <form onSubmit={handleSubmit} className="rounded-lg">
-            <div className="text-center mb-6">
-              <div className="inline-block border-2 border-black overflow-hidden">
-                <Image
-                  src={doctor.imageUrl || "/images/placeholder-doctor-image.jpg"}
-                  alt={doctor.name}
-                  width={150}
-                  height={150}
-                  className="mx-auto" 
-                  unoptimized
-                  priority
-                />
-              </div>
-              <h3 className="text-2xl text-white font-bold mt-8">{doctor.name}</h3>
-              <p className="text-xl text-white">{doctor.specialization}</p>
-              <p className="mt-2 text-md text-gray-300">{doctor.aboutMe}</p>
+        <div className="absolute inset-0 bg-black bg-opacity-20" />
+        <div className="relative z-10 h-full flex items-center justify-center">
+          <div className="text-center">
+            <div className="inline-block border-2 border-white overflow-hidden">
+              <Image
+                src={doctor.imageUrl || "/images/placeholder-doctor-image.jpg"}
+                alt={doctor.name}
+                width={150}
+                height={150}
+                className="mx-auto"
+                unoptimized
+                priority
+              />
             </div>
+            <h3 className="text-3xl text-white font-bold mt-4">{doctor.name}</h3>
+            <p className="text-2xl text-white">{doctor.specialization}</p>
+            <p className="mt-2 text-md text-gray-900">{doctor.aboutMe}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom half with black background */}
+      <div className="flex-1 bg-gray-100 p-8">
+        <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+          <h2 className="text-4xl font-bold mb-6 text-black text-center">Reserve an Appointment</h2>
+          <form onSubmit={handleSubmit} className="rounded-lg">
             <div className="mb-4">
-              <label className="block text-white text-xl font-bold mb-2">Select Date</label>
-              <div className="bg-gray-800 rounded-md border p-3" style={{backgroundImage: "url('/images/calendar-bg.jpg')", backgroundSize: 'cover', backgroundPosition: 'center'}}>
+              <label className="block text-black text-xl font-bold mb-2">Select Date</label>
+              <div className="bg-gray-300 rounded-md border p-3">
                 <Calendar
                   onChange={handleDateChange}
                   value={date}
@@ -141,7 +144,7 @@ export default function DoctorReservePage() {
               </div>
             </div>
             <div className="mb-4">
-              <label className="block text-white text-xl font-bold mb-2">Time</label>
+              <label className="block text-black text-xl font-bold mb-2">Time</label>
               <input
                 type="time"
                 value={time}
@@ -151,7 +154,7 @@ export default function DoctorReservePage() {
               />
             </div>
             <div className="mb-6">
-              <label className="block text-white text-xl font-bold mb-2">Reason for Visit</label>
+              <label className="block text-black text-xl font-bold mb-2">Reason for Visit</label>
               <textarea
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
@@ -164,7 +167,7 @@ export default function DoctorReservePage() {
             <div className="flex items-center justify-center">
               <button
                 type="submit"
-                className="bg-black hover:bg-custom-green text-white text-xl font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="bg-gray-900 text-white hover:bg-custom-green text-2xl font-bold py-4 px-8 rounded-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 active:translate-y-0.5 active:shadow-inner"
               >
                 Book Appointment
               </button>

@@ -4,7 +4,7 @@ import { db } from '@/lib/db';
 export async function GET() {
   try {
     const featuredDoctors = await db.doctor.findMany({
-      take: 5,
+      take: 3,
       select: {
         id: true,
         specialization: true,

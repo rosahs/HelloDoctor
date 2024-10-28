@@ -31,7 +31,7 @@ export default function HomePage() {
           <p className="text-lg sm:text-2xl md:text-3xl text-gray-300 text-center mb-6 sm:mb-8 max-w-3xl mx-auto">
             Connect with trusted doctors worldwide, access affordable medical care, and find the right specialist wherever you are.
           </p>
-          <div className="w-full max-w-4xl mb-8 sm:mb-12 mx-auto">
+          <div className="w-full max-w-4xl mb-16 sm:mb-56 mx-auto">
             <DoctorSearchForm />
           </div>
 
@@ -43,7 +43,7 @@ export default function HomePage() {
           <FeaturedDoctors />
         </div>
       </div>
-      <div className="relative z-20 w-full opacity-70 mt-16">
+      <div className="relative z-20 w-full opacity-60 mt-16">
         <Footer />
       </div>
     </div>

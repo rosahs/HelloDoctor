@@ -77,7 +77,7 @@ export default function EditAppointmentPage() {
           >
             <div className="mb-4">
               <label className="block text-xl font-bold text-gray-700">
-                Doctor's Name
+                Doctor&#89;s Name
               </label>
               <input
                 type="text"

@@ -13,7 +13,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     }
 
     return NextResponse.json(appointment);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to fetch appointment" }, { status: 500 });
   }
 }
@@ -33,7 +33,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     });
 
     return NextResponse.json(updatedAppointment);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to update appointment" }, { status: 500 });
   }
 }
@@ -47,7 +47,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     });
 
     return NextResponse.json({ message: "Appointment deleted successfully" });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to delete appointment" }, { status: 500 });
   }
 }

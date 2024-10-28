@@ -182,7 +182,8 @@ const ACCEPTED_IMAGE_TYPES = [
 export const UpdateProfileSchema = z.object({
   name: z
     .string()
-    .min(2, "Name must be at least 2 characters"),
+    .min(2, "Name must be at least 2 characters")
+    .optional(),
   avatar: z
     .any()
     .refine(
@@ -199,6 +200,6 @@ export const UpdateProfileSchema = z.object({
       "Only .jpg, .png, and .webp formats are supported."
     )
     .optional(),
-  country: z.string().optional(),
-  city: z.string().optional(),
+  country: z.string().optional().nullable(),
+  city: z.string().optional().nullable(),
 });

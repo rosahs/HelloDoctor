@@ -33,26 +33,37 @@ export async function updateProfile(formData: FormData) {
 
     if (avatar && avatar instanceof File) {
       imageUrl = await uploadImage(avatar);
+
+      await db.user.update({
+        where: { id: user.id },
+        data: {
+          image: imageUrl,
+        },
+      });
     }
 
-    // Update user
-    await db.user.update({
-      where: { id: user.id },
-      data: {
-        name,
-        image: imageUrl,
-      },
-    });
+    if (name) {
+      // Update user
+      await db.user.update({
+        where: { id: user.id },
+        data: {
+          name,
+        },
+      });
+    }
 
-    if (user.role === UserRole.PATIENT)
-      // Update or create patient
+    if (
+      user.role === UserRole.PATIENT &&
+      (country !== undefined || city !== undefined)
+    ) {
       await db.patient.update({
         where: { id: user.patientId },
         data: {
-          country,
-          city,
+          ...(country !== undefined && { country }),
+          ...(city !== undefined && { city }),
         },
       });
+    }
 
     revalidatePath("/");
 
@@ -61,4 +72,3 @@ export async function updateProfile(formData: FormData) {
     return { error: "Something went wrong!" };
   }
 }
-

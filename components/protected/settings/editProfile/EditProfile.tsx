@@ -99,25 +99,24 @@ export const UserProfileEditForm = ({
     setError("");
     setSuccess("");
 
-    if (
-      values.avatar &&
-      values.avatar.size > MAX_FILE_SIZE
-    ) {
-      setError(
-        "Image too large. Please upload an image smaller than 10MB."
-      );
-    }
-
     startTransition(async () => {
       const formData = new FormData();
 
-      formData.append("name", values.name);
+      if (values.name) {
+        formData.append("name", values.name);
+      }
 
-      formData.append("avatar", values.avatar);
+      if (values.avatar instanceof File) {
+        formData.append("avatar", values.avatar);
+      }
 
-      formData.append("country", values.country as string);
+      if (values.country) {
+        formData.append("country", values.country);
+      }
 
-      formData.append("city", values.city as string);
+      if (values.city) {
+        formData.append("city", values.city);
+      }
 
       const result = await updateProfile(formData);
 
@@ -126,14 +125,11 @@ export const UserProfileEditForm = ({
         setSuccess("");
       } else if (result.success) {
         setSuccess(result.success);
-
         update();
-
         setError("");
       }
     });
   };
-
   const handleAvatarChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -291,6 +287,7 @@ export const UserProfileEditForm = ({
                     <FormControl>
                       <Input
                         {...field}
+                        value={field.value || ""}
                         placeholder="Enter your city"
                         className="bg-inputBg border-inputBorder text-textDark placeholder:text-placeholder"
                       />

@@ -50,8 +50,8 @@ export const patientLinks = [
     href: "/appointments",
     label: "My Appointments",
   },
-  {
-    href: "/payment",
-    label: "Payment",
-  },
+  // {
+  //   href: "/payment",
+  //   label: "Payment",
+  // },
 ];

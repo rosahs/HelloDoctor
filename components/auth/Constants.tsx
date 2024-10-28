@@ -86,11 +86,11 @@ export const StatusIcon = {
 };
 
 // Stripe Payment
-const PaymentLinks = {
-    Stripe:
-        process.env.NODE_ENV === "development"
-        ? "https://buy.stripe.com/test_3cscPYagGfWBd3O7ss" //Test for Development
-        : "https://buy.stripe.com/live_xxx" // Replace with live payment link
-};
+// const PaymentLinks = {
+//     Stripe:
+//         process.env.NODE_ENV === "development"
+//         ? "https://buy.stripe.com/test_3cscPYagGfWBd3O7ss" //Test for Development
+//         : "https://buy.stripe.com/live_xxx" // Replace with live payment link
+// };
 
-export default PaymentLinks
+// export default PaymentLinks

@@ -18,7 +18,7 @@ export default async function SpecialtyPage({
 }) {
   const { specialty } = params;
   const about = aboutSpecializations.find(
-    (item) => item.specialization.toLowerCase() === specialty.toLowerCase()
+    (item) => item.specialization.toLowerCase() === formattedSpecialty.toLowerCase()
   );
 
   const doctors = await getDoctors({ specialization: specialty });
@@ -26,7 +26,7 @@ export default async function SpecialtyPage({
   if (doctors.length === 0) {
     return (
       <p className="text-center text-gray-500 mt-8">
-        No doctors found for {specialty}.
+        No doctors found for {formattedSpecialty}.
       </p>
     );
   }

@@ -19,7 +19,7 @@ const Modal: React.FC<ModalProps> = ({ show, onClose, onSelectSpecialty }) => {
     'Neurology',
     'Obstetrics-Gynecology',
     'Oncology',
-    'Opthamology',
+    // 'Opthamology',
     'Orthopedics',
     'Pathology',
     'Pediatrics',

@@ -7,10 +7,11 @@ export const publicRoutes: string[] = [
   "/auth/new-verification",
   "/doctor/public-profile",
   "/doctors/search",
-  "/doctors/profile",
+  "/doctors/profile/[id]",
   "/api/doctors/featured",
+  "/api/doctors/[id]",
 
-  "/doctors/search/specialities/cardiology"
+  "/doctors/search/specialities/cardiology",
 ];
 
 /**  An array of routes that are used for authentication

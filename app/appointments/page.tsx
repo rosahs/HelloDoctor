@@ -54,7 +54,7 @@ export default function AppointmentsPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-900">
+    <div className="min-h-screen flex flex-col bg-black">
       <div className="w-full h-[50vh] relative">
         <Image
           src="/images/hosp8.webp"

@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/Specialty-Modal/page";
 
@@ -11,9 +11,27 @@ const DoctorSearchForm = () => {
   const [specialty, setSpecialty] = useState("");
   const [location, setLocation] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0, width: 0 });
+  const specialtyRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  // Handle form submission and redirect to the new route structure
+  const handleSpecialtyClick = () => {
+    if (specialtyRef.current) {
+      const rect = specialtyRef.current.getBoundingClientRect();
+      setModalPosition({
+        top: rect.bottom + window.scrollY,
+        left: rect.left,
+        width: rect.width, // Match the width of the input
+      });
+    }
+    setShowModal(true);
+  };
+
+  const handleSpecialtySelect = (selectedSpecialty: string) => {
+    setSpecialty(selectedSpecialty);
+    setShowModal(false);
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const searchParams = new URLSearchParams();
@@ -21,22 +39,11 @@ const DoctorSearchForm = () => {
     if (location) searchParams.append("location", location);
 
     if (specialty) {
-      // Format the specialty and type into the desired route structure
-      const formattedSpecialty = specialty.toLowerCase().replace(/ /g, "-"); // e.g., "Cardiology" => "cardiology"
+      const formattedSpecialty = specialty.toLowerCase().replace(/ /g, "-");
       router.push(`/doctors/${formattedSpecialty}`);
-      // router.push(`/doctors/${formattedSpecialty}/${formattedSpecialty}?${searchParams.toString()}`);
     } else {
       router.push(`/doctors/search?${searchParams.toString()}`);
     }
-  };
-
-  const handleSpecialtyClick = () => {
-    setShowModal(true);
-  };
-
-  const handleSpecialtySelect = (selectedSpecialty: string) => {
-    setSpecialty(selectedSpecialty);
-    setShowModal(false);
   };
 
   return (
@@ -53,6 +60,7 @@ const DoctorSearchForm = () => {
         <input
           type="text"
           value={specialty}
+          ref={specialtyRef}
           onFocus={handleSpecialtyClick}
           readOnly
           placeholder="Select Specialty"
@@ -78,6 +86,7 @@ const DoctorSearchForm = () => {
         show={showModal}
         onClose={() => setShowModal(false)}
         onSelectSpecialty={handleSpecialtySelect}
+        position={modalPosition}
       />
     </form>
   );

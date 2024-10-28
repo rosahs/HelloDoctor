@@ -4,61 +4,51 @@ interface ModalProps {
   show: boolean;
   onClose: () => void;
   onSelectSpecialty: (specialty: string) => void;
+  position: { top: number; left: number; width: number };
 }
 
-const Modal: React.FC<ModalProps> = ({ show, onClose, onSelectSpecialty }) => {
+const Modal: React.FC<ModalProps> = ({ show, onClose, onSelectSpecialty, position }) => {
   const doctorTypes = [
-    'Immunology',
-    'Cardiology', 
-    'Cosmetic Surgery',
-    'Dentist',
-    'Dermatology',
-    'Gastroenterology',
-    'Hematology',
-    'Nephrology',
-    'Neurology',
-    'Obstetrics-Gynecology',
-    'Oncology',
-    // 'Opthamology',
-    'Orthopedics',
-    'Pathology',
-    'Pediatrics',
-    'Preventative Medicine',
-    'Psychiatry',
-    'Pulmonology',
-    'Surgery',
-    'Urology'
+    'Immunology', 'Cardiology', 'Cosmetic Surgery', 'Dentist', 'Dermatology',
+    'Gastroenterology', 'Hematology', 'Nephrology', 'Neurology', 'Obstetrics-Gynecology',
+    'Oncology', 'Orthopedics', 'Pathology', 'Pediatrics', 'Preventative Medicine',
+    'Psychiatry', 'Pulmonology', 'Surgery', 'Urology'
   ];
 
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 z-[100]" style={{top: '20%', transform: 'translateY(-50%)'}}>
-      <div className="absolute left-1/2 transform -translate-x-1/2 bg-white rounded-lg p-8 w-full max-w-md shadow-xl">
-        <h2 className="text-2xl font-bold mb-4">Select a Specialty</h2>
-        <div className="max-h-60 overflow-y-auto">
-          <ul className="space-y-4">
-            {doctorTypes.map((type) => (
-              <li
-                key={type}
-                className="cursor-pointer text-lg text-blue-600 hover:underline"
-                onClick={() => {
-                  onSelectSpecialty(type);
-                  onClose();
-                }}
-              >
-                {type}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <button
-          className="mt-6 w-full bg-gray-800 text-white py-2 rounded-lg"
-          onClick={onClose}
-        >
-          Close
-        </button>
+    <div
+      className="absolute z-50 bg-white rounded-lg p-4 shadow-xl"
+      style={{
+        top: position.top,
+        left: position.left,
+        width: position.width, // Set modal width to match input width
+      }}
+    >
+      <h2 className="text-xl font-bold mb-2">Select a Specialty</h2>
+      <div className="max-h-60 overflow-y-auto">
+        <ul className="space-y-2">
+          {doctorTypes.map((type) => (
+            <li
+              key={type}
+              className="cursor-pointer text-lg text-blue-600 hover:underline"
+              onClick={() => {
+                onSelectSpecialty(type);
+                onClose();
+              }}
+            >
+              {type}
+            </li>
+          ))}
+        </ul>
       </div>
+      <button
+        className="mt-4 w-full bg-gray-800 text-white py-1 rounded-lg"
+        onClick={onClose}
+      >
+        Close
+      </button>
     </div>
   );
 };

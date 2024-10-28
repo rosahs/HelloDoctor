@@ -11,12 +11,19 @@ const getArticle = (specialty: string) => {
   return vowels.includes(specialty[0].toLowerCase()) ? "an" : "a";
 };
 
+// Helper function to format specialty string
+const formatSpecialty = (specialty: string): string => {
+  return specialty.toLowerCase().replace(/-/g, ' ');
+};
+
 export default async function SpecialtyPage({
   params,
 }: {
   params: { specialty: string };
 }) {
   const { specialty } = params;
+  const formattedSpecialty = formatSpecialty(specialty);
+
   const about = aboutSpecializations.find(
     (item) => item.specialization.toLowerCase() === formattedSpecialty.toLowerCase()
   );

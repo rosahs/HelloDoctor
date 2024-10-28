@@ -11,19 +11,10 @@ const DoctorSearchForm = () => {
   const [specialty, setSpecialty] = useState("");
   const [location, setLocation] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0, width: 0 });
   const specialtyRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   const handleSpecialtyClick = () => {
-    if (specialtyRef.current) {
-      const rect = specialtyRef.current.getBoundingClientRect();
-      setModalPosition({
-        top: rect.bottom + window.scrollY,
-        left: rect.left,
-        width: rect.width, // Match the width of the input
-      });
-    }
     setShowModal(true);
   };
 
@@ -57,15 +48,25 @@ const DoctorSearchForm = () => {
           className="w-full text-2xl px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black text-black shadow-md shadow-gray-700"
         />
 
-        <input
-          type="text"
-          value={specialty}
-          ref={specialtyRef}
-          onFocus={handleSpecialtyClick}
-          readOnly
-          placeholder="Select Specialty"
-          className="w-full text-2xl px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black cursor-pointer text-black shadow-md shadow-gray-700"
-        />
+        {/* Container with relative positioning */}
+        <div className="relative">
+          <input
+            type="text"
+            value={specialty}
+            ref={specialtyRef}
+            onFocus={handleSpecialtyClick}
+            readOnly
+            placeholder="Select Specialty"
+            className="w-full text-2xl px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black cursor-pointer text-black shadow-md shadow-gray-700"
+          />
+
+          {/* Modal positioned absolutely within this container */}
+          <Modal
+            show={showModal}
+            onClose={() => setShowModal(false)}
+            onSelectSpecialty={handleSpecialtySelect}
+          />
+        </div>
 
         <input
           type="text"
@@ -81,13 +82,6 @@ const DoctorSearchForm = () => {
         className="mt-4 px-6 py-2 bg-gray-500 text-2xl text-white rounded-md hover:bg-custom-green focus:outline-none focus:ring-2 focus:ring-black shadow-lg shadow-black active:translate-y-0.5 active:shadow-md transition-all duration-150">
         Search
       </button>
-
-      <Modal
-        show={showModal}
-        onClose={() => setShowModal(false)}
-        onSelectSpecialty={handleSpecialtySelect}
-        position={modalPosition}
-      />
     </form>
   );
 };

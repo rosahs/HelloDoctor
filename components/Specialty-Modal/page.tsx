@@ -4,10 +4,9 @@ interface ModalProps {
   show: boolean;
   onClose: () => void;
   onSelectSpecialty: (specialty: string) => void;
-  position: { top: number; left: number; width: number };
 }
 
-const Modal: React.FC<ModalProps> = ({ show, onClose, onSelectSpecialty, position }) => {
+const Modal: React.FC<ModalProps> = ({ show, onClose, onSelectSpecialty }) => {
   const doctorTypes = [
     'Immunology', 'Cardiology', 'Cosmetic Surgery', 'Dentist', 'Dermatology',
     'Gastroenterology', 'Hematology', 'Nephrology', 'Neurology', 'Obstetrics-Gynecology',
@@ -21,9 +20,9 @@ const Modal: React.FC<ModalProps> = ({ show, onClose, onSelectSpecialty, positio
     <div
       className="absolute z-50 bg-white rounded-lg p-4 shadow-xl"
       style={{
-        top: position.top,
-        left: position.left,
-        width: position.width, // Set modal width to match input width
+        top: '100%', // Positions the modal directly below the input
+        left: 0, // Aligns the modal to the left of the input
+        width: '100%', // Matches the width of the input field
       }}
     >
       <h2 className="text-xl font-bold mb-2">Select a Specialty</h2>

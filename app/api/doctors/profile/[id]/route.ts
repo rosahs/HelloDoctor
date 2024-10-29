@@ -18,6 +18,7 @@ export async function GET(
         certifications: true,
         professionalExperience: true,
         languages: true,
+        images: true,
         user: {
           select: {
             name: true
@@ -36,7 +37,7 @@ export async function GET(
     const formattedDoctor = {
       id: doctor.id,
       name: doctor.user?.name || 'Unknown',
-      imageUrl: '/images/placeholder-doctor-image.jpg',
+      imageUrl: doctor.images?.[0] || '/images/placeholder-doctor-image.jpg',
       specialization: doctor.specialization || 'Not specified',
       specialties: doctor.specialties ? doctor.specialties.split(',') : [],
       certifications: doctor.certifications ? doctor.certifications.split(',') : [],

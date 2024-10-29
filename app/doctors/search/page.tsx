@@ -2,8 +2,9 @@
 
 import DoctorSearchForm from '@/components/DoctorSearchForm/page';
 import Footer from '@/components/footer/page';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface Doctor {
   id: string;
@@ -12,12 +13,7 @@ interface Doctor {
   imageUrl: string;
 }
 
-interface SearchParams {
-  name?: string;
-  specialization?: string;
-}
-
-export default function DoctorSearchPage({ searchParams }: { searchParams: SearchParams }) {
+export default function DoctorSearchPage() {
   const [sortBy, setSortBy] = useState('name');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -25,7 +21,7 @@ export default function DoctorSearchPage({ searchParams }: { searchParams: Searc
   const [loading, setLoading] = useState(false);
   const itemsPerPage = 9;
 
-  const fetchDoctors = async () => {
+  const fetchDoctors = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch(
@@ -54,11 +50,11 @@ export default function DoctorSearchPage({ searchParams }: { searchParams: Searc
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, sortBy]);
 
   useEffect(() => {
     fetchDoctors();
-  }, [currentPage, sortBy]);
+  }, [fetchDoctors]);
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -90,11 +86,14 @@ export default function DoctorSearchPage({ searchParams }: { searchParams: Searc
                   <Link href={`/doctors/profile/${doctor.id}`} key={doctor.id}>
                     <div className="bg-blue-50 rounded-xl p-4 mb-4 cursor-pointer hover:shadow-md">
                       <div className="flex items-center gap-4">
-                        <img
-                          src={doctor.imageUrl || '/api/placeholder/64/64'}
-                          alt={doctor.name}
-                          className="w-16 h-16 rounded-full object-cover"
-                        />
+                        <div className="relative w-16 h-16">
+                          <Image
+                            src={doctor.imageUrl || '/api/placeholder/64/64'}
+                            alt={doctor.name}
+                            fill
+                            className="rounded-full object-cover"
+                          />
+                        </div>
                         <div className="flex-1">
                           <h3 className="text-blue-600 font-semibold">{doctor.name}</h3>
                           <p className="text-gray-600 text-sm">{doctor.specialty}</p>

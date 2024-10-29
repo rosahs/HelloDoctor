@@ -3,7 +3,6 @@
 
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 
 interface Appointment {
   id: string;

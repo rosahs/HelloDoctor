@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import DoctorSearchForm from '@/components/DoctorSearchForm/page';
 import Footer from '@/components/footer/page';
 import FeaturedDoctors from '@/app/doctors/featured/page';

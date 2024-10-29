@@ -32,14 +32,14 @@ export default async function SpecialtyPage({
 
   if (doctors.length === 0) {
     return (
-      <p className="text-center text-gray-500 mt-8">
+      <p className="text-center text-[var(--primary-color)] mt-8">
         No doctors found for {formattedSpecialty}.
       </p>
     );
   }
 
   return (
-    <div className="relative min-h-screen bg-black flex flex-col">
+    <div className="relative min-h-screen bg-white flex flex-col">
       {/* Hero Image Section */}
       <div className="relative w-full h-[50vh]">
         {about?.image ? (
@@ -51,11 +51,11 @@ export default async function SpecialtyPage({
             priority
           />
         ) : (
-          <div className="h-full w-full flex items-center justify-center bg-gray-200">
-            <p className="text-gray-500">Image not available</p>
+          <div className="h-full w-full flex items-center justify-center bg-[var(--secondary-color)]">
+            <p className="text-[var(--primary-color)]">Image not available</p>
           </div>
         )}
-        <div className="absolute inset-0 bg-white bg-opacity-0"></div>
+        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
         <h1 className="absolute bottom-10 left-10 text-4xl font-bold text-white">
           Find {getArticle(specialty)} {specialty} Specialist
         </h1>
@@ -66,23 +66,23 @@ export default async function SpecialtyPage({
         <DoctorSearchForm />
 
         {/* About Section */}
-        <section className="mt-12 mb-12">
-          <h2 className="text-3xl font-semibold mb-4 text-gray-200">
-            About <span className="text-gray-100 text-4xl">{about?.specialization}</span> Specialists
+        <section className="mt-12 mb-12 bg-[var(--secondary-color)] p-8 rounded-lg">
+          <h2 className="text-3xl font-semibold mb-4 text-[var(--primary-color)]">
+            About <span className="text-[var(--primary-color)] text-4xl">{about?.specialization}</span> Specialists
           </h2>
-          <p className="text-gray-200 text-2xl mb-4">{about?.description}</p>
-          <p className="text-gray-200 text-2xl mb-4">
+          <p className="text-black text-2xl mb-4">{about?.description}</p>
+          <p className="text-black text-2xl mb-4">
             These specialists can help with a wide range of issues, including
             but not limited to:
           </p>
-          <ul className="list-disc list-inside text-gray-400 text-2xl mb-4">
+          <ul className="list-disc list-inside text-[var(--primary-color)] text-2xl mb-4">
             {about?.treatments.map((item, i) => (
               <li key={i}>{item}</li>
             ))}
           </ul>
           <div>
             {about?.otherInfo.map((item, i) => (
-              <p className="text-gray-300 text-2xl" key={i}>
+              <p className="text-black text-2xl" key={i}>
                 {item}
               </p>
             ))}

@@ -44,11 +44,11 @@ export default function Home() {
     }, [amount]);
 
     return (
-        <main className="flex items-center justify-center min-h-screen bg-black">
-            <div className="bg-white shadow-lg rounded-lg p-16 h-[550px] max-w-4xl w-full mx-4">
+        <main className="flex items-center justify-center min-h-screen bg-white">
+            <div className="bg-[var(--secondary-color)] shadow-lg rounded-lg p-16 h-[550px] max-w-4xl w-full mx-4">
                 <div className="mb-6">
-                    <h1 className="text-5xl font-bold text-center text-green-700 mb-8">HelloDoctor</h1>
-                    <h2 className="text-3xl text-gray-600 text-center mb-8">
+                    <h1 className="text-5xl font-bold text-center text-[var(--primary-color)] mb-8">HelloDoctor</h1>
+                    <h2 className="text-3xl text-black text-center mb-8">
                         has requested <span className="font-semibold">${amount.toFixed(2)}</span>
                     </h2>
                 </div>
@@ -58,7 +58,7 @@ export default function Home() {
                         href={stripeLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block text-center bg-custom-green hover:bg-green-800 text-white font-semibold py-4 px-16 rounded-md text-2xl transition duration-300"
+                        className="block text-center bg-[var(--primary-color)] hover:opacity-50 text-white font-semibold py-4 px-16 rounded-md text-2xl transition duration-300"
                     >
                         Pay with Stripe
                     </a>
@@ -69,7 +69,7 @@ export default function Home() {
                 ) : errorMessage ? (
                     <div className="text-red-500 text-center mb-6 text-2xl">{errorMessage}</div>
                 ) : (
-                    <p className="text-center text-gray-500 text-xl">Loading payment information...</p>
+                    <p className="text-center text-black text-xl">Loading payment information...</p>
                 )}
             </div>
         </main>

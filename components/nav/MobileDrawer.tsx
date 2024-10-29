@@ -18,12 +18,12 @@ function MobileDrawer({ user }: { user: ExtendedUser | undefined }) {
 
   return (
     <div
-      className={`bg-bgLight ${styles.drawer} ${
+      className={`bg-white text-black ${styles.drawer} ${
         isDrawerOpen ? styles.drawerOpen : styles.drawerClosed
       }`}
       style={{
-        backgroundColor: "white",
-        backgroundImage: "url(/images/steth2.png)",
+        backgroundColor: "gray-800",
+        // backgroundImage: "url(/images/steth2.png)",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
@@ -44,8 +44,8 @@ function MobileDrawer({ user }: { user: ExtendedUser | undefined }) {
           <Link href="/" className={styles.navUserLink}>
             <Avatar user={user} width={150} height={150} className="mr-3" />
             <div className={styles.userInfo}>
-              <span className="text-3xl text-custom-green text">{user?.name || "Guest"}</span>
-              <span className="text-sm text-gray-300">
+              <span className="text-3xl text">{user?.name || "Guest"}</span>
+              <span className="text-sm text-[var(--primary-color)]">
                 {user?.doctor?.specialization || user?.role}
               </span>
             </div>
@@ -57,21 +57,20 @@ function MobileDrawer({ user }: { user: ExtendedUser | undefined }) {
             <NavLink
               link="/auth/login"
               label="Login"
-              className={styles.navItem}
+              className={`${styles.navItem} text-[var(--primary-color)]`}
               onClick={closeDrawer}
             />
             <NavLink
               link="/auth/register"
               label="Signup"
-              className={styles.navItem}
+              className={`${styles.navItem} text-[var(--primary-color)]`}
               onClick={closeDrawer}
             />
           </ul>
           {/* <hr className={styles.separator} /> */}
         </>
       )}
-
-      <div className="text-white">
+      <div className="text-[var(--primary-color)]">
         {user && (
           <ul className={styles.navList}>
             {loggedInLinks.map((link) => (

@@ -31,7 +31,7 @@ const Modal: React.FC<ModalProps> = ({ show, onClose, onSelectSpecialty }) => {
           {doctorTypes.map((type) => (
             <li
               key={type}
-              className="cursor-pointer text-lg text-blue-600 hover:underline"
+              className="cursor-pointer text-lg text-black hover:underline"
               onClick={() => {
                 onSelectSpecialty(type);
                 onClose();
@@ -43,7 +43,7 @@ const Modal: React.FC<ModalProps> = ({ show, onClose, onSelectSpecialty }) => {
         </ul>
       </div>
       <button
-        className="mt-4 w-full bg-gray-800 text-white py-1 rounded-lg"
+        className="mt-4 w-full bg-[var(--primary-color)]  text-white py-2 rounded-3xl"
         onClick={onClose}
       >
         Close

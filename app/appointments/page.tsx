@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import Image from "next/image";
 
 interface Appointment {
   id: string;
@@ -54,16 +53,7 @@ export default function AppointmentsPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-black">
-      <div className="w-full h-[50vh] relative">
-        <Image
-          src="/images/hosp8.webp"
-          alt="Background"
-          fill
-          className="object-cover"
-          priority
-        />
-      </div>
+    <div className="min-h-screen flex flex-col bg-white">
       <div className="flex-1 container mx-auto px-4 py-8">
         <div className="bg-gray-200 rounded-lg p-8 backdrop-blur-sm shadow-2xl">
           <h1 className="text-3xl text-black font-bold mb-6">My Appointments</h1>

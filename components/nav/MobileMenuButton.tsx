@@ -8,10 +8,10 @@ function MobileMenuButton() {
 
   return (
     <button
-      className="flex items-center justify-center text-white p-4 text-dark-hover"
+      className="flex items-center justify-center text-black p-4 text-dark-hover"
       onClick={openDrawer}
     >
-      <GiHamburgerMenu size={24} />
+      <GiHamburgerMenu size={34} />
     </button>
   );
 }

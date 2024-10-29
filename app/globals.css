@@ -24,7 +24,8 @@ body {
 @layer base {
   :root {
     /*  */
-    --primary-color: #91be55;
+    --primary-color: #2260FF;
+    --secondary-color: #CAD6FF;
     --baby-powder: #f8faf4;
     --input-bg: #e8e8e8;
     --input-border: #787878;

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import DoctorCard from '@/components/doctor-card/page';
+import DoctorCard from '@/components/Doctor-card/page';
 
 interface Doctor {
   id: string;
@@ -83,8 +83,8 @@ export default function DoctorSearchResults({ searchParams }: DoctorSearchResult
           No doctors found matching your search criteria.
         </div>
       ) : (
-        <div className="text-center text-gray-500 mt-8">
-          Please use the search form to find a doctor.
+        <div className="text-center text-black mt-8">
+          {/* Please use the search form to find a doctor. */}
         </div>
       )}
     </div>

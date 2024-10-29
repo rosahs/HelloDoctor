@@ -53,7 +53,7 @@ const DoctorSearchForm = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Doctor's name"
-          className="w-full text-2xl px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black text-black shadow-md shadow-gray-700"
+          className="w-full text-2xl px-4 py-2 text-black rounded-md border border-gray-300 focus:outline-none focus:ring-2 bg-[var(--secondary-color)] focus:ring-black shadow-inner"
         />
 
         {/* Container with relative positioning */}
@@ -65,7 +65,7 @@ const DoctorSearchForm = () => {
             onFocus={handleSpecialtyClick}
             readOnly
             placeholder="Select Specialty"
-            className="w-full text-2xl px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black cursor-pointer text-black shadow-md shadow-gray-700"
+            className="w-full text-2xl px-4 py-2 rounded-md border border-gray-300 bg-[var(--secondary-color)] focus:outline-none focus:ring-2 focus:ring-black cursor-pointer text-blue-500 shadow-inner"
           />
 
           {/* Modal positioned absolutely within this container */}
@@ -81,13 +81,13 @@ const DoctorSearchForm = () => {
           value={location}
           onChange={(e) => setLocation(e.target.value)}
           placeholder="Location"
-          className="w-full text-2xl px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black text-black shadow-md shadow-gray-700"
+          className="w-full text-2xl px-4 py-2 rounded-lg border bg-[var(--secondary-color)] border-gray-300 focus:outline-none focus:ring-2 focus:ring-black text-blue-500 shadow-inner"
         />
       </div>
 
       <button
         type="submit"
-        className="mt-4 px-6 py-2 bg-gray-500 text-2xl text-white rounded-md hover:bg-custom-green focus:outline-none focus:ring-2 focus:ring-black shadow-lg shadow-black active:translate-y-0.5 active:shadow-md transition-all duration-150">
+        className="mt-4 px-6 py-2 bg-blue-600 text-2xl text-white rounded-full hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-black shadow-inner active:translate-y-0.5 active:shadow-md transition-all duration-150">
         Search
       </button>
     </form>

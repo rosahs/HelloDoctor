@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import DoctorCard from "@/components/doctor-card/page";
+import DoctorCard from "@/components/Doctor-card/page";
 // import { Doctor } from '@/lib/doctors';
 
 interface DoctorCardProps {

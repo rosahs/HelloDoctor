@@ -37,7 +37,9 @@ export async function GET(request: NextRequest) {
 
     console.log("Formatted Doctors:", formattedDoctors);
 
-    return NextResponse.json(formattedDoctors);
+    const total = formattedDoctors.length;
+
+    return NextResponse.json({ doctors: formattedDoctors, total });
   } catch (error) {
     console.error('Failed to fetch doctors:', error);
     return NextResponse.json({ error: 'Failed to fetch doctors' }, { status: 500 });

@@ -10,7 +10,8 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primaryColor: "#91BE55",
+        primaryColor: "#2260FF",
+        secondaryColor: "#CAD6FF",
         "custom-green": "#91BE55",
         babyPowder: "#f8faf4",
         bgBlack: "#212121",

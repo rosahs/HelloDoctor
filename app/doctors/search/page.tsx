@@ -30,8 +30,6 @@ export default function DoctorSearchPage() {
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
-            // Add authorization header if required
-            // 'Authorization': `Bearer ${token}`,
           },
         }
       );
@@ -43,7 +41,14 @@ export default function DoctorSearchPage() {
       const data = await response.json();
       console.log('Fetched doctors data:', data);
       
-      setDoctors(data.doctors || []);
+      let sortedDoctors = data.doctors || [];
+      if (sortBy === 'name') {
+        sortedDoctors = sortedDoctors.sort((a: Doctor, b: Doctor) => 
+          a.name.localeCompare(b.name)
+        );
+      }
+      
+      setDoctors(sortedDoctors);
       setTotalPages(Math.ceil((data.total || 0) / itemsPerPage));
     } catch (error) {
       console.error('Error fetching doctors:', error);

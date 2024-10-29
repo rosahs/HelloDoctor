@@ -169,7 +169,7 @@ export default function DoctorReservePage() {
             <div className="flex items-center justify-center">
               <button
                 type="submit"
-                className="bg-gray-900 text-white hover:bg-custom-green text-2xl font-bold py-4 px-8 rounded-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 active:translate-y-0.5 active:shadow-inner"
+                className="bg-[var(--primary-color)] text-white hover:bg-blue-800 text-2xl font-bold py-4 px-8 rounded-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 active:translate-y-0.5 active:shadow-inner"
               >
                 Book Appointment
               </button>

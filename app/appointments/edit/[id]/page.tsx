@@ -59,16 +59,9 @@ export default function EditAppointmentPage() {
 
   return (
     <div className="relative min-h-screen">
-      <Image
-        src="/images/outside.jpg"
-        alt="Background"
-        fill
-        className="object-cover"
-        priority
-      />
       <div className="relative container mx-auto px-4 py-8">
-        <div className="bg-white/90 rounded-lg p-8 backdrop-blur-sm">
-          <h1 className="text-3xl font-bold mb-6">Edit Appointment</h1>
+        <div className="bg-[var(--secondary-color)] rounded-lg p-8 backdrop-blur-sm">
+          <h1 className="text-3xl font-bold mb-6 text-[var(--primary-color)]">Edit Appointment</h1>
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -76,7 +69,7 @@ export default function EditAppointmentPage() {
             }}
           >
             <div className="mb-4">
-              <label className="block text-xl font-bold text-gray-700">
+              <label className="block text-xl font-bold text-[var(--primary-color)]">
                 Doctor&#39;s Name
               </label>
               <input
@@ -87,7 +80,7 @@ export default function EditAppointmentPage() {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-xl font-bold text-gray-700">
+              <label className="block text-xl font-bold text-[var(--primary-color)]">
                 Date
               </label>
               <input
@@ -98,7 +91,7 @@ export default function EditAppointmentPage() {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-xl font-bold text-gray-700">
+              <label className="block text-xl font-bold text-[var(--primary-color)]">
                 Time
               </label>
               <input
@@ -110,7 +103,7 @@ export default function EditAppointmentPage() {
             </div>
             <button
               type="submit"
-              className="mt-4 bg-gray-700 hover:bg-custom-green text-white px-6 py-3 rounded text-2xl transition-colors"
+              className="mt-4 bg-[var(--primary-color)] hover:bg-custom-green text-white px-6 py-3 rounded text-2xl transition-colors"
             >
               Save
             </button>

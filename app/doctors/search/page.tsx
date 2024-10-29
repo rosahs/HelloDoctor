@@ -3,6 +3,7 @@
 import DoctorSearchForm from '@/components/DoctorSearchForm/page';
 import Footer from '@/components/footer/page';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 interface Doctor {
   id: string;
@@ -85,20 +86,22 @@ export default function DoctorSearchPage({ searchParams }: { searchParams: Searc
               {loading ? (
                 <div className="text-center py-8">Loading...</div>
               ) : doctors.length > 0 ? (
-                doctors.map((doctor, index) => (
-                  <div key={index} className="bg-blue-50 rounded-xl p-4 mb-4">
-                    <div className="flex items-center gap-4">
-                      <img
-                        src={doctor.imageUrl || '/api/placeholder/64/64'}
-                        alt={doctor.name}
-                        className="w-16 h-16 rounded-full object-cover"
-                      />
-                      <div className="flex-1">
-                        <h3 className="text-blue-600 font-semibold">{doctor.name}</h3>
-                        <p className="text-gray-600 text-sm">{doctor.specialty}</p>
+                doctors.map((doctor) => (
+                  <Link href={`/doctors/profile/${doctor.id}`} key={doctor.id}>
+                    <div className="bg-blue-50 rounded-xl p-4 mb-4 cursor-pointer hover:shadow-md">
+                      <div className="flex items-center gap-4">
+                        <img
+                          src={doctor.imageUrl || '/api/placeholder/64/64'}
+                          alt={doctor.name}
+                          className="w-16 h-16 rounded-full object-cover"
+                        />
+                        <div className="flex-1">
+                          <h3 className="text-blue-600 font-semibold">{doctor.name}</h3>
+                          <p className="text-gray-600 text-sm">{doctor.specialty}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))
               ) : (
                 <div className="text-center py-8">No doctors found</div>

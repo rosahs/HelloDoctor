@@ -1,6 +1,6 @@
 // app/doctors/[specialty]/page.tsx
 import { getDoctors } from "@/lib/doctors";
-import DoctorCard from "@/components/Doctor-card/page";
+import DoctorCard from "@/components/doctor-card/page";
 import Image from "next/image";
 import DoctorSearchForm from "@/components/DoctorSearchForm/page";
 import { aboutSpecializations } from "@/lib/specilizationsAbout";

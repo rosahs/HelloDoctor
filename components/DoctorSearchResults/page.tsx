@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import DoctorCard from '@/components/Doctor-card/page';
+import DoctorCard from '@/components/doctor-card/page';
 
 interface Doctor {
   id: string;

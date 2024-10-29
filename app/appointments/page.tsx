@@ -71,11 +71,11 @@ export default function AppointmentsPage() {
                         {appointment.doctorName || "Unknown Doctor"}
                       </span>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 mb-6">
                       <Calendar className="w-6 h-6 text-gray-600" />
                       <span className="text-gray-700">{appointment.date}</span>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 mt-6">
                       <Clock className="w-6 h-6 text-gray-600" />
                       <span className="text-gray-700">{appointment.time}</span>
                     </div>

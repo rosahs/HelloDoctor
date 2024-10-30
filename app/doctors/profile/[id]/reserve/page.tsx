@@ -89,7 +89,7 @@ export default function DoctorReservePage() {
   };
 
   if (loading) {
-    return <p className="text-center text-white">Loading...</p>;
+    return <p className="text-center text-black">Loading...</p>;
   }
 
   if (!doctor) {
@@ -97,72 +97,71 @@ export default function DoctorReservePage() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col relative">
-      {/* Doctor info overlay */}
-      <div className="relative z-10 h-[40vh] flex flex-col items-center justify-center px-4 sm:px-0">
-        <div className="text-center">
-          <div className="inline-block border-2 border-white overflow-hidden rounded-full">
-            <Image
-              src={doctor.imageUrl || "/images/placeholder-doctor-image.jpg"}
-              alt={doctor.name}
-              width={150}
-              height={150}
-              className="mx-auto rounded-full sm:w-48 sm:h-48"
-              unoptimized
-              priority
+    <div className="min-h-screen bg-white flex flex-col items-center px-4 sm:px-6 lg:px-8 py-6 lg:py-12">
+      {/* Doctor Info */}
+      <div className="relative flex flex-col items-center text-center mb-8 sm:mb-12 lg:mb-16 w-full max-w-lg">
+        <div className="border-2 border-gray-300 rounded-full overflow-hidden mb-4 w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48">
+          <Image
+            src={doctor.imageUrl || "/images/placeholder-doctor-image.jpg"}
+            alt={doctor.name}
+            width={150}
+            height={150}
+            className="object-cover"
+            unoptimized
+            priority
+          />
+        </div>
+        <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[var(--primary-color)]">{doctor.name}</h3>
+        <p className="text-lg sm:text-xl lg:text-2xl text-gray-700">{doctor.specialization}</p>
+        <p className="mt-2 text-sm sm:text-base lg:text-lg text-gray-600 max-w-md px-2 sm:px-0">
+          {doctor.aboutMe || 'No additional information available.'}
+        </p>
+      </div>
+
+      {/* Reservation Form */}
+      <div className="w-full max-w-lg bg-[var(--secondary-color)] p-6 sm:p-8 lg:p-10 rounded-lg shadow-lg">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-6 text-black text-center">Reserve an Appointment</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-lg sm:text-xl font-semibold text-black mb-2">Select Date</label>
+            <div className="bg-gray-300 rounded-md border p-3">
+              <Calendar
+                onChange={handleDateChange}
+                value={date}
+                className="mx-auto"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-lg sm:text-xl font-semibold text-black mb-2">Time</label>
+            <input
+              type="time"
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+              className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:border-[var(--primary-color)]"
+              required
             />
           </div>
-          <h3 className="text-2xl sm:text-3xl text-[var(--primary-color)] font-bold mt-4">{doctor.name}</h3>
-          <p className="text-xl sm:text-2xl mb-4 text-black">{doctor.specialization}</p>
-          <p className="mt-2 text-sm sm:text-md mb-20 text-black px-2">{doctor.aboutMe}</p>
-        </div>
-      </div>
-      {/* Reservation form overlay */}
-      <div className="relative z-10 -mt-10 sm:-mt-20 px-4 sm:px-8 pb-8">
-        <div className="max-w-2xl mx-auto bg-[var(--secondary-color)] p-6 sm:p-8 rounded-lg shadow-xl">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-black text-center">Reserve an Appointment</h2>
-          <form onSubmit={handleSubmit} className="rounded-lg">
-            <div className="mb-4">
-              <label className="block text-black text-lg sm:text-xl font-bold mb-2">Select Date</label>
-              <div className="bg-gray-300 rounded-md border p-3 mt-4">
-                <Calendar
-                  onChange={handleDateChange}
-                  value={date}
-                  className="mx-auto"
-                />
-              </div>
-            </div>
-            <div className="mb-4">
-              <label className="block text-black text-lg sm:text-xl font-bold mb-2">Time</label>
-              <input
-                type="time"
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
-                className="shadow appearance-none cursor-pointer border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                required
-              />
-            </div>
-            <div className="mb-6">
-              <label className="block text-black text-lg sm:text-xl font-bold mb-2">Reason for Visit</label>
-              <textarea
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                placeholder="Enter the reason for your visit"
-                rows={3}
-                required
-              />
-            </div>
-            <div className="flex items-center justify-center">
-              <button
-                type="submit"
-                className="bg-[var(--primary-color)] text-white hover:bg-blue-800 text-lg sm:text-2xl font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 active:translate-y-0.5 active:shadow-inner"
-              >
-                Book Appointment
-              </button>
-            </div>
-          </form>
-        </div>
+          <div>
+            <label className="block text-lg sm:text-xl font-semibold text-black mb-2">Reason for Visit</label>
+            <textarea
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:border-[var(--primary-color)]"
+              placeholder="Enter the reason for your visit"
+              rows={3}
+              required
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <button
+              type="submit"
+              className="bg-[var(--primary-color)] text-white hover:bg-blue-800 text-lg sm:text-xl lg:text-2xl font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 active:translate-y-0.5"
+            >
+              Book Appointment
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

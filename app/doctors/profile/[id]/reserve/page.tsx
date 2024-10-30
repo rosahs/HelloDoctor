@@ -98,46 +98,33 @@ export default function DoctorReservePage() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col relative">
-      {/* Full height background image */}
-      {/* <div className="h-screen fixed inset-0">
-        <Image
-          src="/images/view4.avif"
-          alt="Medical Background"
-          layout="fill"
-          objectFit="cover"
-          quality={100}
-        />
-        <div className="absolute inset-0 bg-black bg-opacity-20" />
-      </div> */}
-
       {/* Doctor info overlay */}
-      <div className="relative z-10 h-[40vh] flex items-center justify-center">
+      <div className="relative z-10 h-[40vh] flex flex-col items-center justify-center px-4 sm:px-0">
         <div className="text-center">
           <div className="inline-block border-2 border-white overflow-hidden rounded-full">
             <Image
               src={doctor.imageUrl || "/images/placeholder-doctor-image.jpg"}
               alt={doctor.name}
-              width={200}
-              height={200}
-              className="mx-auto rounded-full"
+              width={150}
+              height={150}
+              className="mx-auto rounded-full sm:w-48 sm:h-48"
               unoptimized
               priority
             />
           </div>
-          <h3 className="text-3xl text-[var(--primary-color)] font-bold mt-4">{doctor.name}</h3>
-          <p className="text-2xl mb-8 text-black">{doctor.specialization}</p>
-          <p className="mt-2 text-md mb-10 text-black">{doctor.aboutMe}</p>
+          <h3 className="text-2xl sm:text-3xl text-[var(--primary-color)] font-bold mt-4">{doctor.name}</h3>
+          <p className="text-xl sm:text-2xl mb-4 text-black">{doctor.specialization}</p>
+          <p className="mt-2 text-sm sm:text-md mb-20 text-black px-2">{doctor.aboutMe}</p>
         </div>
       </div>
-
       {/* Reservation form overlay */}
-      <div className="relative z-20 -mt-20 px-8 pb-8">
-        <div className="max-w-2xl mx-auto bg-[var(--secondary-color)] p-8 rounded-lg shadow-xl">
-          <h2 className="text-4xl font-bold mb-6 text-black text-center">Reserve an Appointment</h2>
+      <div className="relative z-10 -mt-10 sm:-mt-20 px-4 sm:px-8 pb-8">
+        <div className="max-w-2xl mx-auto bg-[var(--secondary-color)] p-6 sm:p-8 rounded-lg shadow-xl">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-black text-center">Reserve an Appointment</h2>
           <form onSubmit={handleSubmit} className="rounded-lg">
             <div className="mb-4">
-              <label className="block text-black text-xl font-bold mb-2">Select Date</label>
-              <div className="bg-gray-300 rounded-md border p-3">
+              <label className="block text-black text-lg sm:text-xl font-bold mb-2">Select Date</label>
+              <div className="bg-gray-300 rounded-md border p-3 mt-4">
                 <Calendar
                   onChange={handleDateChange}
                   value={date}
@@ -146,7 +133,7 @@ export default function DoctorReservePage() {
               </div>
             </div>
             <div className="mb-4">
-              <label className="block text-black text-xl font-bold mb-2">Time</label>
+              <label className="block text-black text-lg sm:text-xl font-bold mb-2">Time</label>
               <input
                 type="time"
                 value={time}
@@ -156,7 +143,7 @@ export default function DoctorReservePage() {
               />
             </div>
             <div className="mb-6">
-              <label className="block text-black text-xl font-bold mb-2">Reason for Visit</label>
+              <label className="block text-black text-lg sm:text-xl font-bold mb-2">Reason for Visit</label>
               <textarea
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
@@ -169,7 +156,7 @@ export default function DoctorReservePage() {
             <div className="flex items-center justify-center">
               <button
                 type="submit"
-                className="bg-[var(--primary-color)] text-white hover:bg-blue-800 text-2xl font-bold py-4 px-8 rounded-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 active:translate-y-0.5 active:shadow-inner"
+                className="bg-[var(--primary-color)] text-white hover:bg-blue-800 text-lg sm:text-2xl font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 active:translate-y-0.5 active:shadow-inner"
               >
                 Book Appointment
               </button>
